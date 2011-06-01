@@ -1,0 +1,129 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>org.gofleet.module</groupId>
+	<artifactId>map_core</artifactId>
+	<version>0.0.2</version>
+	<name>map_core</name>
+	<packaging>jar</packaging>
+	<description>Core Tools for Maps</description>
+
+	<distributionManagement>
+		<snapshotRepository>
+			<id>gofleet</id>
+			<name>Gofleet</name>
+			<url>http://gis.emergya.info/nexus/content/repositories/gofleet</url>
+		</snapshotRepository>
+		<repository>
+			<id>gofleet_releases</id>
+			<name>Gofleet</name>
+			<url>http://gis.emergya.info/nexus/content/repositories/gofleet_releases</url>
+		</repository>
+	</distributionManagement>
+
+	<build>
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<artifactId>maven-compiler-plugin</artifactId>
+					<configuration>
+						<source>1.6</source>
+						<target>1.6</target>
+						<verbose>true</verbose>
+						<executable>javac</executable>
+						<fork>true</fork>
+						<compilerArguments>
+							<encoding>UTF-8</encoding>
+							<verbose />
+						</compilerArguments>
+					</configuration>
+				</plugin>
+				<plugin>
+					<groupId>org.codehaus.mojo</groupId>
+					<artifactId>findbugs-maven-plugin</artifactId>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+	</build>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.gofleet</groupId>
+			<artifactId>core</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.gofleet.module</groupId>
+			<artifactId>modules</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.gofleet</groupId>
+			<artifactId>ws-client</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		
+		
+		<!-- WMS -->
+		<dependency>
+			<groupId>gvsig.org</groupId>
+			<artifactId>libRemoteServices</artifactId>
+			<version>1.9</version>
+		</dependency>
+		<dependency>
+			<groupId>xmlpull</groupId>
+			<artifactId>xmlpull</artifactId>
+			<version>1.1.3.4d_b4_min</version>
+		</dependency>
+		<dependency>
+			<groupId>gvsig.legacy</groupId>
+			<artifactId>kxml2</artifactId>
+			<version>gvsig</version>
+		</dependency>
+		
+		<!-- SwingX -->
+		<dependency>
+			<groupId>org.swinglabs</groupId>
+			<artifactId>swingx</artifactId>
+			<version>1.6</version>
+		</dependency>
+		
+		<!-- OpenStreetMap -->
+		<dependency>
+			<groupId>org.openstreetmap</groupId>
+			<artifactId>josm</artifactId>
+			<version>1669</version>
+		</dependency>
+		<dependency>
+			<groupId>org.josm</groupId>
+			<artifactId>wms-plugin</artifactId>
+			<version>15961</version>
+		</dependency>
+		
+		<!-- GeoTools -->
+		<dependency>
+			<groupId>org.geotools</groupId>
+			<artifactId>gt2-main</artifactId>
+			<version>2.5-M1</version>
+		</dependency>
+		<dependency>
+			<groupId>org.geotools</groupId>
+			<artifactId>gt2-epsg-hsql</artifactId>
+			<version>2.5-M1</version>
+		</dependency>
+	</dependencies>
+
+	<repositories>
+		<repository>
+			<releases>
+				<checksumPolicy>warn</checksumPolicy>
+			</releases>
+			<snapshots>
+				<checksumPolicy>ignore</checksumPolicy>
+			</snapshots>
+			<id>GoFleet</id>
+			<name>GoFleet</name>
+			<url>http://gis.emergya.info/nexus/content/groups/Gofleet</url>
+		</repository>
+	</repositories>
+</project>

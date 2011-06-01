@@ -1,0 +1,93 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<parent>
+		<artifactId>gofleet</artifactId>
+		<groupId>org.gofleet</groupId>
+		<version>0.0.2</version>
+		<relativePath>../pom.xml</relativePath>
+	</parent>
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>${project.parent.groupId}.module</groupId>
+	<artifactId>modules</artifactId>
+	<version>${project.parent.version}</version>
+	<name>modules</name>
+	<description>Module Core Base System</description>
+	<packaging>jar</packaging>
+
+	<distributionManagement>
+		<snapshotRepository>
+			<id>gofleet</id>
+			<name>Gofleet</name>
+			<url>http://gis.emergya.info/nexus/content/repositories/gofleet</url>
+		</snapshotRepository>
+		<repository>
+			<id>gofleet_releases</id>
+			<name>Gofleet</name>
+			<url>http://gis.emergya.info/nexus/content/repositories/gofleet_releases</url>
+		</repository>
+	</distributionManagement>
+
+	<build>
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<artifactId>maven-compiler-plugin</artifactId>
+					<configuration>
+						<source>1.6</source>
+						<target>1.6</target>
+						<verbose>true</verbose>
+						<executable>javac</executable>
+						<fork>true</fork>
+						<compilerArguments>
+							<encoding>UTF-8</encoding>
+							<verbose />
+						</compilerArguments>
+					</configuration>
+				</plugin>
+				<plugin>
+					<groupId>org.codehaus.mojo</groupId>
+					<artifactId>findbugs-maven-plugin</artifactId>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+	</build>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.gofleet</groupId>
+			<artifactId>core</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.gofleet</groupId>
+			<artifactId>i18n</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.gofleet</groupId>
+			<artifactId>ws-client</artifactId>
+			<version>${project.version}</version>
+			<scope>compile</scope>
+		</dependency>
+		<!-- SwingX -->
+		<dependency>
+			<groupId>org.swinglabs</groupId>
+			<artifactId>swingx</artifactId>
+			<version>1.6</version>
+		</dependency>
+	</dependencies>
+
+	<repositories>
+		<repository>
+			<releases>
+				<checksumPolicy>warn</checksumPolicy>
+			</releases>
+			<snapshots>
+				<checksumPolicy>ignore</checksumPolicy>
+			</snapshots>
+			<id>GoFleet</id>
+			<name>GoFleet</name>
+			<url>http://gis.emergya.info/nexus/content/groups/Gofleet</url>
+		</repository>
+	</repositories>
+</project>
