@@ -38,12 +38,14 @@ import java.util.List;
 import java.util.Map;
 
 import javax.swing.JFrame;
+import javax.swing.SwingWorker;
 
 import org.apache.commons.logging.LogFactory;
 
 import es.emergya.actions.Authentication;
 import es.emergya.bbdd.bean.Usuario;
 import es.emergya.i18n.Internacionalization;
+import es.emergya.ui.base.BasicWindow;
 
 /**
  * Container for plugins.
@@ -187,5 +189,31 @@ public class PluginContainer extends AbstractPluggable {
 	public void maximizeAllDetachedTabs() {
 		for (DetachedTab tab : getPane().detached_tabs)
 			tab.setExtendedState(JFrame.MAXIMIZED_BOTH);
+	}
+
+	public void cleanUp() {
+		SwingWorker<Object, Object> sw = new SwingWorker<Object, Object>() {
+			@Override
+			protected Object doInBackground() throws Exception {
+				for (AbstractPlugin ap : PluginContainer.this.plugins)
+					try {
+						if (ap instanceof CleanUp)
+							((CleanUp) ap).cleanUp();
+					} catch (Throwable t) {
+						log.error("Error on cleanUp " + ap, t);
+					}
+
+				for (DetachedTab t : BasicWindow.getPluginContainer().getPane()
+						.getDetachedTabs())
+					try {
+						t.dispose();
+					} catch (Throwable e) {
+						log.error("Error on dispose " + t, e);
+					}
+				return null;
+			}
+		};
+
+		sw.execute();
 	}
 }

@@ -64,23 +64,12 @@ public class ExitHandler implements ActionListener {
 			al.actionPerformed(e);
 		}
 
-//		ConsultaHistoricos.close();
-//		SaveGPXDialog.close();
-//		MemoryTileCache.resetGlobalSize();
-
 		for (Frame f : Frame.getFrames())
 			f.dispose();
-		LoginWindow.showLogin();
-		for (DetachedTab t : BasicWindow.getPluginContainer().getPane()
-				.getDetachedTabs())
-			t.dispose();
-
-		for (Frame f : JFrame.getFrames())
-			if (!((f instanceof LoginWindow) || (f.equals(BasicWindow
-					.getFrame())))) {
-				f.dispose();
-			}
 
 		BasicWindow.getFrame().setVisible(false);
+		LoginWindow.showLogin();
+		
+		BasicWindow.getPluginContainer().cleanUp();
 	}
 }

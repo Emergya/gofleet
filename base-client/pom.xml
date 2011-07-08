@@ -243,96 +243,16 @@
 			<url>http://snapshots.repository.codehaus.org/</url>
 		</pluginRepository>
 	</pluginRepositories>
-	<dependencies><!--
+	<dependencies>
 		<dependency>
-			<groupId>org.gofleet.module</groupId>
-			<artifactId>routing</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
+			<groupId>${project.parent.groupId}.module</groupId>
+			<artifactId>modules</artifactId>
+			<version>0.0.2</version>
 		</dependency>
-
-		--><!-- Librerias de mapas (JOSM) -->
-		<!-- parent and children -->
 		<dependency>
 			<groupId>${project.parent.groupId}</groupId>
 			<artifactId>core</artifactId>
 			<version>0.0.1</version>
-		</dependency>
-		<dependency>
-			<groupId>org.openstreetmap</groupId>
-			<artifactId>josm</artifactId>
-			<version>1669</version>
-		</dependency>
-		<dependency>
-			<groupId>org.josm</groupId>
-			<artifactId>wms-plugin</artifactId>
-			<version>15961</version>
-		</dependency>
-		<!-- Cliente servicio web (axis2) -->
-		<dependency>
-			<groupId>org.apache.axis2</groupId>
-			<artifactId>axis2-kernel</artifactId>
-			<version>1.4.1</version>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.axis2</groupId>
-			<artifactId>axis2-adb</artifactId>
-			<version>1.4.1</version>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.ws.security</groupId>
-			<artifactId>wss4j</artifactId>
-			<version>1.5.4</version>
-		</dependency>
-		<!-- Pruebas (junit) -->
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>3.8.1</version>
-			<scope>test</scope>
-		</dependency>
-		<!-- Spring -->
-		<dependency>
-			<groupId>org.appfuse</groupId>
-			<artifactId>appfuse-service</artifactId>
-			<version>${appfuse.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-log4j12</artifactId>
-			<version>1.5.2</version>
-		</dependency>
-		<!-- GeoTools -->
-		<dependency>
-			<groupId>org.geotools</groupId>
-			<artifactId>gt2-main</artifactId>
-			<version>2.5-M1</version>
-		</dependency>
-		<dependency>
-			<groupId>org.geotools</groupId>
-			<artifactId>gt2-epsg-hsql</artifactId>
-			<version>2.5-M1</version>
-		</dependency>
-		<!-- SwingX -->
-		<dependency>
-			<groupId>org.swinglabs</groupId>
-			<artifactId>swingx</artifactId>
-			<version>1.6</version>
-		</dependency>
-		<!-- WMS -->
-		<dependency>
-			<groupId>gvsig.org</groupId>
-			<artifactId>libRemoteServices</artifactId>
-			<version>1.9</version>
-		</dependency>
-		<dependency>
-			<groupId>xmlpull</groupId>
-			<artifactId>xmlpull</artifactId>
-			<version>1.1.3.4d_b4_min</version>
-		</dependency>
-		<dependency>
-			<groupId>gvsig.legacy</groupId>
-			<artifactId>kxml2</artifactId>
-			<version>gvsig</version>
 		</dependency>
 	</dependencies>
 	<reporting>

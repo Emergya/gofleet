@@ -1,7 +1,6 @@
 /*
- * Copyright (C) 2010, Emergya (http://www.emergya.es)
+ * Copyright (C) 2011, Emergya (http://www.emergya.es)
  *
- * @author <a href="mailto:jlrodriguez@emergya.es">Juan Luís Rodríguez</a>
  * @author <a href="mailto:marias@emergya.es">María Arias</a>
  *
  * This file is part of GoFleet
@@ -26,43 +25,16 @@
  * This exception does not however invalidate any other reasons why the
  * executable file might be covered by the GNU General Public License.
  */
-/*
- * 06/07/2009
- */
-package es.emergya.ui.gis.layers;
-
-import java.io.File;
-
-import org.openstreetmap.josm.data.gpx.GpxData;
-import org.openstreetmap.josm.gui.MapView;
-import org.openstreetmap.josm.gui.layer.GpxLayer;
-import org.openstreetmap.josm.gui.layer.markerlayer.MarkerLayer;
+package es.emergya.ui.base.plugins;
 
 /**
- * Modification over MarkerLayer to be independent of a MapFrame
  * 
- * A layer holding markers.
+ * If your plugin have to do a clean up every time the user logs out, implement
+ * this interface.
  * 
- * Markers are GPS points with a name and, optionally, a symbol code attached;
- * marker layers can be created from waypoints when importing raw GPS data, but
- * they may also come from other sources.
+ * @author marias
  * 
- * The symbol code is for future use.
- * 
- * The data is read only.
  */
-public class CustomMarkerLayer extends MarkerLayer {
-
-	/**
-	 * @param indata
-	 * @param name
-	 * @param associatedFile
-	 * @param fromLayer
-	 * @param mapView
-	 */
-	public CustomMarkerLayer(GpxData indata, String name, File associatedFile,
-			GpxLayer fromLayer, MapView mapView) {
-		super(indata, name, associatedFile, fromLayer, mapView);
-	}
-
+public interface CleanUp {
+	public void cleanUp();
 }
