@@ -115,6 +115,20 @@ public class PluginContainer extends AbstractPluggable {
 			if (plugin instanceof Option)
 				((Option) plugin).reboot();
 		}
+
+		for (PluginType type : options.keySet()) {
+			boolean exist = false;
+			for (AbstractPluggable ap : tabs) {
+				if (ap.getType().equals(type)) {
+					exist = true;
+				}
+			}
+			if (!exist) {
+				tabs.add(new Tab(Internacionalization.getString(type.type),
+						type, tabs.size()));
+			}
+		}
+
 		Collections.sort(tabs);
 		for (AbstractPluggable tab : tabs) {
 			if (options.containsKey(tab.getType())) {

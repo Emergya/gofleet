@@ -13,7 +13,7 @@
 	<groupId>org.gofleet</groupId>
 	<artifactId>client</artifactId>
 	<name>client</name>
-	<version>0.0.1</version>
+	<version>0.0.2-SNAPSHOT</version>
 	<description>${projectname} Client</description>
 	<distributionManagement>
 		<snapshotRepository>
@@ -247,12 +247,21 @@
 		<dependency>
 			<groupId>${project.parent.groupId}.module</groupId>
 			<artifactId>modules</artifactId>
-			<version>0.0.2</version>
+			<version>0.0.2-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>${project.parent.groupId}</groupId>
 			<artifactId>core</artifactId>
-			<version>0.0.1</version>
+			<version>0.0.2-SNAPSHOT</version>
+		</dependency>
+		
+		<!-- plugins -->
+		
+		
+		<dependency>
+			<groupId>org.gofleet.module</groupId>
+			<artifactId>dummy</artifactId>
+			<version>0.0.2-SNAPSHOT</version>
 		</dependency>
 	</dependencies>
 	<reporting>

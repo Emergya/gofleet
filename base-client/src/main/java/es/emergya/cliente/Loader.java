@@ -20,11 +20,14 @@ import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
 
 import org.apache.commons.logging.LogFactory;
+import org.gofleet.scheduler.Job;
 import org.springframework.transaction.TransactionException;
 
 import es.emergya.i18n.Internacionalization;
+import es.emergya.scheduler.CustomScheduler;
 import es.emergya.tools.ExtensionClassLoader;
 import es.emergya.ui.base.BasicWindow;
 import es.emergya.ui.base.LoginWindow;
@@ -46,21 +49,19 @@ public abstract class Loader {
 	 */
 	public static void main(String[] args) {
 		try {
-			Thread
-					.setDefaultUncaughtExceptionHandler(new UncaughtExceptionHandler() {
+			Thread.setDefaultUncaughtExceptionHandler(new UncaughtExceptionHandler() {
 
-						@Override
-						public void uncaughtException(Thread t, Throwable e) {
-							if (LOG.isTraceEnabled()) {
-								LOG.trace("Excepcion descontrolada en "
-										+ t.toString(), e);
-							} else {
-								LOG.error("Excepcion descontrolada en "
-										+ t.toString() + " :: " + e.toString(),
-										e);
-							}
-						}
-					});
+				@Override
+				public void uncaughtException(Thread t, Throwable e) {
+					if (LOG.isTraceEnabled()) {
+						LOG.trace("Excepcion descontrolada en " + t.toString(),
+								e);
+					} else {
+						LOG.error("Excepcion descontrolada en " + t.toString()
+								+ " :: " + e.toString(), e);
+					}
+				}
+			});
 		} catch (Throwable t) {
 			LOG.error(t, t);
 			showError(t);
@@ -79,9 +80,52 @@ public abstract class Loader {
 	}
 
 	protected void loadJobs() {
+		try {
+			ExtensionClassLoader ecl = new ExtensionClassLoader();
+			List<File> jobs = ecl.getJobs();
+
+			CustomScheduler scheduler = new CustomScheduler();
+
+			for (File job : jobs) {
+				Properties p = new Properties();
+				try {
+					p.load(new FileReader(job));
+					String _class = p.get("CLASS").toString();
+
+					Job plugin = (Job) Class.forName(_class).newInstance();
+					scheduler.addJob((int) plugin.getFrequency(),
+							plugin.getName(), plugin.getClass(),
+							plugin.getParameters(), plugin.getListenerList());
+				} catch (Throwable e) {
+					LOG.error(
+							"Error trying to load job " + job.getAbsolutePath(),
+							e);
+				}
+			}
+			scheduler.start();
+		} catch (Throwable t) {
+			LOG.error("Error trying to load jobs", t);
+			showError(t);
+		}
 	}
 
+	// TODO
 	protected void configureUI() {
+		try {
+			ExtensionClassLoader ecl = new ExtensionClassLoader();
+			List<File> ui_modules = ecl.getUIModules();
+
+			for (File ui : ui_modules) {
+				Properties p = new Properties();
+				p.load(new FileReader(ui));
+				for (Object key : p.keySet()) {
+					UIManager.put(key, p.get(key));
+				}
+			}
+		} catch (Throwable t) {
+			LOG.error("Error trying to load custom ui", t);
+			showError(t);
+		}
 	}
 
 	protected void loadModules() {
@@ -92,14 +136,15 @@ public abstract class Loader {
 				Properties p = new Properties();
 				try {
 					p.load(new FileReader(module));
-					String _class = p.get("MAIN").toString();
+					String _class = p.get("CLASS").toString();
 
 					AbstractPlugin plugin = (AbstractPlugin) Class.forName(
 							_class).newInstance();
 					container.addPlugin(plugin);
 				} catch (Throwable e) {
-					LOG.error("Error trying to load module "
-							+ module.getAbsolutePath(), e);
+					LOG.error(
+							"Error trying to load module "
+									+ module.getAbsolutePath(), e);
 				}
 			}
 		} catch (Throwable t) {
@@ -123,11 +168,10 @@ public abstract class Loader {
 				_this.configureUI();
 				_this.createAndShowGUI();
 				_this.loadModules();
+				_this.loadJobs();
 
 				BasicWindow.setPluginContainer(container);
 				LoginWindow.showLogin();
-
-				_this.loadJobs();
 			} catch (Throwable t) {
 				LOG.error("Fallo al inicializar la aplicacion", t);
 				showError(t);
@@ -149,9 +193,10 @@ public abstract class Loader {
 
 			if (JOptionPane.showOptionDialog(null, "<html><p>"
 					+ Internacionalization.getString("Main.Error") + ":</p><p>"
-					+ errorCause + "</p><html>", Internacionalization
-					.getString("Main.Error"), JOptionPane.YES_NO_OPTION,
-					JOptionPane.ERROR_MESSAGE, null, options, options[1]) == 0) {
+					+ errorCause + "</p><html>",
+					Internacionalization.getString("Main.Error"),
+					JOptionPane.YES_NO_OPTION, JOptionPane.ERROR_MESSAGE, null,
+					options, options[1]) == 0) {
 				final JFrame error = new JFrame();
 				error.setAlwaysOnTop(true);
 				error.setBackground(Color.WHITE);

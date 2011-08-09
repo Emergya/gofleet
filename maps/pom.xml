@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.gofleet.module</groupId>
 	<artifactId>maps</artifactId>
-	<version>0.0.2</version>
+	<version>0.0.2-SNAPSHOT</version>
 	<name>maps</name>
 	<description>Fleet Control Map and History Map</description>
 	<packaging>jar</packaging>
@@ -50,12 +50,12 @@
 		<dependency>
 			<groupId>org.gofleet.module</groupId>
 			<artifactId>map_core</artifactId>
-			<version>${project.version}</version>
+			<version>0.0.2-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>org.gofleet</groupId>
 			<artifactId>i18n</artifactId>
-			<version>${project.version}</version>
+			<version>0.0.2-SNAPSHOT</version>
 		</dependency>
 	</dependencies>
 

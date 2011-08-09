@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.gofleet.module</groupId>
 	<artifactId>routing</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.0.2-SNAPSHOT</version>
 	<name>routing</name>
 	<description>This is a dummy example of a gofleet module.</description>
 
@@ -46,20 +46,20 @@
 	</build>
 	<dependencies>
 		<dependency>
-			<groupId>es.emergya</groupId>
+			<groupId>org.gofleet</groupId>
 			<artifactId>client</artifactId>
-			<version>1.0.0.1</version>
+			<version>0.0.2-SNAPSHOT</version>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.gofleet.module</groupId>
 			<artifactId>map_core</artifactId>
-			<version>0.0.2</version>
+			<version>0.0.2-SNAPSHOT</version>
 		</dependency>
 		<dependency>
-			<groupId>es.emergya</groupId>
+			<groupId>org.gofleet</groupId>
 			<artifactId>core</artifactId>
-			<version>1.0.0.1</version>
+			<version>0.0.2-SNAPSHOT</version>
 			<scope>compile</scope>
 		</dependency>
 

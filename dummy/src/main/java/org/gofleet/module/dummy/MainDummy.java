@@ -31,20 +31,14 @@ import java.awt.BorderLayout;
 
 import javax.swing.JLabel;
 
-import org.apache.commons.lang.StringUtils;
-
 import es.emergya.ui.base.plugins.AbstractPlugin;
-import es.emergya.ui.base.plugins.PluginType;
 
 public class MainDummy extends AbstractPlugin {
 
 	private static final long serialVersionUID = -7521585635230543732L;
 
 	public MainDummy() {
-		this.title = StringUtils.rightPad("Dummy Module", 25);
-		this.type = PluginType.FORMS;
-		this.order = 0;
-		this.tip = title;
+		loadProperties("dummy.module");
 
 		BorderLayout b = new BorderLayout();
 		b.setVgap(10);

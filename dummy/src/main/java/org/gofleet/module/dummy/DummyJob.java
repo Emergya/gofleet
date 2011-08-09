@@ -1,5 +1,13 @@
 package org.gofleet.module.dummy;
 
+/**
+ * Test job. 
+ * 
+ * Just prints every five seconds a "Test Job" message in console.
+ *  
+ * @author marias
+ *
+ */
 public class DummyJob extends org.gofleet.scheduler.Job {
 
 	public String getName() {
@@ -11,7 +19,7 @@ public class DummyJob extends org.gofleet.scheduler.Job {
 	}
 
 	public Integer getFrequency() {
-		return new Integer(30 * 1000);
+		return new Integer(5 * 1000);
 	}
 
 	public void run(){

@@ -31,14 +31,10 @@ package es.emergya.cliente.scheduler.jobs;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.swing.Icon;
 import javax.swing.SwingWorker;
 
 import org.apache.commons.logging.LogFactory;
 import org.gofleet.scheduler.Job;
-import org.quartz.JobExecutionContext;
-import org.quartz.JobExecutionException;
-import org.quartz.JobListener;
 import org.quartz.Scheduler;
 
 import edu.emory.mathcs.backport.java.util.Collections;
@@ -68,26 +64,6 @@ public class UpdateAdminJob extends Job {
 
 	public synchronized static void register(PluginListener o) {
 		updatables.add(o);
-	}
-
-	@Override
-	public String getTitle() {
-		return "";
-	}
-
-	@Override
-	public Icon getIcon() {
-		return null;
-	}
-
-	@Override
-	public boolean isEnabled() {
-		return true;
-	}
-
-	@Override
-	public List<String> getDependencies() {
-		return new ArrayList<String>(0);
 	}
 
 	@Override
@@ -137,10 +113,5 @@ public class UpdateAdminJob extends Job {
 					"Error al ejecutar la actualización de adminjob "
 							+ e.toString(), e);
 		}
-	}
-
-	@Override
-	public List<JobListener> getListenerList() {
-		return new ArrayList<JobListener>(0);
 	}
 }

@@ -50,28 +50,16 @@ import javax.swing.Icon;
 import javax.swing.ImageIcon;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.geotools.geometry.jts.JTS;
-import org.geotools.referencing.CRS;
-import org.opengis.referencing.crs.CoordinateReferenceSystem;
-import org.opengis.referencing.operation.MathTransform;
-
-import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.geom.Point;
 
 import es.emergya.tools.ExtensionClassLoader;
 
 /**
  * Contains the constants for the logic layer
- *
+ * 
  * @author aromero
  */
-public class LogicConstants {
+public class LogicConstantsUI extends LogicConstants {
 
-	private static Properties p;
-	private static final Log LOG = LogFactory.getLog(LogicConstants.class);
-	private static final String constantsProperties = "/conf/constants.properties";
 	private static final HashMap<String, Icon> iconCache = new HashMap<String, Icon>();
 	// Style
 	public static final Font boldFont;
@@ -85,37 +73,36 @@ public class LogicConstants {
 
 	static {
 		getIcon("image_missing");
-		LogicConstants.p = new Properties();
+		LogicConstantsUI.p = new Properties();
 
 		try {
 			ExtensionClassLoader ecl = new ExtensionClassLoader();
 			InputStream is = ecl
-					.getResourceAsStream(LogicConstants.constantsProperties);
+					.getResourceAsStream(LogicConstantsUI.constantsProperties);
 			if (is == null) {
-				is = LogicConstants.class
-						.getResourceAsStream(LogicConstants.constantsProperties);
+				is = LogicConstantsUI.class
+						.getResourceAsStream(LogicConstantsUI.constantsProperties);
 			}
-			LogicConstants.p.load(is);
+			LogicConstantsUI.p.load(is);
 		} catch (FileNotFoundException fnf) {
-			LogicConstants.LOG
-					.error(
-							"Fichero de configuarcion conf/contants.properties no encontrado",
+			LogicConstantsUI.LOG
+					.error("Fichero de configuarcion conf/contants.properties no encontrado",
 							fnf);
 		} catch (IOException e) {
-			LogicConstants.LOG.error(e);
+			LogicConstantsUI.LOG.error(e);
 		} catch (Exception e) {
-			LogicConstants.LOG.error(
+			LogicConstantsUI.LOG.error(
 					"NO se pudo cargar el fichero de propiedades", e);
 		}
 
 		for (int i = 1; i < 11; i++) {
-			final String color_ = LogicConstants.get("GPS_HISTORY" + i);
+			final String color_ = LogicConstantsUI.get("GPS_HISTORY" + i);
 			if (color_ != null)
 				colores.add(color_);
 		}
-		boldFont = LogicConstants.getFont(null, LogicConstants.get("BOLD_FONT",
-				"/fuentes/LiberationSerif-Bold.ttf"));
-		lightFont = LogicConstants.getFont(null, LogicConstants.get(
+		boldFont = LogicConstantsUI.getFont(null, LogicConstantsUI.get(
+				"BOLD_FONT", "/fuentes/LiberationSerif-Bold.ttf"));
+		lightFont = LogicConstantsUI.getFont(null, LogicConstantsUI.get(
 				"DEFAULT_FONT", "/fuentes/LiberationSerif-Regular.ttf"));
 	}
 
@@ -136,10 +123,10 @@ public class LogicConstants {
 	private static Font getFont(Integer type, String font) {
 		Font f;
 		try {
-			f = Font.createFont(Font.TRUETYPE_FONT, LogicConstants.class
-					.getResourceAsStream(font));
+			f = Font.createFont(Font.TRUETYPE_FONT,
+					LogicConstantsUI.class.getResourceAsStream(font));
 		} catch (Exception e) {
-			LogicConstants.LOG.error("No se pudo cargar el font bold", e);
+			LogicConstantsUI.LOG.error("No se pudo cargar el font bold", e);
 			GraphicsEnvironment ge = GraphicsEnvironment
 					.getLocalGraphicsEnvironment();
 			String[] fontNames = ge.getAvailableFontFamilyNames();
@@ -172,10 +159,10 @@ public class LogicConstants {
 	public static final String FIELD_SEPARATOR = "|";
 	public static final String FIELD_SEPARATOR_FORMS = "&";
 	public static final String VALUE_SEPARATOR_FORMS = "@";
-	public static final String DIRECTORIO_ICONOS_FLOTAS = LogicConstants
+	public static final String DIRECTORIO_ICONOS_FLOTAS = LogicConstantsUI
 			.get("DIRECTORIO_ICONOS_FLOTAS");
 	// WEB SERVICE
-	public static final String URL_WEBSERVICE = LogicConstants
+	public static final String URL_WEBSERVICE = LogicConstantsUI
 			.get("URL_WEBSERVICE");
 	/** Axis2 repository location. */
 	public static final String AXIS2_REPOSITORY = get("AXIS2_REPOSITORY");
@@ -185,11 +172,11 @@ public class LogicConstants {
 	 * Número de minutos que tienen que pasar desde la última recepción de su
 	 * posición para que desaparezca del AVL.
 	 */
-	public static final int AVL_TIMEOUT = LogicConstants.getInt("AVL_TIMEOUT",
-			15);
+	public static final int AVL_TIMEOUT = LogicConstantsUI.getInt(
+			"AVL_TIMEOUT", 15);
 	public static final String ZONA_HORARIA = get("ZONA_HORARIA",
 			"Europe/Madrid");
-	public static int TIMEOUT = LogicConstants.getInt("WS_TIMEOUT", 30);
+	public static int TIMEOUT = LogicConstantsUI.getInt("WS_TIMEOUT", 30);
 	public static String PLANTILLA_LLAMADA_TETRA = get("PLANTILLA_LLAMADA_TETRA");
 	public static String TIPO_LLAMADA_TETRA = get("TIPO_LLAMADA_TETRA");
 	public static int PUERTO_LLAMADA_TETRA = getInt("PUERTO_LLAMADA_TETRA",
@@ -201,15 +188,15 @@ public class LogicConstants {
 			"MAX_STREET_AUTOCOMPLETE_RESULTS", 10);
 
 	public static String get(String string) {
-		return LogicConstants.p.getProperty(string);
+		return LogicConstantsUI.p.getProperty(string);
 	}
 
 	public static String get(String string, String defaultValue) {
-		return LogicConstants.p.getProperty(string, defaultValue);
+		return LogicConstantsUI.p.getProperty(string, defaultValue);
 	}
 
 	public static int getInt(String string) {
-		String s = LogicConstants.p.getProperty(string);
+		String s = LogicConstantsUI.p.getProperty(string);
 		return Integer.valueOf(s);
 	}
 
@@ -218,7 +205,7 @@ public class LogicConstants {
 		Integer i = f.intValue();
 		Font font = fonts_bold.get(i);
 		if (font == null) {
-			font = LogicConstants.boldFont.deriveFont(f);
+			font = LogicConstantsUI.boldFont.deriveFont(f);
 			fonts_bold.put(i, font);
 		}
 		return font;
@@ -228,7 +215,7 @@ public class LogicConstants {
 		Integer i = f.intValue();
 		Font font = fonts_light.get(i);
 		if (font == null) {
-			font = LogicConstants.lightFont.deriveFont(f);
+			font = LogicConstantsUI.lightFont.deriveFont(f);
 			fonts_light.put(i, font);
 		}
 		return font;
@@ -243,19 +230,19 @@ public class LogicConstants {
 	}
 
 	public static String getTileUri() {
-		return LogicConstants.get("TILE_URI");
+		return LogicConstantsUI.get("TILE_URI");
 	}
 
 	public static String getWMSUrl() {
-		return LogicConstants.get("WMS_URL");
+		return LogicConstantsUI.get("WMS_URL");
 	}
 
 	public static int getMaxTileZoom() {
-		return LogicConstants.getInt("MAX_TILE_ZOOM");
+		return LogicConstantsUI.getInt("MAX_TILE_ZOOM");
 	}
 
 	public static int getMinTileZoom() {
-		return LogicConstants.getInt("MIN_TILE_ZOOM");
+		return LogicConstantsUI.getInt("MIN_TILE_ZOOM");
 	}
 
 	/**
@@ -273,7 +260,7 @@ public class LogicConstants {
 			return iconCache.get(name);
 		}
 		String fullname = "/images/" + name + ".png";
-		URL url = LogicConstants.class.getResource(fullname);
+		URL url = LogicConstantsUI.class.getResource(fullname);
 		try {
 			if (url != null) {
 				Icon i = new ImageIcon(url);
@@ -283,7 +270,7 @@ public class LogicConstants {
 				LOG.trace("No se pudo encontrar el archivo " + fullname
 						+ ". Intentanamos buscar el .gif");
 				fullname = "/images/" + name + ".gif";
-				url = LogicConstants.class.getResource(fullname);
+				url = LogicConstantsUI.class.getResource(fullname);
 				if (url != null) {
 					Icon i = new ImageIcon(url);
 					iconCache.put(name, i);
@@ -304,53 +291,22 @@ public class LogicConstants {
 	}
 
 	public static int getInt(String string, int defaultValue) {
-		String s = LogicConstants.p.getProperty(string, Integer
-				.toString(defaultValue));
+		String s = LogicConstantsUI.p.getProperty(string,
+				Integer.toString(defaultValue));
 		return Integer.valueOf(s);
 	}
 
 	public static double getDouble(String string, double defaultValue) {
-		String s = LogicConstants.p.getProperty(string, Double
-				.toString(defaultValue));
+		String s = LogicConstantsUI.p.getProperty(string,
+				Double.toString(defaultValue));
 		return Double.valueOf(s);
-	}
-
-	/**
-	 * Transforma un punto de un SRID a otro
-	 * 
-	 * @param geom
-	 *            punto a transformar
-	 * @param sourceSRID
-	 *            "EPSG:XXXX"
-	 * @param targetSRID
-	 *            "EPSG:XXXX"
-	 * @return null si no pudo transformarlo o el punto transformado
-	 */
-	public static Point transform(Point geom, final String sourceSRID,
-			final String targetSRID) {
-		Point p = null;
-		try {
-			CoordinateReferenceSystem sourceCRS = CRS.decode(sourceSRID);
-			CoordinateReferenceSystem targetCRS = CRS.decode(targetSRID);
-			MathTransform transform = CRS.findMathTransform(sourceCRS,
-					targetCRS);
-			com.vividsolutions.jts.geom.Geometry targetGeometry = JTS
-					.transform((Geometry) geom, transform);
-			p = targetGeometry.getCentroid();
-			if (targetSRID.indexOf(":") > 0)
-				p.setSRID(new Integer(targetSRID.substring(targetSRID
-						.indexOf(":") + 1)));
-		} catch (Throwable t) {
-			LOG.error("Error al transformar la proyeccion", t);
-		}
-		return p;
 	}
 
 	public static String[] getPriorities(boolean b) {
 		LinkedList<String> res = new LinkedList<String>();
 		if (b)
 			res.add("");
-		for (Integer i = LogicConstants.getInt("LOWEST_PRIORITY", 0); i < LogicConstants
+		for (Integer i = LogicConstantsUI.getInt("LOWEST_PRIORITY", 0); i < LogicConstantsUI
 				.getInt("HIGHEST_PRIORITY", 9); i++)
 			res.add(i.toString());
 		return res.toArray(new String[0]);

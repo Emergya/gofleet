@@ -62,7 +62,7 @@ import org.apache.commons.logging.LogFactory;
 
 import es.emergya.actions.Authentication;
 import es.emergya.bbdd.bean.Usuario;
-import es.emergya.cliente.constants.LogicConstants;
+import es.emergya.cliente.constants.LogicConstantsUI;
 import es.emergya.consultas.UsuarioConsultas;
 import es.emergya.i18n.Internacionalization;
 import es.emergya.webservices.ServiceStub;
@@ -85,7 +85,7 @@ public class LoginWindow extends JFrame {
 	private static final Log LOG = LogFactory.getLog(LoginWindow.class);
 	private static LoginWindow ventana;
 	private static JButton login = new JButton(
-			LogicConstants.getIcon("login_button_entrar"));
+			LogicConstantsUI.getIcon("login_button_entrar"));
 	private final static JLabel error;
 	private static final JTextField usuario;
 	private static final JPasswordField pass;
@@ -93,7 +93,7 @@ public class LoginWindow extends JFrame {
 	private static final JLabel conectando;
 
 	static {
-		conectando = new JLabel(LogicConstants.getIcon("transparent"));
+		conectando = new JLabel(LogicConstantsUI.getIcon("transparent"));
 
 		version = new JLabel(
 				Internacionalization.getString("LoginWindow.version"));
@@ -156,7 +156,7 @@ public class LoginWindow extends JFrame {
 
 	private LoginWindow() {
 		LoginWindow.login = new JButton(
-				LogicConstants.getIcon("login_button_entrar"));
+				LogicConstantsUI.getIcon("login_button_entrar"));
 		LoginWindow.login.setText(Internacionalization
 				.getString("LoginWindow.ok")); //$NON-NLS-1$
 		LoginWindow.login.setName("login"); //$NON-NLS-1$
@@ -180,7 +180,7 @@ public class LoginWindow extends JFrame {
 
 				LoginWindow.login.setEnabled(false);
 				LoginWindow.login.updateUI();
-				conectando.setIcon(LogicConstants.getIcon("anim_conectando"));
+				conectando.setIcon(LogicConstantsUI.getIcon("anim_conectando"));
 				error.setForeground(Color.WHITE);
 				pass.setEnabled(false);
 				usuario.setEnabled(false);
@@ -256,7 +256,7 @@ public class LoginWindow extends JFrame {
 							Logger.getLogger(LoginWindow.class.getName()).log(
 									Level.SEVERE, null, ex);
 						} finally {
-							conectando.setIcon(LogicConstants
+							conectando.setIcon(LogicConstantsUI
 									.getIcon("48x48_transparente"));
 							pass.setEnabled(true);
 							usuario.setEnabled(true);
@@ -281,8 +281,8 @@ public class LoginWindow extends JFrame {
 		panel.setBackground(Color.WHITE);
 
 		JPanel logos = new JPanel(new GridLayout(2, 1));
-		logos.add(new JLabel(LogicConstants.getIcon("login_logo_cliente")));
-		logos.add(new JLabel(LogicConstants.getIcon("login_logo")));
+		logos.add(new JLabel(LogicConstantsUI.getIcon("login_logo_cliente")));
+		logos.add(new JLabel(LogicConstantsUI.getIcon("login_logo")));
 		logos.setBackground(Color.WHITE);
 
 		JLabel label = new JLabel();
@@ -338,11 +338,11 @@ public class LoginWindow extends JFrame {
 		LoginWindow.ventana.add(abajo, BorderLayout.SOUTH);
 
 		try {
-			label.setFont(LogicConstants.deriveBoldFont(20.0f));
-			labelUsuario.setFont(LogicConstants.deriveBoldFont(20.0f));
-			lablep.setFont(LogicConstants.deriveBoldFont(20.0f));
-			LoginWindow.login.setFont(LogicConstants.deriveBoldFont(20.0f));
-			LoginWindow.error.setFont(LogicConstants.getBoldFont());
+			label.setFont(LogicConstantsUI.deriveBoldFont(20.0f));
+			labelUsuario.setFont(LogicConstantsUI.deriveBoldFont(20.0f));
+			lablep.setFont(LogicConstantsUI.deriveBoldFont(20.0f));
+			LoginWindow.login.setFont(LogicConstantsUI.deriveBoldFont(20.0f));
+			LoginWindow.error.setFont(LogicConstantsUI.getBoldFont());
 		} catch (Exception e) {
 			LOG.error("Error al inicializar el login", e);
 		}

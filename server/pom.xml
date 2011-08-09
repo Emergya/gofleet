@@ -12,7 +12,7 @@
 	<groupId>org.gofleet</groupId>
 	<artifactId>server</artifactId>
 	<packaging>jar</packaging>
-	<version>0.0.1</version>
+	<version>0.0.2-SNAPSHOT</version>
 	<name>server</name>
 	<distributionManagement>
 		<snapshotRepository>
@@ -320,7 +320,7 @@
 		<dependency>
 			<groupId>${project.parent.groupId}</groupId>
 			<artifactId>core</artifactId>
-			<version>0.0.1</version>
+			<version>0.0.2-SNAPSHOT</version>
 		</dependency>
 		<!-- Spring -->
 		<dependency>

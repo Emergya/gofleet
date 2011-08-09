@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.gofleet.module</groupId>
 	<artifactId>map_core</artifactId>
-	<version>0.0.2</version>
+	<version>0.0.2-SNAPSHOT</version>
 	<name>map_core</name>
 	<packaging>jar</packaging>
 	<description>Core Tools for Maps</description>
@@ -50,17 +50,17 @@
 		<dependency>
 			<groupId>org.gofleet</groupId>
 			<artifactId>core</artifactId>
-			<version>${project.version}</version>
+			<version>0.0.2-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>org.gofleet.module</groupId>
 			<artifactId>modules</artifactId>
-			<version>${project.version}</version>
+			<version>0.0.2-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>org.gofleet</groupId>
 			<artifactId>ws-client</artifactId>
-			<version>${project.version}</version>
+			<version>0.0.2-SNAPSHOT</version>
 		</dependency>
 		
 		

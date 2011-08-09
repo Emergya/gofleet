@@ -28,10 +28,10 @@
  */
 package es.emergya.cliente;
 
-import static es.emergya.cliente.constants.LogicConstants.deriveBoldFont;
-import static es.emergya.cliente.constants.LogicConstants.deriveLightFont;
-import static es.emergya.cliente.constants.LogicConstants.getInt;
-import static es.emergya.cliente.constants.LogicConstants.getLightFont;
+import static es.emergya.cliente.constants.LogicConstantsUI.deriveBoldFont;
+import static es.emergya.cliente.constants.LogicConstantsUI.deriveLightFont;
+import static es.emergya.cliente.constants.LogicConstantsUI.getInt;
+import static es.emergya.cliente.constants.LogicConstantsUI.getLightFont;
 
 import java.awt.Color;
 import java.util.Enumeration;
@@ -39,19 +39,6 @@ import java.util.Enumeration;
 import javax.swing.UIManager;
 
 import org.apache.commons.logging.LogFactory;
-import org.quartz.SchedulerException;
-
-import es.emergya.cliente.scheduler.jobs.UpdateAdminJob;
-import es.emergya.cliente.scheduler.jobs.UpdateMapsJob;
-import es.emergya.i18n.Internacionalization;
-import es.emergya.scheduler.CustomScheduler;
-import es.emergya.ui.base.plugins.PluginContainer;
-import es.emergya.ui.base.plugins.PluginType;
-import es.emergya.ui.base.plugins.Tab;
-import es.emergya.ui.gis.FleetControlMapViewer;
-import es.emergya.ui.gis.HistoryMapViewer;
-import es.emergya.ui.plugins.forms.FormIncidencia;
-import es.emergya.ui.plugins.list.ListIncidences;
 
 /**
  * Main class.
@@ -79,20 +66,6 @@ public final class Mobile extends Loader {
 
 	@Override
 	protected void loadJobs() {
-		CustomScheduler scheduler;
-		try {
-			scheduler = new CustomScheduler();
-
-			scheduler.addJob(Mobile.UPDATE_MAPS_FREQUENCY, "updateMaps",
-					UpdateMapsJob.class);
-
-			scheduler.addJob(Mobile.UPDATE_LISTADOS_FREQUENCY,
-					"updateListados", UpdateAdminJob.class);
-			scheduler.start();
-		} catch (SchedulerException e) {
-			LOG.error(e, e);
-			showError(e);
-		}
 	}
 
 	/**
@@ -103,35 +76,6 @@ public final class Mobile extends Loader {
 	 */
 	@Override
 	protected void createAndShowGUI() {
-
-		container.setMode(PluginContainer.Modes.MOBILE);
-
-		// Mapas
-		FleetControlMapViewer fleetcontrol = new FleetControlMapViewer(
-				Internacionalization.getString("Main.FleetControl"),
-				PluginType.getType("GPS"), 1, "tab_icon_controlflota");
-		container.addPlugin(fleetcontrol);
-		container.addPlugin(new HistoryMapViewer(Internacionalization
-				.getString("Main.GPS"), PluginType.getType("GPS"), 2,
-				"tab_icon_historico"));
-
-		// Listados
-		final Tab listados = new Tab(Internacionalization
-				.getString("Main.Listados"), PluginType.getType("LIST"), 3,
-				"tab_icon_listados", Color.LIGHT_GRAY);
-		listados.setDetachable(true);
-		container.addPlugin(listados);
-		final ListIncidences listIncidences = new ListIncidences(1);
-		container.addPlugin(listIncidences);
-
-		// Formularios
-		final Tab formularios = new Tab(Internacionalization
-				.getString("Main.Formularios"), PluginType.getType("FORMS"), 3,
-				"tab_icon_formularios", Color.LIGHT_GRAY);
-		formularios.setDetachable(true);
-		container.addPlugin(formularios);
-		final FormIncidencia formulario = new FormIncidencia(1);
-		container.addPlugin(formulario);
 	}
 
 	@Override

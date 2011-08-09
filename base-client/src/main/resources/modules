@@ -1,3 +1,0 @@
-dummy=org.gofleet.module.dummy.MainDummy
-nexists=org.gofleet.module.dummy.NotExists
-dummyjob=org.gofleet.module.dummy.DummyJob

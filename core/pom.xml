@@ -14,7 +14,7 @@
 	<groupId>org.gofleet</groupId>
 	<artifactId>core</artifactId>
 	<name>core</name>
-	<version>0.0.1</version>
+	<version>0.0.2-SNAPSHOT</version>
 	<description>${projectname} Core</description>
 	<distributionManagement>
 		<snapshotRepository>

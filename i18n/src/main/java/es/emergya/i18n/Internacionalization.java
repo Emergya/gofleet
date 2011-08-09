@@ -34,26 +34,29 @@ import java.util.ResourceBundle;
 
 public class Internacionalization {
 
-    private static final String BUNDLE_NAME = "es.emergya.ui.i18n"; //$NON-NLS-1$
-    private static final ResourceBundle RESOURCE_BUNDLE = ResourceBundle.getBundle(Internacionalization.BUNDLE_NAME);
+	private static final String BUNDLE_NAME = "es.emergya.ui.i18n"; //$NON-NLS-1$
+	private static final ResourceBundle RESOURCE_BUNDLE = ResourceBundle
+			.getBundle(Internacionalization.BUNDLE_NAME);
 
-    private Internacionalization() {
-    }
+	private Internacionalization() {
+	}
 
-    public static String getString(String key) {
-        try {
-            return Internacionalization.RESOURCE_BUNDLE.getString(key);
-        } catch (MissingResourceException e) {
-            return '!' + key + '!';
-        }
-    }
+	public static String getString(String key) {
+		try {
+			return Internacionalization.RESOURCE_BUNDLE.getString(key);
+		} catch (MissingResourceException e) {
+			return '!' + key + '!';
+		}
+	}
 
-    public static String getString(String key, Object... params) {
-        try {
-            return MessageFormat.format(Internacionalization.RESOURCE_BUNDLE.getString(key), params);
-        } catch (Exception e) {
-            return '!' + key + '!';
+	public static String getString(String key, Object... params) {
+		try {
+			return MessageFormat
+					.format(Internacionalization.RESOURCE_BUNDLE.getString(key),
+							params);
+		} catch (Exception e) {
+			return '!' + key + '!';
 
-        }
-    }
+		}
+	}
 }

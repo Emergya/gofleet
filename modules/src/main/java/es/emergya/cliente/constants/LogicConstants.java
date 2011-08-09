@@ -62,9 +62,9 @@ import es.emergya.tools.ExtensionClassLoader;
  */
 public class LogicConstants {
 
-	private static Properties p;
-	private static final Log LOG = LogFactory.getLog(LogicConstants.class);
-	private static final String constantsProperties = "/conf/constants.properties";
+	protected static Properties p;
+	protected static final Log LOG = LogFactory.getLog(LogicConstants.class);
+	protected static final String constantsProperties = "/conf/constants.properties";
 	private static final HashMap<String, Icon> iconCache = new HashMap<String, Icon>();
 	// Style
 	public static final Font boldFont;

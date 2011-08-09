@@ -3,13 +3,13 @@
 	<parent>
 		<artifactId>gofleet</artifactId>
 		<groupId>org.gofleet</groupId>
-		<version>0.0.2</version>
+		<version>1.0-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>${project.parent.groupId}.module</groupId>
 	<artifactId>modules</artifactId>
-	<version>${project.parent.version}</version>
+	<version>0.0.2-SNAPSHOT</version>
 	<name>modules</name>
 	<description>Module Core Base System</description>
 	<packaging>jar</packaging>
@@ -56,17 +56,17 @@
 		<dependency>
 			<groupId>org.gofleet</groupId>
 			<artifactId>core</artifactId>
-			<version>${project.version}</version>
+			<version>0.0.2-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>org.gofleet</groupId>
 			<artifactId>i18n</artifactId>
-			<version>${project.version}</version>
+			<version>0.0.2-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>org.gofleet</groupId>
 			<artifactId>ws-client</artifactId>
-			<version>${project.version}</version>
+			<version>0.0.2-SNAPSHOT</version>
 			<scope>compile</scope>
 		</dependency>
 		<!-- SwingX -->

@@ -1,3 +1,5 @@
+CLASS=org.gofleet.module.dummy.MainDummy
 TITLE=Dummy Module
 TYPE=ADMIN
-MAIN=org.gofleet.module.dummy.MainDummy
+TIP=dummy
+ORDER=3

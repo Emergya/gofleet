@@ -44,18 +44,13 @@ import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 
 import org.apache.commons.logging.LogFactory;
-import org.openstreetmap.josm.Main;
-import org.openstreetmap.josm.data.coor.EastNorth;
-import org.openstreetmap.josm.data.coor.LatLon;
-import org.openstreetmap.josm.gui.MapView;
 
 import es.emergya.actions.Authentication;
 import es.emergya.bbdd.bean.Usuario;
-import es.emergya.cliente.constants.LogicConstants;
+import es.emergya.cliente.constants.LogicConstantsUI;
 import es.emergya.i18n.Internacionalization;
 import es.emergya.ui.base.plugins.AbstractPlugin;
 import es.emergya.ui.base.plugins.PluginContainer;
-import es.emergya.ui.gis.MapViewer;
 
 /**
  * Basic Window with exit button, update icon and company logo. It has also a
@@ -142,8 +137,11 @@ public class BasicWindow {
 		BasicWindow.getFrame().getContentPane().removeAll();
 
 		BasicWindow.getFrame().setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		BasicWindow.getFrame().setFont(
-				LogicConstants.deriveLightFont(BasicWindow.DEFAULT_FONT_SIZE));
+		BasicWindow
+				.getFrame()
+				.setFont(
+						LogicConstantsUI
+								.deriveLightFont(BasicWindow.DEFAULT_FONT_SIZE));
 
 		// Añadimos los plugins;
 		if (BasicWindow.getPluginContainer() == null
@@ -262,7 +260,7 @@ public class BasicWindow {
 
 	/**
 	 * @see Authentication#isAuthenticated()
-         * @deprecated use isAuthenticated()
+	 * @deprecated use isAuthenticated()
 	 * @return
 	 */
 	@Deprecated
@@ -270,31 +268,13 @@ public class BasicWindow {
 		return Authentication.isAuthenticated();
 	}
 
-        public static boolean isAuthenticated() {
-            return Authentication.isAuthenticated();
-        }
+	public static boolean isAuthenticated() {
+		return Authentication.isAuthenticated();
+	}
 
 	public static Image getIconImage() {
 		return ICON_IMAGE;
 	}
-
-	public static void showOnMap(EastNorth ea, int map) {
-		LOG.info("showOnMap(" + ea + ")");
-		for (AbstractPlugin ap : container.getPlugins()) {
-			if (ap instanceof MapViewer) {
-				if (ap.getOrder() == map) {
-					MapView mv = ((MapViewer) ap).getMapView();
-					mv.zoomTo(ea, mv.getScale());
-					break;
-				}
-			}
-		}
-	}
-
-	public static void showOnMap(LatLon ll, int map) {
-		showOnMap(Main.proj.latlon2eastNorth(ll), map);
-	}
-
 }
 
 class RemoveClientesConectadosListener extends WindowAdapter {

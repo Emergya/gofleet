@@ -227,9 +227,13 @@
 
 	<modules>
 		<module>core</module>
+		<module>i18n</module>
+		<module>ws-client</module>
+		<module>modules</module>
 		<module>base-client</module>
 		<module>server</module>
 		<module>webservices</module>
+		<module>map_core</module>
 	</modules>
 
 	<reporting>

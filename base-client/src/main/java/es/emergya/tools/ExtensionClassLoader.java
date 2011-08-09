@@ -191,6 +191,41 @@ public class ExtensionClassLoader extends ClassLoader {
 		
 		return res;
 	}
+	
+
+	public List<File> getJobs() {
+
+		ArrayList<File> res = new ArrayList<File>();
+		
+		String module_suffix = ".job";
+		String path_lib = System.getProperty("user.dir")
+				+ System.getProperty("file.separator") + "lib";
+		String path_target_lib = System.getProperty("user.dir")
+		+ System.getProperty("file.separator") + "target"
+		+ System.getProperty("file.separator") + "lib";
+		
+		findModulesInPath(res, module_suffix, path_lib);
+		findModulesInPath(res, module_suffix, path_target_lib);
+		
+		return res;
+	}
+
+	public List<File> getUIModules() {
+
+		ArrayList<File> res = new ArrayList<File>();
+		
+		String module_suffix = ".ui";
+		String path_lib = System.getProperty("user.dir")
+				+ System.getProperty("file.separator") + "lib";
+		String path_target_lib = System.getProperty("user.dir")
+		+ System.getProperty("file.separator") + "target"
+		+ System.getProperty("file.separator") + "lib";
+		
+		findModulesInPath(res, module_suffix, path_lib);
+		findModulesInPath(res, module_suffix, path_target_lib);
+		
+		return res;
+	}
 
 	private void findModulesInPath(ArrayList<File> res, String module_suffix,
 			final java.lang.String path) {

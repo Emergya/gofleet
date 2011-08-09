@@ -31,6 +31,7 @@ package es.emergya.ui.base.plugins;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.util.Collections;
+import java.util.Random;
 
 import javax.swing.JTabbedPane;
 import javax.swing.SwingConstants;
@@ -42,6 +43,7 @@ import es.emergya.cliente.constants.LogicConstants;
 public class Tab extends AbstractPluggable {
 	private static final long serialVersionUID = -6691454170753397497L;
 	private JTabbedPane tabs;
+	private static Random random = new Random();
 
 	/**
 	 * Le paso el título, tipo y orden para poder cambiarlos desde el Main, pero
@@ -78,7 +80,12 @@ public class Tab extends AbstractPluggable {
 	}
 
 	public Tab(String title, PluginType type, int order) {
-		this(title, type, order, "", Color.BLACK);
+		this(title, type, order, "", getRandomColor());
+	}
+
+	private static Color getRandomColor() {
+		return new Color(random.nextFloat(), random.nextFloat(),
+				random.nextFloat());
 	}
 
 	public Tab(String title, PluginType type, int order, Color color) {
@@ -86,7 +93,7 @@ public class Tab extends AbstractPluggable {
 	}
 
 	public Tab(String title, PluginType type, int order, String icon) {
-		this(title, type, order, icon, Color.BLACK);
+		this(title, type, order, icon, getRandomColor());
 	}
 
 	// Ordeno los plúgines ;) e incrusto los que estén habilitados.
@@ -101,8 +108,7 @@ public class Tab extends AbstractPluggable {
 		for (final AbstractPlugin plugin : this.plugins)
 			if (plugin.isEnabled()) {
 				int tabIndex = ((plugin.getOrder() > this.tabs.getTabCount()) ? this.tabs
-						.getTabCount()
-						: plugin.getOrder());
+						.getTabCount() : plugin.getOrder());
 				this.tabs.insertTab(plugin.getTitle(), plugin.getIcon(),
 						plugin, plugin.getTip(), tabIndex);
 

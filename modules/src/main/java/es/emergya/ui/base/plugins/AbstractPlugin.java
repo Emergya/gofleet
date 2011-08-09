@@ -30,14 +30,21 @@ package es.emergya.ui.base.plugins;
 
 import java.awt.Color;
 import java.awt.Component;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 
 import javax.swing.Icon;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 
+import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 import org.gofleet.module.IModule;
+
+import es.emergya.utils.ExtensionClassLoader;
+import es.emergya.utils.LogicConstants;
 
 @SuppressWarnings("serial")
 /*
@@ -51,12 +58,38 @@ public abstract class AbstractPlugin extends JPanel implements
 	protected String tip;
 	protected Color color = Color.WHITE;
 	protected JComponent tab;
-	protected int order = 0;
-	protected boolean enabled = true;
+	protected Integer order = 0;
+	protected Boolean enabled = true;
 	protected String id;
 
 	public String getId() {
 		return this.id;
+	}
+	
+
+	protected void loadProperties(String file) {
+		Properties p = new Properties();
+
+		try {
+			ExtensionClassLoader ecl = new ExtensionClassLoader();
+			InputStream is = ecl.getResourceAsStream(file);
+			if (is == null)
+				is = LogicConstants.class.getResourceAsStream(file);
+			p.load(is);
+
+			this.title = p.getProperty("TITLE");
+			this.type = PluginType.getType(p.getProperty("TYPE", "UNKNOWN"));
+			this.order = new Integer(p.getProperty("ORDER", "0"));
+			this.tip = p.getProperty("TIP", this.title);
+			
+		} catch (Throwable e) {
+			Logger.getLogger(this.getClass()).error(
+					"Couldn't load property file", e);
+			this.title = StringUtils.rightPad("Unknown Module", 25);
+			this.type = null;
+			this.order = new Integer(0);
+			this.tip = title;
+		}
 	}
 
 	public void setId(String id) {

@@ -47,7 +47,7 @@ import javax.swing.border.MatteBorder;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import es.emergya.cliente.constants.LogicConstants;
+import es.emergya.cliente.constants.LogicConstantsUI;
 
 public class Message {
 	private static final long serialVersionUID = -6691454170753397497L;
@@ -66,7 +66,7 @@ public class Message {
 
 		Message.fecha = Calendar.getInstance().getTime();
 
-		font = LogicConstants.deriveBoldFont(MESSAGE_FONT_SIZE);
+		font = LogicConstantsUI.deriveBoldFont(MESSAGE_FONT_SIZE);
 
 	}
 
