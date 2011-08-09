@@ -1,0 +1,5 @@
+CLASS=org.gofleet.module.dummy.DummyJob
+TITLE=Dummy Module
+TYPE=ADMIN
+TIP=dummy
+ORDER=3
