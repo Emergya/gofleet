@@ -1,0 +1,5 @@
+CLASS=org.gofleet.ReportToolTab
+TITLE=Report Wizard
+TYPE=ADMIN
+TIP=Reporting Tool
+ORDER=5
