@@ -30,7 +30,6 @@ package es.emergya.cliente;
 
 import static es.emergya.cliente.constants.LogicConstantsUI.deriveBoldFont;
 import static es.emergya.cliente.constants.LogicConstantsUI.deriveLightFont;
-import static es.emergya.cliente.constants.LogicConstantsUI.getInt;
 import static es.emergya.cliente.constants.LogicConstantsUI.getLightFont;
 
 import java.awt.Color;
@@ -38,7 +37,8 @@ import java.util.Enumeration;
 
 import javax.swing.UIManager;
 
-import org.apache.commons.logging.LogFactory;
+import es.emergya.ui.base.BasicWindow;
+import es.emergya.ui.base.plugins.PluginContainer;
 
 /**
  * Main class.
@@ -49,33 +49,13 @@ import org.apache.commons.logging.LogFactory;
  */
 public final class Mobile extends Loader {
 
-	private static final int UPDATE_MAPS_FREQUENCY = getInt(
-			"UPDATE_MAPS_FREQUENCY", 10) * 1000;
-	private static final int UPDATE_LISTADOS_FREQUENCY = getInt(
-			"UPDATE_LISTADOS_FREQUENCY", 10) * 1000;
-	private static final org.apache.commons.logging.Log LOG = LogFactory
-			.getLog(Mobile.class);
-
 	static {
 		_this = new Mobile();
 	}
 
 	/** Constructor is private to avoid creating objects. */
 	private Mobile() {
-	}
-
-	@Override
-	protected void loadJobs() {
-	}
-
-	/**
-	 * Create the GUI and show it. For thread safety, this method should be
-	 * invoked from the event dispatch thread.
-	 * 
-	 * 
-	 */
-	@Override
-	protected void createAndShowGUI() {
+		BasicWindow.getPluginContainer().setMode(PluginContainer.Modes.MOBILE);
 	}
 
 	@Override
@@ -94,5 +74,6 @@ public final class Mobile extends Loader {
 		}
 		UIManager.put("TableHeader.font", deriveBoldFont(10f));
 		UIManager.put("TabbedPane.font", deriveLightFont(9f));
+
 	}
 }
