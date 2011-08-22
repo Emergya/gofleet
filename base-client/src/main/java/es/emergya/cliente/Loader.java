@@ -22,7 +22,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
-import javax.swing.plaf.ColorUIResource;
+import javax.swing.UIManager.LookAndFeelInfo;
 
 import org.apache.commons.logging.LogFactory;
 import org.gofleet.scheduler.Job;
@@ -114,6 +114,16 @@ public abstract class Loader {
 
 	protected void configureUI() {
 		try {
+			for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
+				if ("Nimbus".equals(info.getName())) {
+					UIManager.setLookAndFeel(info.getClassName());
+					break;
+				}
+			}
+		} catch (Throwable e) {
+		}
+
+		try {
 			ExtensionClassLoader ecl = new ExtensionClassLoader();
 			List<File> ui_modules = ecl.getUIModules();
 
@@ -126,7 +136,7 @@ public abstract class Loader {
 			});
 
 			for (File ui : ui_modules) {
-				try  {
+				try {
 					Properties p = new Properties();
 					p.load(new FileReader(ui));
 					for (Object key : p.keySet()) {
@@ -141,13 +151,13 @@ public abstract class Loader {
 						}
 					}
 				} catch (Throwable t) {
-					LOG.error("Error trying to load ui " + ui.getAbsolutePath(),
+					LOG.error(
+							"Error trying to load ui " + ui.getAbsolutePath(),
 							t);
 				}
 			}
 		} catch (Throwable t) {
 			LOG.error("Error trying to load custom ui", t);
-			showError(t);
 		}
 	}
 
