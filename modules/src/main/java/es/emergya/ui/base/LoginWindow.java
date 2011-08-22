@@ -53,6 +53,7 @@ import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.SwingWorker;
+import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
 
 import org.apache.commons.codec.digest.DigestUtils;
@@ -100,8 +101,10 @@ public class LoginWindow extends JFrame {
 		LoginWindow.ventana = new LoginWindow();
 		// LoginWindow.ventana.setUndecorated(false);
 		LoginWindow.ventana.setIconImage(BasicWindow.getIconImage()); //$NON-NLS-1$
-		LoginWindow.ventana.setBackground(Color.WHITE);
-		LoginWindow.ventana.getContentPane().setBackground(Color.WHITE);
+		LoginWindow.ventana.setBackground(UIManager
+				.getColor("LoginWindow.background"));
+		LoginWindow.ventana.getContentPane().setBackground(UIManager
+				.getColor("LoginWindow.background"));
 		LoginWindow.ventana.setResizable(false);
 		LoginWindow.ventana.addWindowListener(new WindowAdapter() {
 
@@ -278,12 +281,12 @@ public class LoginWindow extends JFrame {
 		LoginWindow.ventana.setSize(new Dimension(800, 600));
 
 		JPanel panel = new JPanel(new GridBagLayout());
-		panel.setBackground(Color.WHITE);
+		panel.setOpaque(false);
 
 		JPanel logos = new JPanel(new GridLayout(2, 1));
+		logos.setOpaque(false);
 		logos.add(new JLabel(LogicConstants.getIcon("login_logo_cliente")));
 		logos.add(new JLabel(LogicConstants.getIcon("login_logo")));
-		logos.setBackground(Color.WHITE);
 
 		JLabel label = new JLabel();
 		label.setText(Internacionalization.getString("LoginWindow.11")); //$NON-NLS-1$

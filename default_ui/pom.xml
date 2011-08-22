@@ -1,0 +1,66 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>org.gofleet.module</groupId>
+	<artifactId>default_ui</artifactId>
+	<version>0.0.2-SNAPSHOT</version>
+	<name>default_ui</name>
+	<description>This is the default UI for gofleet.</description>
+
+	<distributionManagement>
+		<snapshotRepository>
+			<id>gofleet</id>
+			<name>Gofleet</name>
+			<url>http://gis.emergya.info/nexus/content/repositories/gofleet</url>
+		</snapshotRepository>
+	</distributionManagement>
+
+	<build>
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<artifactId>maven-compiler-plugin</artifactId>
+					<configuration>
+						<source>1.5</source>
+						<target>1.5</target>
+						<verbose>true</verbose>
+						<executable>javac</executable>
+						<fork>true</fork>
+						<compilerArguments>
+							<encoding>UTF-8</encoding>
+							<verbose />
+						</compilerArguments>
+					</configuration>
+				</plugin>
+				<plugin>
+					<groupId>org.codehaus.mojo</groupId>
+					<artifactId>findbugs-maven-plugin</artifactId>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+	</build>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.gofleet.module</groupId>
+			<artifactId>modules</artifactId>
+			<version>0.0.2-SNAPSHOT</version>
+			<type>jar</type>
+			<scope>compile</scope>
+		</dependency>
+	</dependencies>
+
+	<repositories>
+		<repository>
+			<releases>
+				<checksumPolicy>warn</checksumPolicy>
+			</releases>
+			<snapshots>
+				<checksumPolicy>ignore</checksumPolicy>
+			</snapshots>
+			<id>GoFleet</id>
+			<name>GoFleet</name>
+			<url>http://gis.emergya.info/nexus/content/groups/Gofleet</url>
+		</repository>
+	</repositories>
+</project>

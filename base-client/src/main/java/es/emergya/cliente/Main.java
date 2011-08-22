@@ -28,15 +28,6 @@
  */
 package es.emergya.cliente;
 
-import static es.emergya.cliente.constants.LogicConstantsUI.deriveBoldFont;
-import static es.emergya.cliente.constants.LogicConstantsUI.deriveLightFont;
-import static es.emergya.cliente.constants.LogicConstantsUI.getLightFont;
-
-import java.awt.Color;
-import java.util.Enumeration;
-
-import javax.swing.UIManager;
-
 /**
  * Main class.
  * 
@@ -52,24 +43,5 @@ public final class Main extends Loader {
 
 	/** Constructor is private to avoid creating objects. */
 	private Main() {
-	}
-
-	@Override
-	protected void configureUI() {
-		UIManager.put("swing.boldMetal", Boolean.FALSE); //$NON-NLS-1$
-
-		UIManager.put("TabbedPane.selected", Color.decode("#B1BEF0"));
-		final Enumeration<Object> keys = UIManager.getDefaults().keys();
-		while (keys.hasMoreElements()) {
-			Object key = keys.nextElement();
-			Object value = UIManager.get(key);
-			if (value instanceof javax.swing.plaf.FontUIResource) {
-				UIManager.put(key, getLightFont());
-			}
-
-		}
-		UIManager.put("TableHeader.font", deriveBoldFont(10f));
-		UIManager.put("TabbedPane.font", deriveLightFont(9f));
-
 	}
 }

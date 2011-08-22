@@ -194,6 +194,28 @@ public class ExtensionClassLoader extends ClassLoader {
 		return res;
 	}
 
+	public List<File> findFiles(String name) {
+
+		ArrayList<File> res = new ArrayList<File>();
+
+		String path_lib = System.getProperty("user.dir")
+				+ System.getProperty("file.separator") + "lib";
+		String path_target_lib = System.getProperty("user.dir")
+				+ System.getProperty("file.separator") + "target"
+				+ System.getProperty("file.separator") + "lib";
+
+		findModulesInPath(res, name, path_lib);
+		findModulesInPath(res, name, path_target_lib);
+
+		ArrayList<File> res_final = new ArrayList<File>();
+		
+		for(File f : res)
+			if(f.getName().equals(name))
+				res_final.add(f);
+		
+		return res_final;
+	}
+	
 	private void findModulesInPath(ArrayList<File> res, String module_suffix,
 			final java.lang.String path) {
 		try {

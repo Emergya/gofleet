@@ -10,6 +10,7 @@ import java.io.FileReader;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.lang.Thread.UncaughtExceptionHandler;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Properties;
 import java.util.TimeZone;
@@ -21,11 +22,13 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
+import javax.swing.plaf.ColorUIResource;
 
 import org.apache.commons.logging.LogFactory;
 import org.gofleet.scheduler.Job;
 import org.springframework.transaction.TransactionException;
 
+import edu.emory.mathcs.backport.java.util.Collections;
 import es.emergya.i18n.Internacionalization;
 import es.emergya.scheduler.CustomScheduler;
 import es.emergya.tools.ExtensionClassLoader;
@@ -109,17 +112,37 @@ public abstract class Loader {
 		}
 	}
 
-	// TODO
 	protected void configureUI() {
 		try {
 			ExtensionClassLoader ecl = new ExtensionClassLoader();
 			List<File> ui_modules = ecl.getUIModules();
 
+			Collections.sort(ui_modules, new Comparator<File>() {
+
+				@Override
+				public int compare(File arg0, File arg1) {
+					return arg0.getName().compareTo(arg1.getName());
+				}
+			});
+
 			for (File ui : ui_modules) {
-				Properties p = new Properties();
-				p.load(new FileReader(ui));
-				for (Object key : p.keySet()) {
-					UIManager.put(key, p.get(key));
+				try  {
+					Properties p = new Properties();
+					p.load(new FileReader(ui));
+					for (Object key : p.keySet()) {
+						if (!key.equals("CLASS")) {
+							String value = p.get(key).toString();
+							if (value.startsWith("#"))
+								UIManager.put(key, Color.decode(value));
+							else
+								UIManager.put(key, value);
+						} else {
+							Class.forName(p.get(key).toString()).newInstance();
+						}
+					}
+				} catch (Throwable t) {
+					LOG.error("Error trying to load ui " + ui.getAbsolutePath(),
+							t);
 				}
 			}
 		} catch (Throwable t) {

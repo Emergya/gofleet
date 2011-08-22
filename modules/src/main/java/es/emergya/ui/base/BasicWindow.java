@@ -28,7 +28,6 @@
  */
 package es.emergya.ui.base;
 
-import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Image;
@@ -42,6 +41,7 @@ import java.net.URL;
 
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
+import javax.swing.UIManager;
 
 import org.apache.commons.logging.LogFactory;
 import org.openstreetmap.josm.Main;
@@ -110,7 +110,8 @@ public class BasicWindow {
 	private static void inicializar() {
 		BasicWindow.frame = new JFrame(
 				Internacionalization.getString("BasicWindow.title")); //$NON-NLS-1$
-		BasicWindow.getFrame().setBackground(Color.WHITE);
+		BasicWindow.getFrame().setBackground(
+				UIManager.getColor("BasicWindow.background"));
 		BasicWindow.getFrame().setIconImage(ICON_IMAGE); //$NON-NLS-1$
 		BasicWindow.getFrame().addWindowListener(
 				new RemoveClientesConectadosListener());
