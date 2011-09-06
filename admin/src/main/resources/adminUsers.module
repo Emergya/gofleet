@@ -1,1 +1,1 @@
-MAIN=es.emergya.ui.plugins.admin.AdminUsers
+CLASS=es.emergya.ui.plugins.admin.AdminUsers

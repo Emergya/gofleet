@@ -1,1 +1,1 @@
-MAIN=es.emergya.cliente.scheduler.jobs.UpdateAdminJob
+CLASS=es.emergya.cliente.scheduler.jobs.UpdateAdminJob
