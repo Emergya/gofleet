@@ -1,1 +1,5 @@
 CLASS=es.emergya.ui.plugins.admin.AdminRoles
+<<<<<<< HEAD
+=======
+TYPE=ADMIN
+>>>>>>> master

@@ -1,1 +1,2 @@
 MAIN=es.emergya.ui.plugins.list.ListIncidences
+TYPE=LIST

@@ -55,7 +55,6 @@ import org.apache.commons.logging.LogFactory;
 import es.emergya.cliente.constants.LogicConstants;
 import es.emergya.ui.base.BasicWindow;
 import es.emergya.ui.base.ExitHandler;
-import es.emergya.ui.gis.IMapViewer;
 
 public class PluggableJTabbedPane extends JTabbedPane implements MouseListener {
 	private static final org.apache.commons.logging.Log log = LogFactory
@@ -297,8 +296,8 @@ class MyTabbedPaneUI extends MetalTabbedPaneUI {
 					Component c = ((PluggableJTabbedPane) e.getSource())
 							.getSelectedComponent();
 
-					if (c instanceof IMapViewer)
-						((IMapViewer) c).updateGv();
+					if (c instanceof CleanUp)
+						((CleanUp) c).cleanUp();
 				}
 			}
 		});

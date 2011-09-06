@@ -44,10 +44,6 @@ import javax.swing.JFrame;
 import javax.swing.UIManager;
 
 import org.apache.commons.logging.LogFactory;
-import org.openstreetmap.josm.Main;
-import org.openstreetmap.josm.data.coor.EastNorth;
-import org.openstreetmap.josm.data.coor.LatLon;
-import org.openstreetmap.josm.gui.NavigatableComponent;
 
 import es.emergya.actions.Authentication;
 import es.emergya.bbdd.bean.Usuario;
@@ -55,7 +51,6 @@ import es.emergya.cliente.constants.LogicConstants;
 import es.emergya.i18n.Internacionalization;
 import es.emergya.ui.base.plugins.AbstractPlugin;
 import es.emergya.ui.base.plugins.PluginContainer;
-import es.emergya.ui.gis.IMapViewer;
 
 /**
  * Basic Window with exit button, update icon and company logo. It has also a
@@ -279,22 +274,22 @@ public class BasicWindow {
 		return ICON_IMAGE;
 	}
 
-	public static void showOnMap(EastNorth ea, int map) {
-		LOG.info("showOnMap(" + ea + ")");
-		for (AbstractPlugin ap : container.getPlugins()) {
-			if (ap instanceof IMapViewer) {
-				if (ap.getOrder() == map) {
-					NavigatableComponent mv = ((IMapViewer) ap).getMapView();
-					mv.zoomTo(ea, mv.getScale());
-					break;
-				}
-			}
-		}
-	}
+//	public static void showOnMap(EastNorth ea, int map) {
+//		LOG.info("showOnMap(" + ea + ")");
+//		for (AbstractPlugin ap : container.getPlugins()) {
+//			if (ap instanceof IMapViewer) {
+//				if (ap.getOrder() == map) {
+//					NavigatableComponent mv = ((IMapViewer) ap).getMapView();
+//					mv.zoomTo(ea, mv.getScale());
+//					break;
+//				}
+//			}
+//		}
+//	}
 
-	public static void showOnMap(LatLon ll, int map) {
-		showOnMap(Main.proj.latlon2eastNorth(ll), map);
-	}
+	// public static void showOnMap(LatLon ll, int map) {
+	// showOnMap(Main.proj.latlon2eastNorth(ll), map);
+	// }
 
 }
 

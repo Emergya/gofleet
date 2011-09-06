@@ -28,11 +28,6 @@
  */
 package es.emergya.bbdd.dao;
 
-import com.vividsolutions.jts.geom.Geometry;
-
-import es.emergya.actions.HistoricoGPSAdmin;
-import es.emergya.actions.RecursoAdmin;
-
 import java.util.List;
 
 import org.appfuse.dao.hibernate.GenericDaoHibernate;
@@ -44,88 +39,89 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import es.emergya.bbdd.bean.Inbox;
+import com.vividsolutions.jts.geom.Geometry;
+
+import es.emergya.actions.RecursoAdmin;
 import es.emergya.bbdd.bean.HistoricoGPS;
-import es.emergya.bbdd.bean.Recurso;
+import es.emergya.bbdd.bean.Inbox;
 import es.emergya.bbdd.bean.notmapped.RecursoBean;
 import es.emergya.comunications.exceptions.MessageProcessingException;
 import es.emergya.consultas.RecursoConsultas;
 
-import java.math.BigDecimal;
-
 @Repository("bandejaEntradaHome")
 public class BandejaEntradaHome extends GenericDaoHibernate<Inbox, Long> {
 
-    public BandejaEntradaHome() {
-        super(Inbox.class);
-    }
+	public BandejaEntradaHome() {
+		super(Inbox.class);
+	}
 
-    @Override
-    public Inbox get(Long id) {
-        try {
-            return super.get(id);
-        }
-        catch (Throwable t) {
-            log.error("Estamos buscando un objeto que no existe", t);
-            return null;
-        }
-    }
+	@Override
+	public Inbox get(Long id) {
+		try {
+			return super.get(id);
+		} catch (Throwable t) {
+			log.error("Estamos buscando un objeto que no existe", t);
+			return null;
+		}
+	}
 
-    @SuppressWarnings("unchecked")
-    @Transactional(propagation = Propagation.REQUIRES_NEW, readOnly = true, rollbackFor = Throwable.class)
-    public List<Inbox> getNotProcessed() {
-        Session currentSession = getSession();
-        currentSession.clear();
-        return (List<Inbox>) getSession().createCriteria(
-                Inbox.class).add(Restrictions.eq("procesado", false)).addOrder(Order.asc("marcaTemporal")).setResultTransformer(
-                Criteria.DISTINCT_ROOT_ENTITY).list();
-    }
+	@SuppressWarnings("unchecked")
+	@Transactional(propagation = Propagation.REQUIRES_NEW, readOnly = true, rollbackFor = Throwable.class)
+	public List<Inbox> getNotProcessed() {
+		Session currentSession = getSession();
+		currentSession.clear();
+		return (List<Inbox>) getSession().createCriteria(Inbox.class)
+				.add(Restrictions.eq("procesado", false))
+				.addOrder(Order.asc("marcaTemporal"))
+				.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY).list();
+	}
 
-    @Transactional(propagation = Propagation.REQUIRES_NEW, readOnly = false, rollbackFor = Throwable.class)
-    public boolean saveOrUpdate(Inbox b) {
-        Session currentSession = getSession();
-        currentSession.flush();
-        currentSession.saveOrUpdate(currentSession.merge(b));
-        return true;
+	@Transactional(propagation = Propagation.REQUIRES_NEW, readOnly = false, rollbackFor = Throwable.class)
+	public boolean saveOrUpdate(Inbox b) {
+		Session currentSession = getSession();
+		currentSession.flush();
+		currentSession.saveOrUpdate(currentSession.merge(b));
+		return true;
 
-    }
+	}
 
-    @Transactional(propagation = Propagation.REQUIRED, readOnly = false, rollbackFor = Throwable.class)
-    public void processPosicionActual(Inbox entrada, Geometry geom) throws MessageProcessingException {
-        HistoricoGPS historicoGPS = new HistoricoGPS();
-        historicoGPS.setMarcaTemporal(entrada.getMarcaTemporal());
+	@Transactional(propagation = Propagation.REQUIRED, readOnly = false, rollbackFor = Throwable.class)
+	public void processPosicionActual(Inbox entrada, Geometry geom)
+			throws MessageProcessingException {
+		HistoricoGPS historicoGPS = new HistoricoGPS();
+		historicoGPS.setMarcaTemporal(entrada.getMarcaTemporal());
 
-        RecursoBean recurso = RecursoConsultas.findByDispositivoSQL(entrada.getOrigen());
-        if (recurso == null) {
-            throw new MessageProcessingException("No encuentro el recurso "
-                    + entrada.getOrigen());
-        }
+		RecursoBean recurso = RecursoConsultas.findByDispositivoSQL(entrada
+				.getOrigen());
+		if (recurso == null) {
+			throw new MessageProcessingException("No encuentro el recurso "
+					+ entrada.getOrigen());
+		}
 
-        if (recurso.getHabilitado()) {
-            historicoGPS.setTipoRecurso(recurso.getTipoRecurso());
-            if (recurso.getSubflota() == null) {
-                throw new MessageProcessingException("El recurso "
-                        + recurso + " no tiene asignada ninguna flota.");
-            }
-            historicoGPS.setSubflota(recurso.getSubflota());
-            historicoGPS.setRecurso(recurso.getIdentificador());
+		if (recurso.getHabilitado()) {
+			historicoGPS.setTipoRecurso(recurso.getTipoRecurso());
+			if (recurso.getSubflota() == null) {
+				throw new MessageProcessingException("El recurso " + recurso
+						+ " no tiene asignada ninguna flota.");
+			}
+			historicoGPS.setSubflota(recurso.getSubflota());
+			historicoGPS.setRecurso(recurso.getIdentificador());
 
+			geom.setSRID(4326);
+			//
+			// final String sourceSRID = "EPSG:4326";
+			// final String targetSRID = "EPSG:3395";
+			//
+			// Geometry geom = transform(geom, sourceSRID, targetSRID);
 
-            geom.setSRID(4326);
-            //
-            // final String sourceSRID = "EPSG:4326";
-            // final String targetSRID = "EPSG:3395";
-            //
-            // Geometry geom = transform(geom, sourceSRID, targetSRID);
+			historicoGPS.setGeom(geom);
+			historicoGPS.setPosX(geom.getCentroid().getX());
+			historicoGPS.setPosY(geom.getCentroid().getY());
 
-            historicoGPS.setGeom(geom);
-            historicoGPS.setPosX(geom.getCentroid().getX());
-            historicoGPS.setPosY(geom.getCentroid().getY());
-
-            HistoricoGPSAdmin.saveServer(historicoGPS);
-            RecursoAdmin.updateLastGpsSQL(historicoGPS, recurso.getId());
-            //recurso.setHistoricoGps(historicoGPS);
-            //RecursoAdmin.saveOrUpdate(recurso);
-        }
-    }
+			// HistoricoGPSAdmin.saveServer(historicoGPS);
+			RecursoAdmin.updateLastGpsSQL(historicoGPS, recurso.getId());
+			// recurso.setHistoricoGps(historicoGPS);
+			// RecursoAdmin.saveOrUpdate(recurso);
+		}
+	}
 }

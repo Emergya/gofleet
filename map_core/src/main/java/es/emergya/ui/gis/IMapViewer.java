@@ -2,9 +2,10 @@ package es.emergya.ui.gis;
 
 import org.openstreetmap.josm.gui.NavigatableComponent;
 
+import es.emergya.ui.base.plugins.CleanUp;
 import es.emergya.ui.base.plugins.PluginEvent;
 
-public interface IMapViewer {
+public interface IMapViewer extends CleanUp {
 
 	public abstract NavigatableComponent getMapView();
 
@@ -13,7 +14,5 @@ public interface IMapViewer {
 	public abstract void refresh(PluginEvent event);
 
 	public abstract void setup();
-
-	public abstract void updateGv();
 
 }

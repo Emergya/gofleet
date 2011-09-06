@@ -6,7 +6,7 @@
 	<groupId>org.gofleet</groupId>
 	<artifactId>gofleet</artifactId>
 	<packaging>pom</packaging>
-	<version>1.0-SNAPSHOT</version>
+	<version>0.0.2-SNAPSHOT</version>
 	<name>${projectname}</name>
 	<url>http://www.emergya.es</url>
 	<distributionManagement>
@@ -234,6 +234,12 @@
 		<module>server</module>
 		<module>webservices</module>
 		<module>map_core</module>
+		<!-- plugins -->
+		<module>maps</module>
+		<module>admin</module>
+		<module>dummy</module>
+		<module>issuesList</module>
+		<module>routing</module>
 	</modules>
 
 	<reporting>

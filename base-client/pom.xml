@@ -6,7 +6,7 @@
 	<parent>
 		<groupId>org.gofleet</groupId>
 		<artifactId>gofleet</artifactId>
-		<version>1.0-SNAPSHOT</version>
+		<version>0.0.2-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
@@ -256,15 +256,25 @@
 		</dependency>
 		
 		<!-- plugins -->
-		
-		
 		<dependency>
 			<groupId>org.gofleet.module</groupId>
 			<artifactId>dummy</artifactId>
 			<version>0.0.2-SNAPSHOT</version>
 		</dependency><dependency>
 			<groupId>org.gofleet.module</groupId>
+<<<<<<< HEAD
 			<artifactId>default_ui</artifactId>
+=======
+			<artifactId>admin</artifactId>
+			<version>0.0.2-SNAPSHOT</version>
+		</dependency><dependency>
+			<groupId>org.gofleet.module</groupId>
+			<artifactId>maps</artifactId>
+			<version>0.0.2-SNAPSHOT</version>
+		</dependency><dependency>
+			<groupId>org.gofleet.module</groupId>
+			<artifactId>issuesList</artifactId>
+>>>>>>> master
 			<version>0.0.2-SNAPSHOT</version>
 		</dependency>
 	</dependencies>
