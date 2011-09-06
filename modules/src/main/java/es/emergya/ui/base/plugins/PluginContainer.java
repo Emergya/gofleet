@@ -109,6 +109,8 @@ public class PluginContainer extends AbstractPluggable {
 					options.put(plugin.getType(),
 							new ArrayList<AbstractPlugin>());
 				}
+				if(plugin.getType() == null)
+					plugin.setType(PluginType.getDefault());
 				options.get(plugin.getType()).add(plugin);
 			}
 

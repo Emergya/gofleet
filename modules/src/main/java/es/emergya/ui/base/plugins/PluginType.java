@@ -38,8 +38,9 @@ import org.apache.commons.logging.LogFactory;
 import es.emergya.tools.ExtensionClassLoader;
 
 public class PluginType implements Comparable<PluginType> {
+	private static final String UNKNOWN = "UNKNOWN";
 	final static private PluginTypeContainer ptc = new PluginTypeContainer();
-	String type = "UNKNOWN";
+	String type = UNKNOWN;
 	Boolean detachable = false;
 
 	public Boolean isDetachable() {
@@ -62,8 +63,12 @@ public class PluginType implements Comparable<PluginType> {
 
 	public static Set<String> getAll() {
 		Set<String> res = ptc.keySet();
-		res.remove("UNKNOWN");
+		res.remove(UNKNOWN);
 		return res;
+	}
+
+	public static PluginType getDefault() {
+		return getType(UNKNOWN);
 	}
 }
 
