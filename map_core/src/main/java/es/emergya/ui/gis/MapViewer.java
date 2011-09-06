@@ -310,7 +310,8 @@ public abstract class MapViewer extends AbstractPluggable implements
 	protected void updateControls() {
 	}
 
-	public void updateGv() {
+	@Override
+	public void cleanUp() {
 		CustomMapView gv = null;
 		for (Component comp : this.getComponents()) {
 			if (comp instanceof CustomMapView)

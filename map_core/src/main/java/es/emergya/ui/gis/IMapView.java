@@ -9,6 +9,8 @@ import org.openstreetmap.josm.gui.layer.Layer;
 import org.openstreetmap.josm.gui.layer.MapViewPaintable;
 import org.openstreetmap.josm.gui.layer.OsmDataLayer;
 
+import es.emergya.ui.base.plugins.CleanUp;
+
 public interface IMapView {
 
 	public abstract void addLayer(Layer layer);
@@ -35,8 +37,11 @@ public interface IMapView {
 
 	/**
 	 * Moves the layer to the given new position. No event is fired.
-	 * @param layer     The layer to move
-	 * @param pos       The new position of the layer
+	 * 
+	 * @param layer
+	 *            The layer to move
+	 * @param pos
+	 *            The new position of the layer
 	 */
 	public abstract void moveLayer(Layer layer, int pos);
 
@@ -59,7 +64,8 @@ public interface IMapView {
 	public abstract Collection<Layer> getAllLayers();
 
 	/**
-	 * Set the active selection to the given value and raise an layerchange event.
+	 * Set the active selection to the given value and raise an layerchange
+	 * event.
 	 */
 	public abstract void setActiveLayer(Layer layer);
 
@@ -69,17 +75,17 @@ public interface IMapView {
 	public abstract Layer getActiveLayer();
 
 	/**
-	 * In addition to the base class funcitonality, this keep trak of the autoscale
-	 * feature.
+	 * In addition to the base class funcitonality, this keep trak of the
+	 * autoscale feature.
 	 */
 	public abstract void zoomTo(EastNorth newCenter, double scale);
 
 	/**
 	 * Tries to zoom to the download boundingbox[es] of the current edit layer
-	 * (aka {@link OsmDataLayer}). If the edit layer has multiple download bounding
-	 * boxes it zooms to a large virtual bounding box containing all smaller ones.
-	 * This implementation can be used for resolving ticket #1461.
-	 *
+	 * (aka {@link OsmDataLayer}). If the edit layer has multiple download
+	 * bounding boxes it zooms to a large virtual bounding box containing all
+	 * smaller ones. This implementation can be used for resolving ticket #1461.
+	 * 
 	 * @return <code>true</code> if a zoom operation has been performed
 	 */
 	public abstract boolean zoomToEditLayerBoundingBox();

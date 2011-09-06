@@ -65,7 +65,6 @@ public abstract class AbstractPlugin extends JPanel implements
 	public String getId() {
 		return this.id;
 	}
-	
 
 	protected void loadProperties(String file) {
 		Properties p = new Properties();
@@ -81,7 +80,7 @@ public abstract class AbstractPlugin extends JPanel implements
 			this.type = PluginType.getType(p.getProperty("TYPE", "UNKNOWN"));
 			this.order = new Integer(p.getProperty("ORDER", "0"));
 			this.tip = p.getProperty("TIP", this.title);
-			
+
 		} catch (Throwable e) {
 			Logger.getLogger(this.getClass()).error(
 					"Couldn't load property file", e);
@@ -149,5 +148,9 @@ public abstract class AbstractPlugin extends JPanel implements
 
 	public List<String> getDependencies() {
 		return new ArrayList<String>(0);
+	}
+
+	public void setType(PluginType t) {
+		this.type = t;
 	}
 }

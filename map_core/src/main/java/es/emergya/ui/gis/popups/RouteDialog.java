@@ -423,8 +423,8 @@ public class RouteDialog extends JFrame implements ActionListener {
 							targetCRS, sourceCRS));
 					LatLon ll = new LatLon(p.getY(), p.getX());
 					way.addNode(new Node(ll));
-					if (log.isTraceEnabled())
-						BasicWindow.showOnMap(ll, 1);
+//					if (log.isTraceEnabled())
+//						BasicWindow.showOnMap(ll, 1);
 				}
 				res.add(way);
 			}

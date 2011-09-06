@@ -109,6 +109,8 @@ public class PluginContainer extends AbstractPluggable {
 					options.put(plugin.getType(),
 							new ArrayList<AbstractPlugin>());
 				}
+				if(plugin.getType() == null)
+					plugin.setType(PluginType.getDefault());
 				options.get(plugin.getType()).add(plugin);
 			}
 
@@ -117,15 +119,20 @@ public class PluginContainer extends AbstractPluggable {
 		}
 
 		for (PluginType type : options.keySet()) {
-			boolean exist = false;
-			for (AbstractPluggable ap : tabs) {
-				if (ap.getType().equals(type)) {
-					exist = true;
+			try {
+				boolean exist = false;
+				for (AbstractPluggable ap : tabs) {
+					if (ap != null && ap.getType() != null)
+						if (ap.getType().equals(type)) {
+							exist = true;
+						}
 				}
-			}
-			if (!exist) {
-				tabs.add(new Tab(Internacionalization.getString(type.type),
-						type, tabs.size()));
+				if (!exist) {
+					tabs.add(new Tab(Internacionalization.getString(type.type),
+							type, tabs.size()));
+				}
+			} catch (Throwable t) {
+				log.error("Error loading plugin", t);
 			}
 		}
 

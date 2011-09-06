@@ -1,1 +1,2 @@
-MAIN=es.emergya.ui.plugins.forms.FormIncidencia
+CLASS=es.emergya.ui.plugins.forms.FormIncidencia
+TYPE=LIST

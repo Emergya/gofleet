@@ -34,12 +34,7 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.swing.JFrame;
-
-import org.openstreetmap.gui.jmapviewer.MemoryTileCache;
-
 import es.emergya.actions.Authentication;
-import es.emergya.ui.base.plugins.DetachedTab;
 
 /**
  * Log out the application.
@@ -48,8 +43,9 @@ import es.emergya.ui.base.plugins.DetachedTab;
  * 
  */
 public class ExitHandler implements ActionListener {
-	
+
 	List<ActionListener> listeners = new ArrayList<ActionListener>();
+
 	/**
 	 * Log out the application.
 	 * 
@@ -59,8 +55,8 @@ public class ExitHandler implements ActionListener {
 	public void actionPerformed(final ActionEvent e) {
 
 		Authentication.logOut();
-		
-		for(ActionListener al : listeners){
+
+		for (ActionListener al : listeners) {
 			al.actionPerformed(e);
 		}
 
@@ -69,7 +65,7 @@ public class ExitHandler implements ActionListener {
 
 		BasicWindow.getFrame().setVisible(false);
 		LoginWindow.showLogin();
-		
+
 		BasicWindow.getPluginContainer().cleanUp();
 	}
 }
