@@ -3,7 +3,7 @@ CREATE DATABASE template_postgis WITH TEMPLATE = template0 ENCODING = 'UTF8';
 \c template_postgis
 
 -- Add PLPGSQL language support
-CREATE OR REPLACE LANGUAGE plpgsql;
+CREATE LANGUAGE plpgsql;
 
 ---PostGIS
 \cd `pg_config --sharedir`
