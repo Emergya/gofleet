@@ -82,7 +82,7 @@ public class ListIncidences extends Option {
 			Point geom = objeto.getGeometria().getCentroid();
 			LatLon ll = new LatLon(geom.getCoordinate().y,
 					geom.getCoordinate().x);
-			BasicWindow.showOnMap(ll, 1);
+//			BasicWindow.showOnMap(ll, 1);
 		}
 	}
 

@@ -7,7 +7,7 @@
 	<parent>
 		<groupId>org.gofleet</groupId>
 		<artifactId>gofleet</artifactId>
-		<version>1.0-SNAPSHOT</version>
+		<version>0.0.2-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
@@ -195,13 +195,6 @@
 			<artifactId>slf4j-log4j12</artifactId>
 			<version>1.5.8</version>
 		</dependency>
-		<!-- Librerias de mapas (JOSM) -->
-		<dependency>
-			<groupId>org.openstreetmap</groupId>
-			<artifactId>josm</artifactId>
-			<version>1669</version>
-		</dependency>
-
 		<!-- Jobs -->
 		<dependency>
 			<groupId>opensymphony</groupId>

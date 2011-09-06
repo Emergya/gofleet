@@ -29,7 +29,6 @@
 package es.emergya.bbdd.dao;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -40,7 +39,6 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
-import java.util.TimeZone;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -51,20 +49,10 @@ import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
-import org.openstreetmap.josm.data.coor.LatLon;
-import org.openstreetmap.josm.data.gpx.GpxData;
-import org.openstreetmap.josm.data.gpx.GpxRoute;
-import org.openstreetmap.josm.data.gpx.GpxTrackSegment;
-import org.openstreetmap.josm.data.gpx.ImmutableGpxTrack;
-import org.openstreetmap.josm.data.gpx.WayPoint;
-import org.openstreetmap.josm.io.GpxReader;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.vividsolutions.jts.geom.Coordinate;
-import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.Point;
 
 import es.emergya.bbdd.bean.Flota;
@@ -78,6 +66,8 @@ import es.emergya.utils.LogicConstants;
 @Repository("historicoGPSHome")
 public class HistoricoGPSHome extends GenericDaoHibernate<HistoricoGPS, Long> {
 
+	
+	//TODO no longer supports GPX
 	private static final String DIRECTORIO_GPX_DEFAULT = "/var/gpx/";
 	private static final String DIRECTORIO_GPX = "DIRECTORIO_GPX";
 	private static final Log log = LogFactory.getLog(HistoricoGPSHome.class);
@@ -527,12 +517,12 @@ public class HistoricoGPSHome extends GenericDaoHibernate<HistoricoGPS, Long> {
 			Date inicio, Date fin) {
 		List<HistoricoGPS> result = getPosicionesEnIntervaloSoloBBDD(recurso,
 				inicio, fin);
-		try {
-			getPosicionesEnIntervaloFromGPX(inicio, fin, recurso, result);
-			ordenar(result);
-		} catch (Throwable t) {
-			log.error("Error al extraer posiciones en intervalo", t);
-		}
+//		try {
+//			getPosicionesEnIntervaloFromGPX(inicio, fin, recurso, result);
+//			ordenar(result);
+//		} catch (Throwable t) {
+//			log.error("Error al extraer posiciones en intervalo", t);
+//		}
 		return result;
 	}
 
@@ -591,165 +581,165 @@ public class HistoricoGPSHome extends GenericDaoHibernate<HistoricoGPS, Long> {
 		return result;
 	}
 
-	/**
-	 * Busca posiciones en el intervalo para el recurso únicamente usando los
-	 * datos de los GPX.
-	 * 
-	 * @param inicio
-	 * @param fin
-	 * @param recurso
-	 * @param result
-	 */
-	private void getPosicionesEnIntervaloFromGPX(Date inicio, Date fin,
-			String recurso, List<HistoricoGPS> result) {
-		try {
-			File directorio = new File(LogicConstants.get(DIRECTORIO_GPX,
-					DIRECTORIO_GPX_DEFAULT));
-			if (!directorio.isDirectory()) {
-				throw new IOException(
-						"La ruta pasada para los gpx no es un directorio");
-			}
-			Calendar c = Calendar.getInstance();
-			Date inicio_day = null;
-			if (inicio != null) {
-				c.setTime(inicio);
-				c.set(Calendar.HOUR_OF_DAY, 0);
-				c.set(Calendar.MINUTE, 0);
-				c.set(Calendar.SECOND, 0);
-				c.set(Calendar.MILLISECOND, 0);
-				c.add(Calendar.SECOND, -1);
-				inicio_day = c.getTime();
-			}
-			Date fin_day = null;
-			if (fin != null) {
-				c.setTime(fin);
-				c.set(Calendar.HOUR_OF_DAY, 0);
-				c.set(Calendar.MINUTE, 0);
-				c.set(Calendar.SECOND, 0);
-				c.set(Calendar.MILLISECOND, 0);
-				c.add(Calendar.DAY_OF_YEAR, 1);
-				fin_day = c.getTime();
-			}
-			for (File file : directorio.listFiles()) {
-				try {
-					if (file.isDirectory()) {
-						throw new IOException(file + " no es un fichero");
-					}
-					if (!file.canRead()) {
-						throw new IOException(file + " no es legible");
-					}
-					String nombreFichero = file.getName();
-					// Si este fichero es de este recurso
-					if (recurso.equals(getRecursoFromFileName(nombreFichero))) {
-						Date time = getTimeFromFileName(nombreFichero);
-						// Y las fechas coinciden
-						if (time != null) {
-							if (inicio_day == null || inicio_day.before(time)) {
-								if (fin_day == null || fin_day.after(time)) {
-									log.trace("Procesamos "
-											+ file.getAbsolutePath());
-									for (HistoricoGPS hgps : extractPositions(file)) {
-										// Aunque sea el fichero correcto,
-										// volvemos a comprobar las marcas
-										// temporales
-										final Date marcaTemporal = hgps
-												.getMarcaTemporal();
-										log.info(inicio + " - " + marcaTemporal
-												+ " - " + fin);
-										if (fin == null
-												|| (marcaTemporal.before(fin))
-												&& (inicio == null || marcaTemporal
-														.after(inicio))) {
-											result.add(hgps);
-										}
-									}
-								}
-							}
-						}
-					}
-				} catch (Throwable t) {
-					log.error("No pude leer a " + file, t);
-				}
-			}
-		} catch (Throwable t) {
-			log.error("No pudimos buscar en los gpx", t);
-		}
-	}
+	// /**
+	// * Busca posiciones en el intervalo para el recurso únicamente usando los
+	// * datos de los GPX.
+	// *
+	// * @param inicio
+	// * @param fin
+	// * @param recurso
+	// * @param result
+	// */
+	// private void getPosicionesEnIntervaloFromGPX(Date inicio, Date fin,
+	// String recurso, List<HistoricoGPS> result) {
+	// try {
+	// File directorio = new File(LogicConstants.get(DIRECTORIO_GPX,
+	// DIRECTORIO_GPX_DEFAULT));
+	// if (!directorio.isDirectory()) {
+	// throw new IOException(
+	// "La ruta pasada para los gpx no es un directorio");
+	// }
+	// Calendar c = Calendar.getInstance();
+	// Date inicio_day = null;
+	// if (inicio != null) {
+	// c.setTime(inicio);
+	// c.set(Calendar.HOUR_OF_DAY, 0);
+	// c.set(Calendar.MINUTE, 0);
+	// c.set(Calendar.SECOND, 0);
+	// c.set(Calendar.MILLISECOND, 0);
+	// c.add(Calendar.SECOND, -1);
+	// inicio_day = c.getTime();
+	// }
+	// Date fin_day = null;
+	// if (fin != null) {
+	// c.setTime(fin);
+	// c.set(Calendar.HOUR_OF_DAY, 0);
+	// c.set(Calendar.MINUTE, 0);
+	// c.set(Calendar.SECOND, 0);
+	// c.set(Calendar.MILLISECOND, 0);
+	// c.add(Calendar.DAY_OF_YEAR, 1);
+	// fin_day = c.getTime();
+	// }
+	// for (File file : directorio.listFiles()) {
+	// try {
+	// if (file.isDirectory()) {
+	// throw new IOException(file + " no es un fichero");
+	// }
+	// if (!file.canRead()) {
+	// throw new IOException(file + " no es legible");
+	// }
+	// String nombreFichero = file.getName();
+	// // Si este fichero es de este recurso
+	// if (recurso.equals(getRecursoFromFileName(nombreFichero))) {
+	// Date time = getTimeFromFileName(nombreFichero);
+	// // Y las fechas coinciden
+	// if (time != null) {
+	// if (inicio_day == null || inicio_day.before(time)) {
+	// if (fin_day == null || fin_day.after(time)) {
+	// log.trace("Procesamos "
+	// + file.getAbsolutePath());
+	// for (HistoricoGPS hgps : extractPositions(file)) {
+	// // Aunque sea el fichero correcto,
+	// // volvemos a comprobar las marcas
+	// // temporales
+	// final Date marcaTemporal = hgps
+	// .getMarcaTemporal();
+	// log.info(inicio + " - " + marcaTemporal
+	// + " - " + fin);
+	// if (fin == null
+	// || (marcaTemporal.before(fin))
+	// && (inicio == null || marcaTemporal
+	// .after(inicio))) {
+	// result.add(hgps);
+	// }
+	// }
+	// }
+	// }
+	// }
+	// }
+	// } catch (Throwable t) {
+	// log.error("No pude leer a " + file, t);
+	// }
+	// }
+	// } catch (Throwable t) {
+	// log.error("No pudimos buscar en los gpx", t);
+	// }
+	// }
 
-	private List<HistoricoGPS> extractPositions(File file) {
-		log.trace("extractPositions(" + file.getAbsolutePath() + ")");
-		List<HistoricoGPS> resultado = new LinkedList<HistoricoGPS>();
-
-		String fileName = file.getName();
-		String recurso = getRecursoFromFileName(fileName);
-		String flota = getFlotaFromFileName(fileName);
-
-		FileInputStream is;
-
-		try {
-			is = new FileInputStream(file);
-			GpxReader reader = new GpxReader(is);
-			reader.parse(true);
-
-			GpxData data = reader.data;
-
-			for (GpxRoute r : data.routes) {
-				for (WayPoint w : r.routePoints) {
-					resultado.add(convert(w, recurso, flota));
-
-				}
-			}
-
-			for (WayPoint w : data.waypoints) {
-				resultado.add(convert(w, recurso, flota));
-
-			}
-
-			for (ImmutableGpxTrack tr : data.tracks) {
-				for (GpxTrackSegment seg : tr.getSegments()) {
-					for (WayPoint w : seg.getWayPoints()) {
-						resultado.add(convert(w, recurso, flota));
-
-					}
-				}
-			}
-
-		} catch (Throwable e) {
-			log.error("No pude extraer el historico", e);
-
-		}
-
-		return resultado;
-
-	}
-
-	private HistoricoGPS convert(WayPoint w, String recurso, String subflota) {
-		log.trace("convert(" + w + ", " + recurso + ", " + subflota + ")");
-		HistoricoGPS his = new HistoricoGPS();
-		w.setTime();
-		Calendar c = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
-		Calendar c2 = Calendar.getInstance();
-		c2.setTime(new Date((long) (w.time * 1000)));
-		for (Integer i : new Integer[] { Calendar.YEAR, Calendar.MONTH,
-				Calendar.DAY_OF_MONTH, Calendar.HOUR_OF_DAY, Calendar.MINUTE,
-				Calendar.SECOND, Calendar.MILLISECOND })
-			c.set(i, c2.get(i));
-		his.setMarcaTemporal(c.getTime());
-		log.trace("Historico GPS a las " + his.getMarcaTemporal()
-				+ " y deberia ser a las " + new Date((long) (w.time * 1000)));
-		his.setRecurso(recurso);
-		his.setSubflota(subflota);
-		LatLon latlon = w.latlon;
-		GeometryFactory factory = new GeometryFactory();
-		Geometry geom = factory.createPoint(new Coordinate(latlon.getX(),
-				latlon.getY()));
-		his.setGeom(geom);
-		his.setPosX(geom.getCentroid().getX());
-		his.setPosY(geom.getCentroid().getY());
-
-		return his;
-
-	}
+//	private List<HistoricoGPS> extractPositions(File file) {
+//		log.trace("extractPositions(" + file.getAbsolutePath() + ")");
+//		List<HistoricoGPS> resultado = new LinkedList<HistoricoGPS>();
+//
+//		String fileName = file.getName();
+//		String recurso = getRecursoFromFileName(fileName);
+//		String flota = getFlotaFromFileName(fileName);
+//
+//		FileInputStream is;
+//
+//		try {
+//			is = new FileInputStream(file);
+//			GpxReader reader = new GpxReader(is);
+//			reader.parse(true);
+//
+//			GpxData data = reader.data;
+//
+//			for (GpxRoute r : data.routes) {
+//				for (WayPoint w : r.routePoints) {
+//					resultado.add(convert(w, recurso, flota));
+//
+//				}
+//			}
+//
+//			for (WayPoint w : data.waypoints) {
+//				resultado.add(convert(w, recurso, flota));
+//
+//			}
+//
+//			for (ImmutableGpxTrack tr : data.tracks) {
+//				for (GpxTrackSegment seg : tr.getSegments()) {
+//					for (WayPoint w : seg.getWayPoints()) {
+//						resultado.add(convert(w, recurso, flota));
+//
+//					}
+//				}
+//			}
+//
+//		} catch (Throwable e) {
+//			log.error("No pude extraer el historico", e);
+//
+//		}
+//
+//		return resultado;
+//
+//	}
+//
+//	private HistoricoGPS convert(WayPoint w, String recurso, String subflota) {
+//		log.trace("convert(" + w + ", " + recurso + ", " + subflota + ")");
+//		HistoricoGPS his = new HistoricoGPS();
+//		w.setTime();
+//		Calendar c = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+//		Calendar c2 = Calendar.getInstance();
+//		c2.setTime(new Date((long) (w.time * 1000)));
+//		for (Integer i : new Integer[] { Calendar.YEAR, Calendar.MONTH,
+//				Calendar.DAY_OF_MONTH, Calendar.HOUR_OF_DAY, Calendar.MINUTE,
+//				Calendar.SECOND, Calendar.MILLISECOND })
+//			c.set(i, c2.get(i));
+//		his.setMarcaTemporal(c.getTime());
+//		log.trace("Historico GPS a las " + his.getMarcaTemporal()
+//				+ " y deberia ser a las " + new Date((long) (w.time * 1000)));
+//		his.setRecurso(recurso);
+//		his.setSubflota(subflota);
+//		LatLon latlon = w.latlon;
+//		GeometryFactory factory = new GeometryFactory();
+//		Geometry geom = factory.createPoint(new Coordinate(latlon.getX(),
+//				latlon.getY()));
+//		his.setGeom(geom);
+//		his.setPosX(geom.getCentroid().getX());
+//		his.setPosY(geom.getCentroid().getY());
+//
+//		return his;
+//
+//	}
 
 	@Transactional(propagation = Propagation.REQUIRES_NEW, readOnly = true, rollbackFor = Throwable.class)
 	public Posicion[] getUltimasPosiciones(String[] idRecursos) {
