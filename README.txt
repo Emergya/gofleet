@@ -1,7 +1,7 @@
 GoFleet
 
 
- * What is this? *
+# What is this? 
 
 This is a modular open source project to control fleets. Of course, as it is modular
 and open source, you can change it the way you want, but it was designed as a framework
@@ -16,7 +16,7 @@ are your partners, calculate shortest routes to goals,...
 
 You can have as many desktop or mobile clients as you want, as long as your server is big enough.
 
- * I still don't understand what is this project *
+##  I still don't understand what is this project
  
 Let's try with a simple example:
  
@@ -34,7 +34,6 @@ beer after work.
 
 But, as it is modular and open source, you can add as many extensions as you can imagine. 
 
- * I have more questions, where can I ask them? *
-//TODO add mail-list/webpage
+#  I have more questions, where can I ask them? 
 
-If you have more questions, you can ask me directly on marias@emergya.com
+Get involved on the mailing list: https://lists.morfeo-project.org/mailman/listinfo/gofleet-devel
