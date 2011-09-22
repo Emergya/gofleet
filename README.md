@@ -8,11 +8,12 @@ and open source, you can change it the way you want, but it was designed as a fr
 to track gis elements (events, issues, people,...). 
 
 It is split on four different parts:
- - Mobile Client: Light client where you can send info related to issues, see where 
+ 
+ * Mobile Client: Light client where you can send info related to issues, see where 
 are your partners, calculate shortest routes to goals,...
- - Desktop Client: Where you can either administer or use it as a mobile client.
- - Server: Centralizes all the generic work of all clients. Has the whole database.
- - WebService: Closely related to the server, it gives the clients info and functionality.
+ * Desktop Client: Where you can either administer or use it as a mobile client.
+ * Server: Centralizes all the generic work of all clients. Has the whole database.
+ * WebService: Closely related to the server, it gives the clients info and functionality.
 
 You can have as many desktop or mobile clients as you want, as long as your server is big enough.
 
