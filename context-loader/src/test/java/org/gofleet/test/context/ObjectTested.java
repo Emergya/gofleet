@@ -25,23 +25,33 @@
  * This exception does not however invalidate any other reasons why the
  * executable file might be covered by the GNU General Public License.
  */
-package org.gofleet.context;
+package org.gofleet.test.context;
+
+import org.gofleet.context.GoWired;
 
 /**
  * @author marias
- *
+ * 
  */
 public class ObjectTested {
-	
+
 	@GoWired
 	public FieldTested fieldTested;
-	
+
+	public FieldTested getFieldTested() {
+		return fieldTested;
+	}
+
 	@Override
 	public String toString() {
 		return fieldTested.toString();
 	}
-	
+
 	public void setFieldTested(FieldTested fieldTested) {
 		this.fieldTested = fieldTested;
+	}
+
+	public ObjectTested() {
+		super();
 	}
 }

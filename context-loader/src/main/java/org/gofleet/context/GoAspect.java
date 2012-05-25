@@ -27,19 +27,24 @@
  */
 package org.gofleet.context;
 
+import org.aspectj.lang.JoinPoint;
+import org.aspectj.lang.annotation.After;
+import org.aspectj.lang.annotation.Aspect;
+import org.aspectj.lang.annotation.Pointcut;
+
 /**
  * @author marias
- *
+ * 
  */
-public class FieldTested {
-	
-	private String mes = "Field Tested!!";
-	@Override
-	public String toString() {
-		return this.mes;
+@Aspect
+public class GoAspect {
+
+	@Pointcut("!within(org.gofleet.context.*) && execution(*.new())")
+	public void constructor() {
 	}
-	
-	public void setString(String mes){
-		this.mes = mes;
+
+	@After("constructor()")
+	public void addTrace(JoinPoint call) {
+		GoClassLoader.getGoClassLoader().initializeObject(call.getTarget());
 	}
 }

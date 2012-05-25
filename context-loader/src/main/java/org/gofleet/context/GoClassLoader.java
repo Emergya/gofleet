@@ -164,37 +164,68 @@ public class GoClassLoader extends URLClassLoader {
 				LOG.error("Couldn't use uri " + dir.getAbsolutePath(), e);
 			}
 	}
-	
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.ClassLoader#loadClass(java.lang.String, boolean)
 	 */
 	@Override
-	protected synchronized Class<?> loadClass(String name, boolean resolve)
+	protected synchronized Class<?> loadClass(String arg0, boolean arg1)
 			throws ClassNotFoundException {
-		System.out.println("loadClass(" + name + ")");
-		return super.loadClass(name, resolve);
+		Class<?> res = super.loadClass(arg0, arg1);
+
+		initializeObject(res);
+
+		return res;
 	}
-	
-	/* (non-Javadoc)
-	 * @see java.lang.ClassLoader#findLibrary(java.lang.String)
+
+	/**
+	 * @param res
+	 * @throws InstantiationException
+	 * @throws IllegalAccessException
+	 * @throws ClassNotFoundException
 	 */
-	@Override
-	protected String findLibrary(String libname) {
-		System.out.println("loadLibrary(" + libname + ")");
-		return super.findLibrary(libname);
+	public void initializeObject(Object result) {
+		try {
+			for (Field f : result.getClass().getFields()) {
+				if (f.isAnnotationPresent(GoWired.class)) {
+					final Class<?> type = f.getType();
+					String fieldNameClass = type.getCanonicalName();
+
+					Object parameter = null;
+					// Check if we already loaded it
+					if (this.elements.containsKey(fieldNameClass))
+						parameter = this.elements.get(fieldNameClass);
+					else {
+						parameter = this.loadClass(fieldNameClass)
+								.newInstance();
+						this.elements.put(fieldNameClass, parameter);
+					}
+					String methodname = ("set"
+							+ f.getName().substring(0, 1).toUpperCase() + f
+							.getName().substring(1));
+
+					try {
+						Method m = result.getClass().getMethod(methodname, type);
+						m.invoke(result, type.cast(parameter));
+
+					} catch (Throwable ex) {
+						LOG.error(
+								"Error loading field "
+										+ f.getName()
+										+ " in class "
+										+ result.getClass().getCanonicalName()
+										+ ". Are you sure the field has a proper setter method? It should be: "
+										+ methodname, ex);
+					}
+				}
+			}
+		} catch (Throwable t) {
+			LOG.error("Error initializing object " + result + " of class " + result.getClass(), t);
+		}
 	}
-	
-	/* (non-Javadoc)
-	 * @see java.lang.ClassLoader#getPackage(java.lang.String)
-	 */
-	@Override
-	protected Package getPackage(String name) {
-		System.out.println("getPackage(" + name + ")");
-		return super.getPackage(name);
-	}
-	
-	
-	
+
 	public Object load(String name) throws ClassNotFoundException,
 			InstantiationException, IllegalAccessException {
 		Class<?> res = super.loadClass(name);

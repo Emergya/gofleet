@@ -25,9 +25,10 @@
  * This exception does not however invalidate any other reasons why the
  * executable file might be covered by the GNU General Public License.
  */
-package org.gofleet.context;
+package org.gofleet.test.context;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 import org.junit.Test;
 
@@ -40,11 +41,18 @@ public class GoWiredTest {
 	@Test
 	public void test() throws InstantiationException, IllegalAccessException,
 			ClassNotFoundException {
-		final ObjectTested load = (ObjectTested) GoClassLoader.getGoClassLoader().load(
-						"org.gofleet.context.ObjectTested");
+		ObjectTested load = new ObjectTested();
+		assertNotNull("Field tested null", load.getFieldTested());
 		assertEquals("Field Tested!!", load.toString());
 		load.fieldTested.setString("ok!");
-		assertEquals(GoClassLoader.getGoClassLoader().load(
-				ObjectTested.class).toString(), "ok!");
+		assertEquals((new ObjectTested()).toString(), "ok!");
+	}
+
+	public static void main(String[] args) {
+		ObjectTested load = new ObjectTested();
+		assertNotNull("Field tested null", load.getFieldTested());
+		assertEquals("Field Tested!!", load.toString());
+		load.fieldTested.setString("ok!");
+		assertEquals((new ObjectTested()).toString(), "ok!");
 	}
 }

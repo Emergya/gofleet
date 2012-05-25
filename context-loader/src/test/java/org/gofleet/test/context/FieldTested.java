@@ -25,21 +25,21 @@
  * This exception does not however invalidate any other reasons why the
  * executable file might be covered by the GNU General Public License.
  */
-package org.gofleet.context;
-
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+package org.gofleet.test.context;
 
 /**
- * 
- * Indicates that an element has to be autowired (as on Spring)
- * 
  * @author marias
  *
  */
-@Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.FIELD)
-public @interface GoWired {
+public class FieldTested {
+	
+	private String mes = "Field Tested!!";
+	@Override
+	public String toString() {
+		return this.mes;
+	}
+	
+	public void setString(String mes){
+		this.mes = mes;
+	}
 }

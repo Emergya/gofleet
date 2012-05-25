@@ -3,10 +3,30 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.gofleet</groupId>
 	<artifactId>context-loader</artifactId>
-	<version>0.0.1</version>
+	<version>0.1.0</version>
 	<name>context-loader</name>
 	<description>Context loader (like a simple Spring Framework) for Desktop Applications</description>
 	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>aspectj-maven-plugin</artifactId>
+				<version>1.3</version>
+				<configuration>
+					<source>1.6</source>
+					<target>1.6</target>
+					<complianceLevel>1.6</complianceLevel>
+				</configuration>
+				<executions>
+					<execution>
+						<goals>
+							<goal>compile</goal>
+							<goal>test-compile</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
 		<pluginManagement>
 			<plugins>
 				<plugin>
@@ -28,10 +48,17 @@
 			<version>1.1.1</version>
 			<scope>provided</scope>
 		</dependency>
+		<!-- Tests -->
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
 			<version>4.10</version>
+		</dependency>
+		<!-- AspectJ -->
+		<dependency>
+			<groupId>org.aspectj</groupId>
+			<artifactId>aspectjrt</artifactId>
+			<version>1.6.2</version>
 		</dependency>
 	</dependencies>
 </project>
