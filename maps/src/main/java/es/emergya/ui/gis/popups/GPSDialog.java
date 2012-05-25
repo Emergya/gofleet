@@ -53,6 +53,7 @@ import javax.swing.SwingWorker;
 import javax.swing.Timer;
 
 import org.apache.commons.logging.LogFactory;
+import org.gofleet.context.GoWired;
 
 import es.emergya.bbdd.bean.Outbox;
 import es.emergya.bbdd.bean.Recurso;
@@ -75,6 +76,22 @@ public class GPSDialog extends JFrame implements ActionListener {
 	JLabel progressIcon;
 	Recurso target;
 
+	@GoWired
+	private BasicWindow basicWindow;
+
+	/**
+	 * @return the basicWindow
+	 */
+	public BasicWindow getBasicWindow() {
+		return basicWindow;
+	}
+
+	/**
+	 * @param basicWindow the basicWindow to set
+	 */
+	public void setBasicWindow(BasicWindow basicWindow) {
+		this.basicWindow = basicWindow;
+	}
 	public GPSDialog(Recurso r) {
 		super();
 		setAlwaysOnTop(true);
@@ -86,7 +103,7 @@ public class GPSDialog extends JFrame implements ActionListener {
 		setPreferredSize(new Dimension(400, 150));
 		setTitle(getString("window.gps.titleBar") + " "
 				+ target.getIdentificador());
-		setIconImage(BasicWindow.getFrame().getIconImage());
+		setIconImage(getBasicWindow().getFrame().getIconImage());
 
 		JPanel base = new JPanel();
 
@@ -137,7 +154,7 @@ public class GPSDialog extends JFrame implements ActionListener {
 
 		int x;
 		int y;
-		Container myParent = BasicWindow.getFrame().getContentPane();
+		Container myParent = getBasicWindow().getFrame().getContentPane();
 		Point topLeft = myParent.getLocationOnScreen();
 		Dimension parentSize = myParent.getSize();
 		Dimension mySize = getSize();

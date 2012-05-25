@@ -5,6 +5,7 @@
 	<session-factory>
 		<property name="hibernate.current_session_context_class">thread</property>
 		<property name="hibernate.cache.provider_class">org.hibernate.cache.EhCacheProvider</property>
+		<property name="hibernate.cache.use_second_level_cache">true</property>
 		<property name="hibernate.transaction.factory_class">org.hibernate.transaction.JDBCTransactionFactory</property>
 		<property name="hibernate.show_sql">false</property>
 

@@ -50,6 +50,8 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SpringLayout;
 
+import org.gofleet.context.GoWired;
+
 import es.emergya.bbdd.bean.Recurso;
 import es.emergya.cliente.constants.LogicConstants;
 import es.emergya.consultas.HistoricoGPSConsultas;
@@ -61,6 +63,23 @@ public class SummaryDialog extends JFrame {
 	private static final String FORMAT = "%0" + LogicConstants.LONGITUD_ISSI
 			+ "d";
 	private static final long serialVersionUID = -299088272363122282L;
+	
+	@GoWired
+	private BasicWindow basicWindow;
+
+	/**
+	 * @return the basicWindow
+	 */
+	public BasicWindow getBasicWindow() {
+		return basicWindow;
+	}
+
+	/**
+	 * @param basicWindow the basicWindow to set
+	 */
+	public void setBasicWindow(BasicWindow basicWindow) {
+		this.basicWindow = basicWindow;
+	}
 
 	public SummaryDialog(Recurso r) {
 
@@ -74,7 +93,7 @@ public class SummaryDialog extends JFrame {
 		setSize(600, 400);
 		setTitle(getString("Resources.summary.titleWindow") + " "
 				+ r.getIdentificador());
-		setIconImage(BasicWindow.getFrame().getIconImage());
+		setIconImage(getBasicWindow().getFrame().getIconImage());
 		JPanel base = new JPanel();
 		base.setLayout(new BoxLayout(base, BoxLayout.Y_AXIS));
 		base.setBackground(Color.WHITE);
@@ -221,7 +240,7 @@ public class SummaryDialog extends JFrame {
 		int x;
 		int y;
 
-		Container myParent = BasicWindow.getFrame().getContentPane();
+		Container myParent = getBasicWindow().getFrame().getContentPane();
 		Point topLeft = myParent.getLocationOnScreen();
 		Dimension parentSize = myParent.getSize();
 

@@ -34,7 +34,6 @@ import java.awt.Color;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
-import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.SimpleDateFormat;
@@ -50,6 +49,9 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SpringLayout;
 
+import org.apache.commons.logging.LogFactory;
+import org.gofleet.context.GoClassLoader;
+
 import es.emergya.bbdd.bean.Recurso;
 import es.emergya.cliente.constants.LogicConstants;
 import es.emergya.consultas.HistoricoGPSConsultas;
@@ -61,6 +63,9 @@ public class SummaryDialog extends JFrame {
 	private static final String FORMAT = "%0" + LogicConstants.LONGITUD_ISSI
 			+ "d";
 	private static final long serialVersionUID = -299088272363122282L;
+
+	private static final org.apache.commons.logging.Log LOG = LogFactory
+			.getLog(SummaryDialog.class);
 
 	public SummaryDialog(Recurso r) {
 
@@ -74,7 +79,12 @@ public class SummaryDialog extends JFrame {
 		setSize(600, 400);
 		setTitle(getString("Resources.summary.titleWindow") + " "
 				+ r.getIdentificador());
-		setIconImage(BasicWindow.getFrame().getIconImage());
+		try {
+			setIconImage(((BasicWindow) GoClassLoader.getGoClassLoader().load(
+					BasicWindow.class)).getFrame().getIconImage());
+		} catch (Throwable e) {
+			LOG.error("There is no icon image", e);
+		}
 		JPanel base = new JPanel();
 		base.setLayout(new BoxLayout(base, BoxLayout.Y_AXIS));
 		base.setBackground(Color.WHITE);
@@ -86,8 +96,8 @@ public class SummaryDialog extends JFrame {
 
 		final JLabel labelTitle = new JLabel(
 				getString("Resources.summary.title") + " "
-						+ r.getIdentificador(), LogicConstants
-						.getIcon("tittleficha_icon_recurso"), JLabel.LEFT);
+						+ r.getIdentificador(),
+				LogicConstants.getIcon("tittleficha_icon_recurso"), JLabel.LEFT);
 		labelTitle.setFont(LogicConstants.deriveBoldFont(12f));
 
 		title.setBackground(Color.WHITE);
@@ -141,8 +151,8 @@ public class SummaryDialog extends JFrame {
 		// Referencia Humana
 		mid.add(new JLabel(getString("Resources.incidences"), JLabel.RIGHT));
 		JTextField rHumana = new JTextField();
-//		if (r.getIncidencias() != null)
-//			rHumana.setText(r.getIncidencias().getReferenciaHumana());
+		// if (r.getIncidencias() != null)
+		// rHumana.setText(r.getIncidencias().getReferenciaHumana());
 		rHumana.setEditable(false);
 		mid.add(rHumana);
 		// dispositivo
@@ -203,8 +213,8 @@ public class SummaryDialog extends JFrame {
 		JPanel buttons = new JPanel();
 
 		buttons.setBackground(Color.WHITE);
-		JButton accept = new JButton(getString("Buttons.ok"), LogicConstants
-				.getIcon("button_accept"));
+		JButton accept = new JButton(getString("Buttons.ok"),
+				LogicConstants.getIcon("button_accept"));
 
 		accept.addActionListener(new ActionListener() {
 
@@ -221,22 +231,28 @@ public class SummaryDialog extends JFrame {
 		int x;
 		int y;
 
-		Container myParent = BasicWindow.getFrame().getContentPane();
-		Point topLeft = myParent.getLocationOnScreen();
-		Dimension parentSize = myParent.getSize();
+		Container myParent;
+		try {
+			myParent = ((BasicWindow) GoClassLoader.getGoClassLoader().load(
+					BasicWindow.class)).getFrame().getContentPane();
+			java.awt.Point topLeft = myParent.getLocationOnScreen();
+			Dimension parentSize = myParent.getSize();
 
-		Dimension mySize = getSize();
+			Dimension mySize = getSize();
 
-		if (parentSize.width > mySize.width)
-			x = ((parentSize.width - mySize.width) / 2) + topLeft.x;
-		else
-			x = topLeft.x;
+			if (parentSize.width > mySize.width)
+				x = ((parentSize.width - mySize.width) / 2) + topLeft.x;
+			else
+				x = topLeft.x;
 
-		if (parentSize.height > mySize.height)
-			y = ((parentSize.height - mySize.height) / 2) + topLeft.y;
-		else
-			y = topLeft.y;
+			if (parentSize.height > mySize.height)
+				y = ((parentSize.height - mySize.height) / 2) + topLeft.y;
+			else
+				y = topLeft.y;
 
-		setLocation(x, y);
+			setLocation(x, y);
+		} catch (Throwable e1) {
+			LOG.error("There is no basic window!", e1);
+		}
 	}
 }

@@ -40,6 +40,7 @@ import java.util.Properties;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.gofleet.context.GoClassLoader;
 
 /**
  * @author marias
@@ -53,17 +54,15 @@ public class LogicConstants {
 		LogicConstants.p = new Properties();
 
 		try {
-			ExtensionClassLoader ecl = new ExtensionClassLoader();
-			InputStream is = ecl
+			InputStream is = GoClassLoader.getGoClassLoader()
 					.getResourceAsStream(LogicConstants.constantsProperties);
 			if (is == null)
 				is = LogicConstants.class
 						.getResourceAsStream(LogicConstants.constantsProperties);
 			p.load(is);
 		} catch (FileNotFoundException fnf) {
-			LOG
-					.error("Fichero de configuarcion conf/contants.properties no encontrado"
-							+ fnf);
+			LOG.error("Fichero de configuarcion conf/contants.properties no encontrado"
+					+ fnf);
 		} catch (IOException e) {
 			LOG.error(e);
 		} catch (Exception e) {

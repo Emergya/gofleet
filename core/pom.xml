@@ -7,25 +7,28 @@
 	<parent>
 		<groupId>org.gofleet</groupId>
 		<artifactId>gofleet</artifactId>
-		<version>0.0.2-SNAPSHOT</version>
+		<version>0.0.3-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
-	<groupId>org.gofleet</groupId>
 	<artifactId>core</artifactId>
 	<name>core</name>
-	<version>0.0.2-SNAPSHOT</version>
 	<description>${projectname} Core</description>
+
+
+
+
 	<distributionManagement>
-		<snapshotRepository>
+		<repository>
 			<id>gofleet</id>
-			<url>http://gis.emergya.info/nexus/content/repositories/gofleet</url>
+			<url>http://nexus.emergya.es/nexus/content/repositories/gofleet</url>
+		</repository>
+		<snapshotRepository>
+			<id>gofleet-snap</id>
+			<url>http://nexus.emergya.es/nexus/content/repositories/gofleet-snapshots</url>
 		</snapshotRepository>
-                <repository>
-                        <id>gofleet_releases</id>
-                        <url>http://gis.emergya.info/nexus/content/repositories/gofleet_releases</url>
-                </repository>
 	</distributionManagement>
+
 
 	<build>
 		<pluginManagement>
@@ -67,13 +70,6 @@
 						</aspectLibrary>
 					</aspectLibraries>
 				</configuration>
-				<executions>
-					<execution>
-						<goals>
-							<goal>compile</goal>
-						</goals>
-					</execution>
-				</executions>
 				<dependencies>
 					<dependency>
 						<groupId>org.aspectj</groupId>
@@ -87,26 +83,6 @@
 					</dependency>
 				</dependencies>
 
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-dependency-plugin</artifactId>
-				<version>2.1</version>
-				<executions>
-					<execution>
-						<id>copy-dependencies</id>
-						<phase>package</phase>
-						<goals>
-							<goal>copy-dependencies</goal>
-						</goals>
-						<configuration>
-							<outputDirectory>${project.build.directory}/lib</outputDirectory>
-							<overWriteReleases>false</overWriteReleases>
-							<overWriteSnapshots>false</overWriteSnapshots>
-							<overWriteIfNewer>true</overWriteIfNewer>
-						</configuration>
-					</execution>
-				</executions>
 			</plugin>
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
@@ -125,14 +101,6 @@
 					<schema>${dbunit.schema}</schema>
 					<skip>${maven.test.skip}</skip>
 				</configuration>
-				<executions>
-					<execution>
-						<phase>test-compile</phase>
-						<goals>
-							<goal>operation</goal>
-						</goals>
-					</execution>
-				</executions>
 				<dependencies>
 					<dependency>
 						<groupId>${jdbc.groupId}</groupId>
@@ -180,6 +148,11 @@
 	</repositories>
 
 	<dependencies>
+		<dependency>
+			<groupId>org.gofleet</groupId>
+			<artifactId>context-loader</artifactId>
+			<version>0.1.0</version>
+		</dependency>
 		<dependency>
 			<groupId>org.appfuse</groupId>
 			<artifactId>appfuse-service</artifactId>

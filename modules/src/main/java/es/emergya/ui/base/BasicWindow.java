@@ -44,11 +44,11 @@ import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 
 import org.apache.commons.logging.LogFactory;
+import org.gofleet.context.GoWired;
+import org.gofleet.internacionalization.I18n;
 
 import es.emergya.actions.Authentication;
-import es.emergya.bbdd.bean.Usuario;
 import es.emergya.cliente.constants.LogicConstants;
-import es.emergya.i18n.Internacionalization;
 import es.emergya.ui.base.plugins.AbstractPlugin;
 import es.emergya.ui.base.plugins.PluginContainer;
 
@@ -60,25 +60,36 @@ import es.emergya.ui.base.plugins.PluginContainer;
  * 
  */
 public class BasicWindow {
-	private static JFrame frame;
-	private static Cursor busyCursor;
-	private static Cursor defaultCursor;
-	private static Cursor handCursor;
+	private JFrame frame;
+	private Cursor busyCursor;
+	private Cursor defaultCursor;
+	private Cursor handCursor;
 
-	private static final org.apache.commons.logging.Log LOG = LogFactory
-			.getLog(BasicWindow.class);
+	@GoWired
+	public I18n i18n;
+
+	public void setI18n(I18n i18n) {
+		this.i18n = i18n;
+	}
+	
+	@GoWired
+	public Message message;
+
+	public void setMessage(Message message) {
+		this.message = message;
+	}
+
+	private final org.apache.commons.logging.Log LOG = LogFactory
+			.getLog(this.getClass());
 	/** Plugin container @see {@link AbstractPlugin} **/
-	private static PluginContainer container;
-	// /** Default frame width. */
-	// private static final int DEFAULT_WIDTH = 800; // 800 para las OBU
-	// /** Default frame height. */
-	// private static final int DEFAULT_HEIGHT = 650; // 650 para las OBU
-	/** Default font size. */
-	private static final float DEFAULT_FONT_SIZE = 18.0f;
-	private static final Image ICON_IMAGE = getImageIcon("/images/iconoEF.png");
+	private PluginContainer container;
 
-	private static Image getImageIcon(String uri) {
-		final URL resource = BasicWindow.class.getResource(uri);
+	/** Default font size. */
+	private final float DEFAULT_FONT_SIZE = 18.0f;
+	private final Image ICON_IMAGE = getImageIcon("/images/iconoEF.png");
+
+	private Image getImageIcon(String uri) {
+		final URL resource = this.getClass().getResource(uri);
 		if (resource != null) {
 			final ImageIcon imageIcon = new ImageIcon(resource);
 			if (imageIcon != null)
@@ -89,85 +100,78 @@ public class BasicWindow {
 	}
 
 	/**
-	 * Build a basic BasicWindow.
+	 * Build a basic
 	 */
-	private BasicWindow() {
+	public BasicWindow() {
 		super();
-	}
-
-	static {
 		inicializar();
 	}
 
 	/**
 	 * Initialize the window with default values.
 	 */
-	private static void inicializar() {
-		BasicWindow.frame = new JFrame(
-				Internacionalization.getString("BasicWindow.title")); //$NON-NLS-1$
-		BasicWindow.getFrame().setBackground(Color.WHITE);
-		BasicWindow.getFrame().setIconImage(ICON_IMAGE); //$NON-NLS-1$
-		BasicWindow.getFrame().addWindowListener(
-				new RemoveClientesConectadosListener());
+	private void inicializar() {
+		frame = new JFrame(i18n.getString("title")); //$NON-NLS-1$
+		getFrame().setBackground(Color.WHITE);
+		getFrame().setIconImage(ICON_IMAGE); //$NON-NLS-1$
+		getFrame().addWindowListener(new RemoveClientesConectadosListener());
 
-		BasicWindow.getFrame().setMinimumSize(new Dimension(900, 600));
-		BasicWindow.getFrame().addComponentListener(new ComponentAdapter() {
+		getFrame().setMinimumSize(new Dimension(900, 600));
+		getFrame().addComponentListener(new ComponentAdapter() {
 
 			@Override
 			public void componentResized(ComponentEvent e) {
-				BasicWindow.resize();
+				resize();
 			}
 
 		});
 
-		BasicWindow.busyCursor = new Cursor(Cursor.WAIT_CURSOR);
-		BasicWindow.defaultCursor = new Cursor(Cursor.DEFAULT_CURSOR);
+		busyCursor = new Cursor(Cursor.WAIT_CURSOR);
+		defaultCursor = new Cursor(Cursor.DEFAULT_CURSOR);
 		Toolkit toolkit = Toolkit.getDefaultToolkit();
 		Image image = getImageIcon("/images/hand.gif");
 		if (image != null)
-			BasicWindow.handCursor = toolkit.createCustomCursor(image,
-					new Point(0, 0), "hand"); //$NON-NLS-1$
+			handCursor = toolkit.createCustomCursor(image, new Point(0, 0),
+					"hand"); //$NON-NLS-1$
 	}
 
 	/**
 	 * Draws the frame.
 	 */
-	public static void draw() {
+	public void draw() {
 
-		BasicWindow.getFrame().getContentPane().removeAll();
+		getFrame().getContentPane().removeAll();
 
-		BasicWindow.getFrame().setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		BasicWindow.getFrame().setFont(
-				LogicConstants.deriveLightFont(BasicWindow.DEFAULT_FONT_SIZE));
+		getFrame().setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		getFrame().setFont(LogicConstants.deriveLightFont(DEFAULT_FONT_SIZE));
 
 		// Añadimos los plugins;
-		if (BasicWindow.getPluginContainer() == null
-				|| BasicWindow.getPluginContainer().getPlugins().size() == 0)
+		if (getPluginContainer() == null
+				|| getPluginContainer().getPlugins().size() == 0)
 			LOG.error("no hay plugins");
 		else {
-			BasicWindow.getPluginContainer().setup();
-			BasicWindow.getFrame().getContentPane()
-					.add(BasicWindow.getPluginContainer());
-			BasicWindow.getPluginContainer().maximizeAllDetachedTabs();
+			getPluginContainer().setup();
+			getFrame().getContentPane().add(getPluginContainer());
+			getPluginContainer().maximizeAllDetachedTabs();
 		}
-		BasicWindow.getFrame().pack();
-		BasicWindow.getFrame().setExtendedState(JFrame.MAXIMIZED_BOTH);
+		getFrame().pack();
+		getFrame().setExtendedState(JFrame.MAXIMIZED_BOTH);
 
 		// Display the window.
-		BasicWindow.getFrame().setVisible(true);
+		getFrame().setVisible(true);
 	}
 
 	/**
 	 * Calculate and resize all the components of the window.
 	 */
-	public static void resize() {
+	public void resize() {
 
-		if (BasicWindow.getFrame() == null)
+		if (getFrame() == null)
 			return;
 
 		// Recorremos los plugins propios para redibujarlos con el nuevo
 		// tamaño.
-		BasicWindow.getPluginContainer().resize();
+		getPluginContainer().resize();
 
 	}
 
@@ -176,119 +180,80 @@ public class BasicWindow {
 	 * 
 	 * @param pc
 	 */
-	public static void setPluginContainer(PluginContainer pc) {
-		BasicWindow.container = pc;
-	}
-
-	/**
-	 * Deprecated, usa mejor Autenticacion.getUsuario()
-	 * 
-	 * @see Authentication#getUsuario()
-	 * @return
-	 */
-	@Deprecated
-	public static Usuario getUsuario() {
-		return Authentication.getUsuario();
+	public void setPluginContainer(PluginContainer pc) {
+		container = pc;
 	}
 
 	/**
 	 * Gives a new color to the alert (the color of the main tab)
 	 */
-	public static void recolorAlert() {
-		if (BasicWindow.getPluginContainer() != null)
-			Message.changeColor(BasicWindow.getPluginContainer()
-					.getBackgroundColor());
+	public void recolorAlert() {
+		if (getPluginContainer() != null)
+			message.changeColor(getPluginContainer().getBackgroundColor());
 	}
 
 	/**
 	 * 
 	 * @return actual width
 	 */
-	public static int getWidth() {
-		// if (BasicWindow.frame == null)
-		// return BasicWindow.DEFAULT_WIDTH;
-		return BasicWindow.getFrame().getWidth();
+	public int getWidth() {
+		// if (frame == null)
+		// return DEFAULT_WIDTH;
+		return getFrame().getWidth();
 	}
 
 	/**
 	 * 
 	 * @return actual height
 	 */
-	public static int getHeight() {
-		// if (BasicWindow.frame == null)
-		// return BasicWindow.DEFAULT_HEIGHT;
-		return BasicWindow.getFrame().getHeight();
+	public int getHeight() {
+		// if (frame == null)
+		// return DEFAULT_HEIGHT;
+		return getFrame().getHeight();
 	}
 
 	/**
 	 * 
 	 * @return the plugin container
 	 */
-	public static PluginContainer getPluginContainer() {
-		return BasicWindow.container;
+	public PluginContainer getPluginContainer() {
+		return container;
 	}
 
-	public static JFrame getFrame() {
-		return BasicWindow.frame;
+	public JFrame getFrame() {
+		return frame;
 	}
 
 	/** Set a wait cursor. */
-	public static void showAsBusy() {
-		if (BasicWindow.getFrame() != null)
-			BasicWindow.getFrame().setCursor(BasicWindow.busyCursor);
+	public void showAsBusy() {
+		if (getFrame() != null)
+			getFrame().setCursor(busyCursor);
 	}
 
 	/** Set a hand cursor. */
-	public static void showAsHand() {
-		if (BasicWindow.getFrame() != null)
-			BasicWindow.getFrame().setCursor(BasicWindow.handCursor);
+	public void showAsHand() {
+		if (getFrame() != null)
+			getFrame().setCursor(handCursor);
 	}
 
 	/** Set a default cursor */
-	public static void showIdle() {
-		if (BasicWindow.getFrame() != null)
-			BasicWindow.getFrame().setCursor(BasicWindow.defaultCursor);
+	public void showIdle() {
+		if (getFrame() != null)
+			getFrame().setCursor(defaultCursor);
 	}
 
-	public static void logOut() {
+	public void logOut() {
 		ExitHandler eh = new ExitHandler();
 		eh.actionPerformed(null);
 	}
 
-	/**
-	 * @see Authentication#isAuthenticated()
-	 * @deprecated use isAuthenticated()
-	 * @return
-	 */
-	@Deprecated
-	public static boolean isAutenticated() {
+	public boolean isAuthenticated() {
 		return Authentication.isAuthenticated();
 	}
 
-	public static boolean isAuthenticated() {
-		return Authentication.isAuthenticated();
-	}
-
-	public static Image getIconImage() {
+	public Image getIconImage() {
 		return ICON_IMAGE;
 	}
-
-//	public static void showOnMap(EastNorth ea, int map) {
-//		LOG.info("showOnMap(" + ea + ")");
-//		for (AbstractPlugin ap : container.getPlugins()) {
-//			if (ap instanceof IMapViewer) {
-//				if (ap.getOrder() == map) {
-//					NavigatableComponent mv = ((IMapViewer) ap).getMapView();
-//					mv.zoomTo(ea, mv.getScale());
-//					break;
-//				}
-//			}
-//		}
-//	}
-
-	// public static void showOnMap(LatLon ll, int map) {
-	// showOnMap(Main.proj.latlon2eastNorth(ll), map);
-	// }
 
 }
 

@@ -30,7 +30,6 @@
 package es.emergya.ui.plugins;
 
 import static es.emergya.cliente.constants.LogicConstants.getIcon;
-import static es.emergya.i18n.Internacionalization.getString;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -108,7 +107,7 @@ public class AdminPanel extends JPanel implements ActionListener {
 	private Option father = null;
 	protected int columnToReselect = 1;
 	protected Map<Integer, Integer> colsWidth = new HashMap<Integer, Integer>();
-	protected String errorString = getString("Admin.delete.fail");
+	protected String errorString = "Admin.delete.fail";
 	protected String errorCause = "";
 	protected List<Integer> invisibleFilterCols = new LinkedList<Integer>();
 	private List<Object> seleccion = new ArrayList<Object>(0);
@@ -277,7 +276,7 @@ public class AdminPanel extends JPanel implements ActionListener {
 			}
 
 			if (JOptionPane.showConfirmDialog(this,
-					getString("Buttons.delete.confirm"),
+					"Buttons.delete.confirm",
 					"Selecciona una opción", JOptionPane.YES_NO_OPTION) != JOptionPane.YES_OPTION) {
 				return;
 			}
@@ -719,7 +718,7 @@ public class AdminPanel extends JPanel implements ActionListener {
 		 *            objeto a borrar
 		 */
 		public DeleteAction(T o) {
-			super(null, getIcon(getString("Buttons.delete")));
+			super(null, getIcon("Buttons.delete"));
 			this.target = o;
 			log.trace("Creado delete action para " + this.target);
 		}
@@ -727,7 +726,7 @@ public class AdminPanel extends JPanel implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			if (JOptionPane.showConfirmDialog(AdminPanel.this,
-					getString("Buttons.delete.confirm"),
+					"Buttons.delete.confirm",
 					"Selecciona una opción", JOptionPane.YES_NO_OPTION) == JOptionPane.OK_OPTION) {
 				delete(true);
 				AdminPanel.this.father.refresh(null);
@@ -787,7 +786,7 @@ public class AdminPanel extends JPanel implements ActionListener {
 		private static final long serialVersionUID = -4311069821314184357L;
 
 		public FiltrarAction() {
-			super(null, getIcon(getString("Buttons.filtrar")));
+			super(null, getIcon("Buttons.filtrar"));
 		}
 
 		@Override
@@ -823,7 +822,7 @@ public class AdminPanel extends JPanel implements ActionListener {
 		private static final long serialVersionUID = -4311069821314184357L;
 
 		public NoFiltrarAction() {
-			super(null, getIcon(getString("Buttons.noFiltrar")));
+			super(null, getIcon("Buttons.noFiltrar"));
 		}
 
 		@Override

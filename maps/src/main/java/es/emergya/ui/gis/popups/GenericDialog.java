@@ -57,6 +57,7 @@ import javax.swing.SpringLayout;
 
 import org.apache.commons.logging.LogFactory;
 import org.freixas.jcalendar.JCalendarCombo;
+import org.gofleet.context.GoWired;
 
 import es.emergya.cliente.constants.LogicConstants;
 import es.emergya.ui.SpringUtilities;
@@ -92,6 +93,22 @@ public abstract class GenericDialog<T> extends JFrame {
 		return this.id;
 	}
 
+	@GoWired
+	private BasicWindow basicWindow;
+
+	/**
+	 * @return the basicWindow
+	 */
+	public BasicWindow getBasicWindow() {
+		return basicWindow;
+	}
+
+	/**
+	 * @param basicWindow the basicWindow to set
+	 */
+	public void setBasicWindow(BasicWindow basicWindow) {
+		this.basicWindow = basicWindow;
+	}
 	public GenericDialog(T i, final String titulo, final String icon) {
 		super();
 		log.trace("GenericDialog(" + i + ")");
@@ -100,7 +117,7 @@ public abstract class GenericDialog<T> extends JFrame {
 		setBackground(Color.WHITE);
 		setPreferredSize(new Dimension(500, 500));
 		setTitle(titulo);
-		setIconImage(BasicWindow.getFrame().getIconImage());
+		setIconImage(getBasicWindow().getFrame().getIconImage());
 		JPanel base = new JPanel();
 		base.setLayout(new BoxLayout(base, BoxLayout.Y_AXIS));
 		base.setBackground(Color.WHITE);
@@ -148,7 +165,7 @@ public abstract class GenericDialog<T> extends JFrame {
 		int x;
 		int y;
 
-		Container myParent = BasicWindow.getFrame().getContentPane();
+		Container myParent = getBasicWindow().getFrame().getContentPane();
 		Point topLeft = myParent.getLocationOnScreen();
 		Dimension parentSize = myParent.getSize();
 

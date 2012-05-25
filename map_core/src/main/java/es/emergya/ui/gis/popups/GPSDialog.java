@@ -36,7 +36,6 @@ import java.awt.Color;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
-import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
@@ -52,7 +51,9 @@ import javax.swing.JPanel;
 import javax.swing.SwingWorker;
 import javax.swing.Timer;
 
+import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.gofleet.context.GoClassLoader;
 
 import es.emergya.bbdd.bean.Outbox;
 import es.emergya.bbdd.bean.Recurso;
@@ -74,6 +75,7 @@ public class GPSDialog extends JFrame implements ActionListener {
 	JLabel notification;
 	JLabel progressIcon;
 	Recurso target;
+	private static final Log LOG = LogFactory.getLog(GPSDialog.class);
 
 	public GPSDialog(Recurso r) {
 		super();
@@ -86,7 +88,12 @@ public class GPSDialog extends JFrame implements ActionListener {
 		setPreferredSize(new Dimension(400, 150));
 		setTitle(getString("window.gps.titleBar") + " "
 				+ target.getIdentificador());
-		setIconImage(BasicWindow.getFrame().getIconImage());
+		try {
+			setIconImage(((BasicWindow) GoClassLoader.getGoClassLoader().load(
+					BasicWindow.class)).getFrame().getIconImage());
+		} catch (Throwable e) {
+			LOG.error("There is no icon image", e);
+		}
 
 		JPanel base = new JPanel();
 
@@ -137,24 +144,29 @@ public class GPSDialog extends JFrame implements ActionListener {
 
 		int x;
 		int y;
-		Container myParent = BasicWindow.getFrame().getContentPane();
-		Point topLeft = myParent.getLocationOnScreen();
-		Dimension parentSize = myParent.getSize();
-		Dimension mySize = getSize();
+		Container myParent;
+		try {
+			myParent = ((BasicWindow) GoClassLoader.getGoClassLoader().load(
+					BasicWindow.class)).getFrame().getContentPane();
+			java.awt.Point topLeft = myParent.getLocationOnScreen();
+			Dimension parentSize = myParent.getSize();
 
-		if (parentSize.width > mySize.width) {
-			x = ((parentSize.width - mySize.width) / 2) + topLeft.x;
-		} else {
-			x = topLeft.x;
+			Dimension mySize = getSize();
+
+			if (parentSize.width > mySize.width)
+				x = ((parentSize.width - mySize.width) / 2) + topLeft.x;
+			else
+				x = topLeft.x;
+
+			if (parentSize.height > mySize.height)
+				y = ((parentSize.height - mySize.height) / 2) + topLeft.y;
+			else
+				y = topLeft.y;
+
+			setLocation(x, y);
+		} catch (Throwable e1) {
+			LOG.error("There is no basic window!", e1);
 		}
-
-		if (parentSize.height > mySize.height) {
-			y = ((parentSize.height - mySize.height) / 2) + topLeft.y;
-		} else {
-			y = topLeft.y;
-		}
-
-		setLocation(x, y);
 		this.addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowOpened(WindowEvent arg0) {

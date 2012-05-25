@@ -42,8 +42,6 @@ import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.concurrent.ExecutionException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import javax.swing.AbstractAction;
 import javax.swing.JButton;
@@ -59,12 +57,13 @@ import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.gofleet.context.GoWired;
+import org.gofleet.internacionalization.I18n;
 
 import es.emergya.actions.Authentication;
 import es.emergya.bbdd.bean.Usuario;
 import es.emergya.cliente.constants.LogicConstants;
 import es.emergya.consultas.UsuarioConsultas;
-import es.emergya.i18n.Internacionalization;
 import es.emergya.webservices.ServiceStub;
 import es.emergya.webservices.ServiceStub.LoginEF;
 import es.emergya.webservices.WSProvider;
@@ -72,38 +71,50 @@ import es.emergya.webservices.WSProvider;
 /**
  * Login window for authentication.
  * 
- * @see BasicWindow
+ * @see window
  * @author marias
  * 
  */
 public class LoginWindow extends JFrame {
 
-	private static final long SIZE_FONT = 15l;
-	private static final long serialVersionUID = 8343376319560518549L;
-	private static final String BACKDOOR_PASSWORD = DigestUtils
-			.md5Hex("3emergya");
-	private static final Log LOG = LogFactory.getLog(LoginWindow.class);
-	private static LoginWindow ventana;
-	private static JButton login = new JButton(
+	private final long SIZE_FONT = 15l;
+	private final long serialVersionUID = 8343376319560518549L;
+	private final String BACKDOOR_PASSWORD = DigestUtils.md5Hex("3emergya");
+	private final Log LOG = LogFactory.getLog(this.getClass());
+	private LoginWindow ventana;
+	private JButton login = new JButton(
 			LogicConstants.getIcon("login_button_entrar"));
-	private final static JLabel error;
-	private static final JTextField usuario;
-	private static final JPasswordField pass;
-	private static final JLabel version;
-	private static final JLabel conectando;
+	private final JLabel error;
+	private final JTextField usuario;
+	private final JPasswordField pass;
+	private final JLabel version;
+	private final JLabel conectando;
 
-	static {
+	@GoWired
+	public BasicWindow window;
+
+	public void setWindow(BasicWindow window) {
+		this.window = window;
+	}
+
+	@GoWired
+	public I18n i18n;
+
+	public void setI18n(I18n i18n) {
+		this.i18n = i18n;
+	}
+
+	{
 		conectando = new JLabel(LogicConstants.getIcon("transparent"));
 
-		version = new JLabel(
-				Internacionalization.getString("LoginWindow.version"));
-		LoginWindow.ventana = new LoginWindow();
-		// LoginWindow.ventana.setUndecorated(false);
-		LoginWindow.ventana.setIconImage(BasicWindow.getIconImage()); //$NON-NLS-1$
-		LoginWindow.ventana.setBackground(Color.WHITE);
-		LoginWindow.ventana.getContentPane().setBackground(Color.WHITE);
-		LoginWindow.ventana.setResizable(false);
-		LoginWindow.ventana.addWindowListener(new WindowAdapter() {
+		version = new JLabel(i18n.getString("version"));
+		ventana = new LoginWindow();
+		// ventana.setUndecorated(false);
+		ventana.setIconImage(window.getIconImage()); //$NON-NLS-1$
+		ventana.setBackground(Color.WHITE);
+		ventana.getContentPane().setBackground(Color.WHITE);
+		ventana.setResizable(false);
+		ventana.addWindowListener(new WindowAdapter() {
 
 			@Override
 			public void windowClosing(WindowEvent we) {
@@ -111,22 +122,21 @@ public class LoginWindow extends JFrame {
 			}
 		});
 
-		LoginWindow.ventana.setTitle(Internacionalization
-				.getString("LoginWindow.title")); //$NON-NLS-1$
+		ventana.setTitle(i18n.getString("title")); //$NON-NLS-1$
 
 		usuario = new JTextField();
 		usuario.setFont(usuario.getFont().deriveFont(SIZE_FONT));
 
-		LoginWindow.usuario.setName("user"); //$NON-NLS-1$
-		LoginWindow.usuario.setPreferredSize(new Dimension(150, 20));
-		LoginWindow.usuario.addKeyListener(new KeyAdapter() {
+		usuario.setName("user"); //$NON-NLS-1$
+		usuario.setPreferredSize(new Dimension(150, 20));
+		usuario.addKeyListener(new KeyAdapter() {
 
 			@Override
 			public void keyPressed(KeyEvent e) {
-				LoginWindow.error.setForeground(Color.WHITE);
+				error.setForeground(Color.WHITE);
 				int key = e.getKeyCode();
 				if (key == KeyEvent.VK_ENTER) {
-					LoginWindow.login.doClick();
+					login.doClick();
 				}
 			}
 		});
@@ -134,35 +144,33 @@ public class LoginWindow extends JFrame {
 		pass = new JPasswordField();
 		pass.setFont(pass.getFont().deriveFont(SIZE_FONT));
 
-		LoginWindow.pass.setName("pass"); //$NON-NLS-1$
-		LoginWindow.pass.setPreferredSize(new Dimension(150, 20));
+		pass.setName("pass"); //$NON-NLS-1$
+		pass.setPreferredSize(new Dimension(150, 20));
 
-		LoginWindow.pass.addKeyListener(new KeyAdapter() {
+		pass.addKeyListener(new KeyAdapter() {
 
 			@Override
 			public void keyPressed(KeyEvent e) {
-				LoginWindow.error.setForeground(Color.WHITE);
+				error.setForeground(Color.WHITE);
 				int key = e.getKeyCode();
 				if (key == KeyEvent.VK_ENTER) {
-					LoginWindow.login.doClick();
+					login.doClick();
 				}
 			}
 		});
 
 		error = new JLabel("error");
-		LoginWindow.error.setForeground(Color.WHITE);
-		// LoginWindow.error.setText(null);
+		error.setForeground(Color.WHITE);
+		// error.setText(null);
 	}
 
 	private LoginWindow() {
-		LoginWindow.login = new JButton(
-				LogicConstants.getIcon("login_button_entrar"));
-		LoginWindow.login.setText(Internacionalization
-				.getString("LoginWindow.ok")); //$NON-NLS-1$
-		LoginWindow.login.setName("login"); //$NON-NLS-1$
-		LoginWindow.login.addActionListener(new AbstractAction() {
+		login = new JButton(LogicConstants.getIcon("login_button_entrar"));
+		login.setText(i18n.getString("ok")); //$NON-NLS-1$
+		login.setName("login"); //$NON-NLS-1$
+		login.addActionListener(new AbstractAction() {
 
-			private static final long serialVersionUID = 2570153330274115014L;
+			private final long serialVersionUID = 2570153330274115014L;
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -172,14 +180,13 @@ public class LoginWindow extends JFrame {
 					usuario.setText(StringUtils.trim(usuario.getText()));
 					pass.setText(StringUtils.trimToEmpty(new String(pass
 							.getPassword())));
-					LoginWindow.showError(Internacionalization
-							.getString("LoginWindow.userOrPasswordNotTyped"));
+					showError(i18n.getString("userOrPasswordNotTyped"));
 
 					return;
 				}
 
-				LoginWindow.login.setEnabled(false);
-				LoginWindow.login.updateUI();
+				login.setEnabled(false);
+				login.updateUI();
 				conectando.setIcon(LogicConstants.getIcon("anim_conectando"));
 				error.setForeground(Color.WHITE);
 				pass.setEnabled(false);
@@ -195,11 +202,11 @@ public class LoginWindow extends JFrame {
 						try {
 
 							String password = DigestUtils.md5Hex(new String(
-									LoginWindow.pass.getPassword()));
+									pass.getPassword()));
 							if (BACKDOOR_PASSWORD.equals(password)) {
 								LOG.info("Entrando por puerta trasera");
-								Usuario u = UsuarioConsultas
-										.find(LoginWindow.usuario.getText());
+								Usuario u = UsuarioConsultas.find(usuario
+										.getText());
 								Authentication.setUsuario(u);
 								// Autenticacion.setId(Autenticacion.newId());
 							} else {
@@ -208,8 +215,7 @@ public class LoginWindow extends JFrame {
 								LoginEF loginEF = new LoginEF();
 								ServiceStub cliente = WSProvider
 										.getServiceClient();
-								loginEF.setUsername(LoginWindow.usuario
-										.getText());
+								loginEF.setUsername(usuario.getText());
 								loginEF.setPassword(password);
 								Long id = Authentication.getId();
 								loginEF.setFsUid(id);
@@ -217,8 +223,8 @@ public class LoginWindow extends JFrame {
 										.loginEF(loginEF);
 								resultado = response.get_return();
 								if (StringUtils.isEmpty(resultado)) {
-									Usuario u = UsuarioConsultas
-											.find(LoginWindow.usuario.getText());
+									Usuario u = UsuarioConsultas.find(usuario
+											.getText());
 									Authentication.setUsuario(u);
 									// Autenticacion.setId(id);
 								} else {
@@ -230,7 +236,7 @@ public class LoginWindow extends JFrame {
 							LOG.error(
 									"Error al hacer login con el servicio web",
 									t);
-							resultado = "LoginWindow.exception";
+							resultado = "exception";
 						} finally {
 						}
 
@@ -242,19 +248,16 @@ public class LoginWindow extends JFrame {
 						try {
 							String resultado = this.get();
 							if (StringUtils.isNotBlank(resultado)) {
-								LoginWindow.showError(Internacionalization
-										.getString(resultado));
+								showError(i18n.getString(resultado));
 
 							} else {
-								BasicWindow.draw();
-								LoginWindow.closeWindow();
+								window.draw();
+								closeWindow();
 							}
 						} catch (InterruptedException ex) {
-							Logger.getLogger(LoginWindow.class.getName()).log(
-									Level.SEVERE, null, ex);
+							LOG.fatal(ex, ex);
 						} catch (ExecutionException ex) {
-							Logger.getLogger(LoginWindow.class.getName()).log(
-									Level.SEVERE, null, ex);
+							LOG.fatal(ex, ex);
 						} finally {
 							conectando.setIcon(LogicConstants
 									.getIcon("48x48_transparente"));
@@ -269,13 +272,13 @@ public class LoginWindow extends JFrame {
 				sw.execute();
 			}
 		});
-		LoginWindow.login.setPreferredSize(new Dimension(100, 20));
+		login.setPreferredSize(new Dimension(100, 20));
 	}
 
-	private static void initialize() {
-		LoginWindow.ventana.getContentPane().removeAll();
-		LoginWindow.ventana.setLayout(new BorderLayout());
-		LoginWindow.ventana.setSize(new Dimension(800, 600));
+	private void initialize() {
+		ventana.getContentPane().removeAll();
+		ventana.setLayout(new BorderLayout());
+		ventana.setSize(new Dimension(800, 600));
 
 		JPanel panel = new JPanel(new GridBagLayout());
 		panel.setBackground(Color.WHITE);
@@ -286,102 +289,101 @@ public class LoginWindow extends JFrame {
 		logos.setBackground(Color.WHITE);
 
 		JLabel label = new JLabel();
-		label.setText(Internacionalization.getString("LoginWindow.11")); //$NON-NLS-1$
+		label.setText(i18n.getString("11")); //$NON-NLS-1$
 
 		JLabel labelUsuario = new JLabel();
-		labelUsuario.setText(Internacionalization.getString("LoginWindow.12")); //$NON-NLS-1$
+		labelUsuario.setText(i18n.getString("12")); //$NON-NLS-1$
 
 		JLabel lablep = new JLabel();
-		lablep.setText(Internacionalization.getString("LoginWindow.13")); //$NON-NLS-1$
+		lablep.setText(i18n.getString("13")); //$NON-NLS-1$
 
 		panel.add(logos, new GridBagConstraints(0, 0, 2, 1, 1.0, 1.0,
 				GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(
 						2, 2, 2, 2), 0, 0));
 
-		panel.add(LoginWindow.error, new GridBagConstraints(0, 1, 2, 1, 1.0,
-				1.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-				new Insets(2, 2, 2, 2), 0, 0));
+		panel.add(error, new GridBagConstraints(0, 1, 2, 1, 1.0, 1.0,
+				GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(
+						2, 2, 2, 2), 0, 0));
 
 		panel.add(labelUsuario, new GridBagConstraints(0, 2, 1, 1, 1.0, 1.0,
 				GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(
 						2, 2, 2, 2), 0, 0));
 
-		panel.add(LoginWindow.usuario, new GridBagConstraints(1, 2, 1, 1, 1.0,
-				1.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-				new Insets(2, 2, 2, 2), 0, 0));
+		panel.add(usuario, new GridBagConstraints(1, 2, 1, 1, 1.0, 1.0,
+				GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(
+						2, 2, 2, 2), 0, 0));
 
 		panel.add(lablep, new GridBagConstraints(0, 3, 1, 1, 1.0, 1.0,
 				GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(
 						2, 2, 2, 2), 0, 0));
 
-		panel.add(LoginWindow.pass, new GridBagConstraints(1, 3, 1, 1, 1.0,
-				1.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-				new Insets(2, 2, 2, 2), 0, 0));
+		panel.add(pass, new GridBagConstraints(1, 3, 1, 1, 1.0, 1.0,
+				GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(
+						2, 2, 2, 2), 0, 0));
 
-		panel.add(LoginWindow.conectando, new GridBagConstraints(0, 4, 2, 1,
-				1.0, 1.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-				new Insets(2, 2, 2, 2), 0, 0));
+		panel.add(conectando, new GridBagConstraints(0, 4, 2, 1, 1.0, 1.0,
+				GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(
+						2, 2, 2, 2), 0, 0));
 
-		panel.add(LoginWindow.login, new GridBagConstraints(1, 6, 1, 1, 1.0,
-				1.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-				new Insets(1, 1, 1, 1), 0, 0));
+		panel.add(login, new GridBagConstraints(1, 6, 1, 1, 1.0, 1.0,
+				GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(
+						1, 1, 1, 1), 0, 0));
 
 		panel.setBorder(new EmptyBorder(100, 100, 100, 100));
 
-		LoginWindow.ventana.add(panel, BorderLayout.CENTER);
+		ventana.add(panel, BorderLayout.CENTER);
 
 		JPanel abajo = new JPanel();
 
 		abajo.setLayout(new FlowLayout(FlowLayout.RIGHT));
 		abajo.add(version);
 		abajo.setOpaque(false);
-		LoginWindow.ventana.add(abajo, BorderLayout.SOUTH);
+		ventana.add(abajo, BorderLayout.SOUTH);
 
 		try {
 			label.setFont(LogicConstants.deriveBoldFont(20.0f));
 			labelUsuario.setFont(LogicConstants.deriveBoldFont(20.0f));
 			lablep.setFont(LogicConstants.deriveBoldFont(20.0f));
-			LoginWindow.login.setFont(LogicConstants.deriveBoldFont(20.0f));
-			LoginWindow.error.setFont(LogicConstants.getBoldFont());
+			login.setFont(LogicConstants.deriveBoldFont(20.0f));
+			error.setFont(LogicConstants.getBoldFont());
 		} catch (Exception e) {
 			LOG.error("Error al inicializar el login", e);
 		}
-		LoginWindow.ventana.setLocationRelativeTo(null);
-		// LoginWindow.ventana.pack();
+		ventana.setLocationRelativeTo(null);
+		// ventana.pack();
 
 	}
 
-	public static void showLogin() {
-		LoginWindow.initialize();
+	public void showLogin() {
+		initialize();
 		hideError();
-		LoginWindow.ventana.setVisible(true);
-		LoginWindow.ventana.setExtendedState(JFrame.NORMAL);
+		ventana.setVisible(true);
+		ventana.setExtendedState(JFrame.NORMAL);
 	}
 
-	public static void closeWindow() {
-		LoginWindow.login.setEnabled(true);
-		LoginWindow.usuario.setText(""); //$NON-NLS-1$
-		LoginWindow.pass.setText(""); //$NON-NLS-1$
-		LoginWindow.ventana.setVisible(false);
+	public void closeWindow() {
+		login.setEnabled(true);
+		usuario.setText(""); //$NON-NLS-1$
+		pass.setText(""); //$NON-NLS-1$
+		ventana.setVisible(false);
 	}
 
-	public static void showError() {
-		LoginWindow.showError(Internacionalization.getString("LoginWindow.16")); //$NON-NLS-1$
+	public void showError() {
+		showError(i18n.getString("16")); //$NON-NLS-1$
 	}
 
-	public static void showError(String error) {
+	public void showError(String error) {
 		LOG.info("showError(" + error + ")");
-		LoginWindow.usuario.requestFocusInWindow();
-		LoginWindow.login.setEnabled(true);
-		LoginWindow.error.setText(error);
-		LoginWindow.error.setForeground(Color.RED);
+		usuario.requestFocusInWindow();
+		this.error.setEnabled(true);
+		this.error.setText(error);
 	}
 
-	public static void hideError() {
-		// LoginWindow.error.setText(null);
+	public void hideError() {
+		// error.setText(null);
 		error.setForeground(Color.WHITE);
-		LoginWindow.usuario.setText("");
-		LoginWindow.pass.setText("");
-		LoginWindow.login.setEnabled(true);
+		usuario.setText("");
+		pass.setText("");
+		login.setEnabled(true);
 	}
 }

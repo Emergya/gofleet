@@ -6,15 +6,23 @@
 	<groupId>org.gofleet</groupId>
 	<artifactId>gofleet</artifactId>
 	<packaging>pom</packaging>
-	<version>0.0.2-SNAPSHOT</version>
+	<version>0.0.3-SNAPSHOT</version>
 	<name>${projectname}</name>
 	<url>http://www.emergya.es</url>
+
+
+
 	<distributionManagement>
-		<snapshotRepository>
+		<repository>
 			<id>gofleet</id>
-			<url>http://gis.emergya.info/nexus/content/repositories/gofleet</url>
+			<url>http://nexus.emergya.es/nexus/content/repositories/gofleet</url>
+		</repository>
+		<snapshotRepository>
+			<id>gofleet-snap</id>
+			<url>http://nexus.emergya.es/nexus/content/repositories/gofleet-snapshots</url>
 		</snapshotRepository>
 	</distributionManagement>
+
 
 	<prerequisites>
 		<maven>2.0.6</maven>
@@ -29,56 +37,31 @@
 
 
 	<inceptionYear>${copyright.year}</inceptionYear>
-	<issueManagement>
-		<system>redmine</system>
-		<url>//TODO</url>
-	</issueManagement>
-	<ciManagement>
-		<system>hudson</system>
-		<url>//TODO</url>
-	</ciManagement>
+
 	<developers>
 		<developer>
 			<id>marias</id>
 			<name>María Arias de Reyna</name>
-			<email>marias@emergya.es</email>
-			<organization>Emergya Consultoría</organization>
-			<organizationUrl>http://www.emergya.es</organizationUrl>
-			<roles>
-				<role>Desarrollador</role>
-			</roles>
+			<email>marias@emergya.com</email>
 		</developer>
 		<developer>
 			<id>fario</id>
 			<name>Félix del Río Benigno</name>
-			<roles>
-				<role>Desarrollador</role>
-			</roles>
 		</developer>
 		<developer>
 			<id>jlrodriguez</id>
 			<name>Juan Luis Rodríguez</name>
-			<email>jlrodriguez@emergya.es</email>
-			<organization>Emergya Consultoría</organization>
-			<organizationUrl>http://www.emergya.es</organizationUrl>
-			<roles>
-				<role>Analista</role>
-			</roles>
+			<email>jlrodriguez@emergya.com</email>
 		</developer>
 		<developer>
 			<id>agonzalez</id>
 			<name>Antonio González</name>
-			<email>agonzalez@emergya.es</email>
-			<organization>Emergya Consultoría</organization>
-			<organizationUrl>http://www.emergya.es</organizationUrl>
-			<roles>
-				<role>Jefe de proyecto</role>
-			</roles>
+			<email>agonzalez@emergya.com</email>
 		</developer>
 	</developers>
 	<organization>
 		<name>Emergya Consultori­a</name>
-		<url>http://www.emergya.es</url>
+		<url>http://www.emergya.com</url>
 	</organization>
 
 	<build>
@@ -150,7 +133,7 @@
 			</snapshots>
 			<id>GoFleet</id>
 			<name>GoFleet</name>
-			<url>http://gis.emergya.info/nexus/content/groups/Gofleet</url>
+			<url>http://nexus.emergya.es/nexus/content/groups/GoFleet/</url>
 		</repository>
 	</repositories>
 	<pluginRepositories>
@@ -226,8 +209,8 @@
 	</dependencies>
 
 	<modules>
+		<module>context-loader</module>
 		<module>core</module>
-		<module>i18n</module>
 		<module>ws-client</module>
 		<module>modules</module>
 		<module>base-client</module>
@@ -291,7 +274,7 @@
 
 	<properties>
 		<!-- Application settings -->
-		<copyright.year>2010</copyright.year>
+		<copyright.year>2012</copyright.year>
 		<projectname>gofleet</projectname>
 		<dao.framework>hibernate</dao.framework>
 		<web.framework>spring</web.framework>

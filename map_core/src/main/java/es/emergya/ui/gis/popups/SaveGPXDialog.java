@@ -33,7 +33,6 @@ import java.awt.Color;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
-import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
@@ -54,6 +53,7 @@ import javax.swing.border.EmptyBorder;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.gofleet.context.GoClassLoader;
 import org.openstreetmap.josm.gui.layer.GpxLayer;
 import org.openstreetmap.josm.gui.layer.Layer;
 import org.openstreetmap.josm.io.GpxWriter;
@@ -66,6 +66,7 @@ public class SaveGPXDialog extends JFrame {
 	static final Log log = LogFactory.getLog(SaveGPXDialog.class);
 	private static final long serialVersionUID = -6066807198392103411L;
 	private static SaveGPXDialog self;
+	private static final Log LOG = LogFactory.getLog(SaveGPXDialog.class);
 
 	public synchronized static void close() {
 		if (self != null)
@@ -84,7 +85,13 @@ public class SaveGPXDialog extends JFrame {
 		super("Consulta de Posiciones GPS");
 		setResizable(false);
 		setAlwaysOnTop(true);
-		this.setIconImage(BasicWindow.getIconImage());
+		try {
+			setIconImage(((BasicWindow) GoClassLoader.getGoClassLoader().load(
+					BasicWindow.class)).getFrame().getIconImage());
+		} catch (Throwable e) {
+			LOG.error("There is no icon image", e);
+		}
+
 		this.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 		JPanel dialogo = new JPanel(new BorderLayout());
 		dialogo.setBackground(Color.WHITE);
@@ -95,11 +102,11 @@ public class SaveGPXDialog extends JFrame {
 		final JTextField nombre = new JTextField(15);
 		nombre.setEditable(false);
 		central.add(nombre);
-		final JButton button = new JButton("Examinar...", LogicConstants
-				.getIcon("button_nuevo"));
+		final JButton button = new JButton("Examinar...",
+				LogicConstants.getIcon("button_nuevo"));
 		central.add(button);
-		final JButton aceptar = new JButton("Guardar", LogicConstants
-				.getIcon("button_save"));
+		final JButton aceptar = new JButton("Guardar",
+				LogicConstants.getIcon("button_save"));
 		button.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -133,8 +140,7 @@ public class SaveGPXDialog extends JFrame {
 								String original = f.getCanonicalPath();
 								f = checkFileOverwritten(nombre, f);
 								sobreescribir = !f.exists()
-										|| original
-												.equals(f.getCanonicalPath());
+										|| original.equals(f.getCanonicalPath());
 							}
 						} catch (NullPointerException t) {
 							log.debug("Cancelando creacion de fichero: " + t);
@@ -170,8 +176,7 @@ public class SaveGPXDialog extends JFrame {
 								}
 							}
 						} else
-							log
-									.error("Por errores anteriores no se escribio el fichero");
+							log.error("Por errores anteriores no se escribio el fichero");
 					} else
 						log.error("Una de las capas no era gpx: " + layer.name);
 				}
@@ -192,8 +197,8 @@ public class SaveGPXDialog extends JFrame {
 			}
 		});
 
-		JButton cancelar = new JButton("Cancelar", LogicConstants
-				.getIcon("button_cancel"));
+		JButton cancelar = new JButton("Cancelar",
+				LogicConstants.getIcon("button_cancel"));
 
 		cancelar.addActionListener(new ActionListener() {
 
@@ -215,23 +220,29 @@ public class SaveGPXDialog extends JFrame {
 		int x;
 		int y;
 
-		Container myParent = BasicWindow.getFrame().getContentPane();
-		Point topLeft = myParent.getLocationOnScreen();
-		Dimension parentSize = myParent.getSize();
+		Container myParent;
+		try {
+			myParent = ((BasicWindow) GoClassLoader.getGoClassLoader().load(
+					BasicWindow.class)).getFrame().getContentPane();
+			java.awt.Point topLeft = myParent.getLocationOnScreen();
+			Dimension parentSize = myParent.getSize();
 
-		Dimension mySize = getSize();
+			Dimension mySize = getSize();
 
-		if (parentSize.width > mySize.width)
-			x = ((parentSize.width - mySize.width) / 2) + topLeft.x;
-		else
-			x = topLeft.x;
+			if (parentSize.width > mySize.width)
+				x = ((parentSize.width - mySize.width) / 2) + topLeft.x;
+			else
+				x = topLeft.x;
 
-		if (parentSize.height > mySize.height)
-			y = ((parentSize.height - mySize.height) / 2) + topLeft.y;
-		else
-			y = topLeft.y;
+			if (parentSize.height > mySize.height)
+				y = ((parentSize.height - mySize.height) / 2) + topLeft.y;
+			else
+				y = topLeft.y;
 
-		setLocation(x, y);
+			setLocation(x, y);
+		} catch (Throwable e1) {
+			LOG.error("There is no basic window!", e1);
+		}
 
 		this.addWindowListener(new WindowAdapter() {
 

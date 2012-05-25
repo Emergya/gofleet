@@ -25,6 +25,7 @@ import javax.swing.JSeparator;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.gofleet.context.GoWired;
 import org.openstreetmap.gui.jmapviewer.JobDispatcher;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.DiskAccessAction;
@@ -82,6 +83,12 @@ public class WMSLayer extends MapViewerLayer {
     BufferedImage snapShot = null;
 
     private JobDispatcher executor = null;
+	@GoWired
+	public BasicWindow window;
+
+	public void setWindow(BasicWindow window) {
+		this.window = window;
+	}
 
     public WMSLayer(MapView mapView) {
         this(tr("Blank Layer"), null, null, mapView);
@@ -230,7 +237,7 @@ public class WMSLayer extends MapViewerLayer {
         
         if((bmaxx - bminx > dax) || (bmaxy - bminy > day)){
 			JOptionPane.showMessageDialog(
-							BasicWindow.getFrame(),
+							window.getFrame(),
 							tr("The requested area is too big. Please zoom in a little, or change resolution"));
             return;
         }

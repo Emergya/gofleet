@@ -3,30 +3,15 @@
 	<parent>
 		<artifactId>gofleet</artifactId>
 		<groupId>org.gofleet</groupId>
-		<version>0.0.2-SNAPSHOT</version>
+		<version>0.0.3-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.gofleet.module</groupId>
 	<artifactId>maps</artifactId>
-	<version>0.0.2-SNAPSHOT</version>
 	<name>maps</name>
 	<description>Fleet Control Map and History Map</description>
 	<packaging>jar</packaging>
-
-	<distributionManagement>
-		<snapshotRepository>
-			<id>gofleet</id>
-			<name>Gofleet</name>
-			<url>http://gis.emergya.info/nexus/content/repositories/gofleet</url>
-		</snapshotRepository>
-		<repository>
-			<id>gofleet_releases</id>
-			<name>Gofleet</name>
-			<url>http://gis.emergya.info/nexus/content/repositories/gofleet_releases</url>
-		</repository>
-	</distributionManagement>
-
 	<build>
 		<pluginManagement>
 			<plugins>
@@ -56,26 +41,33 @@
 		<dependency>
 			<groupId>org.gofleet.module</groupId>
 			<artifactId>map_core</artifactId>
-			<version>0.0.2-SNAPSHOT</version>
+			<version>0.0.3-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>org.gofleet</groupId>
-			<artifactId>i18n</artifactId>
-			<version>0.0.2-SNAPSHOT</version>
+			<artifactId>internacionalization</artifactId>
+			<version>1.1.0</version>
+			<scope>provided</scope>
 		</dependency>
 	</dependencies>
-
 	<repositories>
 		<repository>
-			<releases>
-				<checksumPolicy>warn</checksumPolicy>
-			</releases>
-			<snapshots>
-				<checksumPolicy>ignore</checksumPolicy>
-			</snapshots>
-			<id>GoFleet</id>
-			<name>GoFleet</name>
-			<url>http://gis.emergya.info/nexus/content/groups/Gofleet</url>
+			<id>Emergya Nexus</id>
+			<name>Emergya Nexus</name>
+			<url>http://nexus.emergya.es/nexus/content/groups/public/</url>
 		</repository>
 	</repositories>
+
+
+	<distributionManagement>
+		<repository>
+			<id>gofleet</id>
+			<url>http://nexus.emergya.es/nexus/content/repositories/gofleet</url>
+		</repository>
+		<snapshotRepository>
+			<id>gofleet-snap</id>
+			<url>http://nexus.emergya.es/nexus/content/repositories/gofleet-snapshots</url>
+		</snapshotRepository>
+	</distributionManagement>
+
 </project>

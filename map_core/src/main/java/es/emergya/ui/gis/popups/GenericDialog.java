@@ -35,7 +35,6 @@ import java.awt.Component;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
-import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Date;
@@ -57,6 +56,7 @@ import javax.swing.SpringLayout;
 
 import org.apache.commons.logging.LogFactory;
 import org.freixas.jcalendar.JCalendarCombo;
+import org.gofleet.context.GoClassLoader;
 
 import es.emergya.cliente.constants.LogicConstants;
 import es.emergya.ui.SpringUtilities;
@@ -76,6 +76,8 @@ public abstract class GenericDialog<T> extends JFrame {
 	protected Object id = null;
 	protected LinkedList<Component> componentes = new LinkedList<Component>();
 	protected ActionListener saveListener = saveListener();
+	private static final org.apache.commons.logging.Log LOG = LogFactory
+			.getLog(GenericDialog.class);
 	protected final ActionListener closeListener = new ActionListener() {
 
 		@Override
@@ -100,15 +102,20 @@ public abstract class GenericDialog<T> extends JFrame {
 		setBackground(Color.WHITE);
 		setPreferredSize(new Dimension(500, 500));
 		setTitle(titulo);
-		setIconImage(BasicWindow.getFrame().getIconImage());
+		try {
+			setIconImage(((BasicWindow) GoClassLoader.getGoClassLoader().load(
+					BasicWindow.class)).getFrame().getIconImage());
+		} catch (Throwable e) {
+			LOG.error("There is no icon image", e);
+		}
 		JPanel base = new JPanel();
 		base.setLayout(new BoxLayout(base, BoxLayout.Y_AXIS));
 		base.setBackground(Color.WHITE);
 
 		JPanel title = new JPanel(new FlowLayout(FlowLayout.LEADING));
 
-		final JLabel labelTitle = new JLabel(titulo, LogicConstants
-				.getIcon(icon), JLabel.LEFT);
+		final JLabel labelTitle = new JLabel(titulo,
+				LogicConstants.getIcon(icon), JLabel.LEFT);
 		labelTitle.setFont(LogicConstants.deriveBoldFont(12f));
 
 		title.setBackground(Color.WHITE);
@@ -129,8 +136,8 @@ public abstract class GenericDialog<T> extends JFrame {
 		JPanel buttons = new JPanel();
 
 		buttons.setBackground(Color.WHITE);
-		JButton accept = new JButton(getString("Buttons.ok"), LogicConstants
-				.getIcon("button_accept"));
+		JButton accept = new JButton(getString("Buttons.ok"),
+				LogicConstants.getIcon("button_accept"));
 		accept.addActionListener(closeListener);
 		accept.addActionListener(saveListener);
 		buttons.add(accept);
@@ -148,23 +155,29 @@ public abstract class GenericDialog<T> extends JFrame {
 		int x;
 		int y;
 
-		Container myParent = BasicWindow.getFrame().getContentPane();
-		Point topLeft = myParent.getLocationOnScreen();
-		Dimension parentSize = myParent.getSize();
+		Container myParent;
+		try {
+			myParent = ((BasicWindow) GoClassLoader.getGoClassLoader().load(
+					BasicWindow.class)).getFrame().getContentPane();
+			java.awt.Point topLeft = myParent.getLocationOnScreen();
+			Dimension parentSize = myParent.getSize();
 
-		Dimension mySize = getSize();
+			Dimension mySize = getSize();
 
-		if (parentSize.width > mySize.width)
-			x = ((parentSize.width - mySize.width) / 2) + topLeft.x;
-		else
-			x = topLeft.x;
+			if (parentSize.width > mySize.width)
+				x = ((parentSize.width - mySize.width) / 2) + topLeft.x;
+			else
+				x = topLeft.x;
 
-		if (parentSize.height > mySize.height)
-			y = ((parentSize.height - mySize.height) / 2) + topLeft.y;
-		else
-			y = topLeft.y;
+			if (parentSize.height > mySize.height)
+				y = ((parentSize.height - mySize.height) / 2) + topLeft.y;
+			else
+				y = topLeft.y;
 
-		setLocation(x, y);
+			setLocation(x, y);
+		} catch (Throwable e1) {
+			LOG.error("There is no basic window!", e1);
+		}
 	}
 
 	protected abstract void loadDialog(T i);

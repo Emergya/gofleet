@@ -56,20 +56,23 @@ public final class Main extends Loader {
 
 	@Override
 	protected void configureUI() {
-		UIManager.put("swing.boldMetal", Boolean.FALSE); //$NON-NLS-1$
+		try {
+			UIManager.put("swing.boldMetal", Boolean.FALSE); //$NON-NLS-1$
 
-		UIManager.put("TabbedPane.selected", Color.decode("#B1BEF0"));
-		final Enumeration<Object> keys = UIManager.getDefaults().keys();
-		while (keys.hasMoreElements()) {
-			Object key = keys.nextElement();
-			Object value = UIManager.get(key);
-			if (value instanceof javax.swing.plaf.FontUIResource) {
-				UIManager.put(key, getLightFont());
+			UIManager.put("TabbedPane.selected", Color.decode("#B1BEF0"));
+			final Enumeration<Object> keys = UIManager.getDefaults().keys();
+			while (keys.hasMoreElements()) {
+				Object key = keys.nextElement();
+				Object value = UIManager.get(key);
+				if (value instanceof javax.swing.plaf.FontUIResource) {
+					UIManager.put(key, getLightFont());
+				}
+
 			}
-
+			UIManager.put("TableHeader.font", deriveBoldFont(10f));
+			UIManager.put("TabbedPane.font", deriveLightFont(9f));
+		} catch (Throwable t) {
+			
 		}
-		UIManager.put("TableHeader.font", deriveBoldFont(10f));
-		UIManager.put("TabbedPane.font", deriveLightFont(9f));
-
 	}
 }

@@ -3,29 +3,28 @@
 	<parent>
 		<artifactId>gofleet</artifactId>
 		<groupId>org.gofleet</groupId>
-		<version>0.0.2-SNAPSHOT</version>
+		<version>0.0.3-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.gofleet.module</groupId>
 	<artifactId>map_core</artifactId>
-	<version>0.0.2-SNAPSHOT</version>
 	<name>map_core</name>
 	<packaging>jar</packaging>
 	<description>Core Tools for Maps</description>
 
+
 	<distributionManagement>
-		<snapshotRepository>
-			<id>gofleet</id>
-			<name>Gofleet</name>
-			<url>http://gis.emergya.info/nexus/content/repositories/gofleet</url>
-		</snapshotRepository>
 		<repository>
-			<id>gofleet_releases</id>
-			<name>Gofleet</name>
-			<url>http://gis.emergya.info/nexus/content/repositories/gofleet_releases</url>
+			<id>gofleet</id>
+			<url>http://nexus.emergya.es/nexus/content/repositories/gofleet</url>
 		</repository>
+		<snapshotRepository>
+			<id>gofleet-snap</id>
+			<url>http://nexus.emergya.es/nexus/content/repositories/gofleet-snapshots</url>
+		</snapshotRepository>
 	</distributionManagement>
+
 
 	<build>
 		<pluginManagement>
@@ -56,20 +55,20 @@
 		<dependency>
 			<groupId>org.gofleet</groupId>
 			<artifactId>core</artifactId>
-			<version>0.0.2-SNAPSHOT</version>
+			<version>0.0.3-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>org.gofleet.module</groupId>
 			<artifactId>modules</artifactId>
-			<version>0.0.2-SNAPSHOT</version>
+			<version>0.0.3-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>org.gofleet</groupId>
 			<artifactId>ws-client</artifactId>
-			<version>0.0.2-SNAPSHOT</version>
+			<version>0.0.3-SNAPSHOT</version>
 		</dependency>
-		
-		
+
+
 		<!-- WMS -->
 		<dependency>
 			<groupId>gvsig.org</groupId>
@@ -86,14 +85,14 @@
 			<artifactId>kxml2</artifactId>
 			<version>gvsig</version>
 		</dependency>
-		
+
 		<!-- SwingX -->
 		<dependency>
 			<groupId>org.swinglabs</groupId>
 			<artifactId>swingx</artifactId>
 			<version>1.6</version>
 		</dependency>
-		
+
 		<!-- OpenStreetMap -->
 		<dependency>
 			<groupId>org.openstreetmap</groupId>
@@ -105,7 +104,7 @@
 			<artifactId>wms-plugin</artifactId>
 			<version>15961</version>
 		</dependency>
-		
+
 		<!-- GeoTools -->
 		<dependency>
 			<groupId>org.geotools</groupId>

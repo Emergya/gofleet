@@ -37,8 +37,7 @@ import java.util.Properties;
 import org.apache.commons.lang.NotImplementedException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
-import es.emergya.tools.ExtensionClassLoader;
+import org.gofleet.context.GoClassLoader;
 
 /**
  * Utility class for transform geographical coordinates to UTM reference system.
@@ -69,20 +68,23 @@ public class GeoToUtmConverter {
 		props = new Properties();
 		// load and read properties
 		try {
-			ExtensionClassLoader ecl = new ExtensionClassLoader();
-			InputStream is = ecl.getResourceAsStream(GeoToUtmConverter.utmProperties);
+			InputStream is = GoClassLoader.getGoClassLoader()
+					.getResourceAsStream(GeoToUtmConverter.utmProperties);
 			if (is == null)
-				is = GeoToUtmConverter.class.getResourceAsStream(GeoToUtmConverter.utmProperties);
+				is = GeoToUtmConverter.class
+						.getResourceAsStream(GeoToUtmConverter.utmProperties);
 			GeoToUtmConverter.props.load(is);
 		} catch (FileNotFoundException fnf) {
-			GeoToUtmConverter.LOG.error("Fichero de configuarcion " + GeoToUtmConverter.utmProperties
-					+ " no encontrado", fnf);
+			GeoToUtmConverter.LOG.error("Fichero de configuarcion "
+					+ GeoToUtmConverter.utmProperties + " no encontrado", fnf);
 		} catch (IOException e) {
-			GeoToUtmConverter.LOG.error("No se pudo cargar el fichero de propiedades "
-					+ GeoToUtmConverter.utmProperties, e);
+			GeoToUtmConverter.LOG.error(
+					"No se pudo cargar el fichero de propiedades "
+							+ GeoToUtmConverter.utmProperties, e);
 		} catch (Exception e) {
-			GeoToUtmConverter.LOG.error("NO se pudo cargar el fichero de propiedades "
-					+ GeoToUtmConverter.utmProperties, e);
+			GeoToUtmConverter.LOG.error(
+					"NO se pudo cargar el fichero de propiedades "
+							+ GeoToUtmConverter.utmProperties, e);
 		}
 	}
 
@@ -104,55 +106,62 @@ public class GeoToUtmConverter {
 	 * @return a point where x is longitude and y is latitude.
 	 */
 	public static Point2D toUTM(final double latitude, final double longitude) {
-//
-//		Ellipsoid ellipsoid;
-//		Ellipsoid targetEllipsoid;
-//		int hemisphere;
-//		int zone;
-//
-//		String hemisphereProp = GeoToUtmConverter.props.getProperty(GeoToUtmConverter.HEMISPHERE_KEY,
-//				GeoToUtmConverter.DEFAULT_HEMISPHERE);
-//		String zoneProp = GeoToUtmConverter.props.getProperty(GeoToUtmConverter.UTM_ZONE_KEY, GeoToUtmConverter.DEFAULT_ZONE);
-//		String ellipsoidProp = GeoToUtmConverter.props.getProperty(GeoToUtmConverter.ELLIPSOID_KEY,
-//				GeoToUtmConverter.DEFAULT_ELLIPSOID);
-//
-//		if (ellipsoidProp.toUpperCase().equals("WGS84")) {
-//			ellipsoid = Ellipsoid.wgs84;
-//			targetEllipsoid = Ellipsoid.ed50;
-//		} else {
-//			ellipsoid = Ellipsoid.ed50;
-//			targetEllipsoid = Ellipsoid.wgs84;
-//		}
-//
-//		zone = Integer.valueOf(zoneProp);
-//		if (hemisphereProp.toUpperCase().equals("N"))
-//			hemisphere = Projection.NORTH;
-//		else
-//			hemisphere = Projection.SOUTH;
-//
-//		// Do the transformation.
-//		// UtmZone utm = new UtmZone(ellipsoid, zone, hemisphere, 0.0d);
-//
-//		GeodesicPosition original = new GeodesicPosition(Math
-//				.toRadians(longitude), Math.toRadians(latitude), 0.0d);
-//		// GeodesicPosition result = transform(original, 6378137,
-//		// 1/298.257223563d,
-//		// 6.69437999014E-3, 6377563.396-6378137.0,
-//		// 1/297 - 1/298.257223563 , -87.0d, -98.0d, -121.0d);
-//		GeodesicPosition result = GeoToUtmConverter.transform(original, Ellipsoid.wgs84
-//				.getESemiMajorAxis(), 1.0d / Ellipsoid.wgs84.getEIFlattening(),
-//				Ellipsoid.wgs84.e2, Ellipsoid.ed50.getESemiMajorAxis()
-//				- Ellipsoid.wgs84.getESemiMajorAxis(), 1.0d
-//				/ Ellipsoid.ed50.getEIFlattening() - 1.0d
-//				/ Ellipsoid.wgs84.getEIFlattening(), 86d, 107d, 121d);
-//
-//		UtmZone targetUtm = new UtmZone(targetEllipsoid, zone, hemisphere, 0.0d);
-//		GeoPoint gp = new GeoPoint(targetUtm, Math.toDegrees(result.lon), Math
-//				.toDegrees(result.lat));
-//		UtmPoint up = new UtmPoint(targetUtm);
-//
-//		return targetUtm.fromGeo(gp, up, targetUtm);
-		
+		//
+		// Ellipsoid ellipsoid;
+		// Ellipsoid targetEllipsoid;
+		// int hemisphere;
+		// int zone;
+		//
+		// String hemisphereProp =
+		// GeoToUtmConverter.props.getProperty(GeoToUtmConverter.HEMISPHERE_KEY,
+		// GeoToUtmConverter.DEFAULT_HEMISPHERE);
+		// String zoneProp =
+		// GeoToUtmConverter.props.getProperty(GeoToUtmConverter.UTM_ZONE_KEY,
+		// GeoToUtmConverter.DEFAULT_ZONE);
+		// String ellipsoidProp =
+		// GeoToUtmConverter.props.getProperty(GeoToUtmConverter.ELLIPSOID_KEY,
+		// GeoToUtmConverter.DEFAULT_ELLIPSOID);
+		//
+		// if (ellipsoidProp.toUpperCase().equals("WGS84")) {
+		// ellipsoid = Ellipsoid.wgs84;
+		// targetEllipsoid = Ellipsoid.ed50;
+		// } else {
+		// ellipsoid = Ellipsoid.ed50;
+		// targetEllipsoid = Ellipsoid.wgs84;
+		// }
+		//
+		// zone = Integer.valueOf(zoneProp);
+		// if (hemisphereProp.toUpperCase().equals("N"))
+		// hemisphere = Projection.NORTH;
+		// else
+		// hemisphere = Projection.SOUTH;
+		//
+		// // Do the transformation.
+		// // UtmZone utm = new UtmZone(ellipsoid, zone, hemisphere, 0.0d);
+		//
+		// GeodesicPosition original = new GeodesicPosition(Math
+		// .toRadians(longitude), Math.toRadians(latitude), 0.0d);
+		// // GeodesicPosition result = transform(original, 6378137,
+		// // 1/298.257223563d,
+		// // 6.69437999014E-3, 6377563.396-6378137.0,
+		// // 1/297 - 1/298.257223563 , -87.0d, -98.0d, -121.0d);
+		// GeodesicPosition result = GeoToUtmConverter.transform(original,
+		// Ellipsoid.wgs84
+		// .getESemiMajorAxis(), 1.0d / Ellipsoid.wgs84.getEIFlattening(),
+		// Ellipsoid.wgs84.e2, Ellipsoid.ed50.getESemiMajorAxis()
+		// - Ellipsoid.wgs84.getESemiMajorAxis(), 1.0d
+		// / Ellipsoid.ed50.getEIFlattening() - 1.0d
+		// / Ellipsoid.wgs84.getEIFlattening(), 86d, 107d, 121d);
+		//
+		// UtmZone targetUtm = new UtmZone(targetEllipsoid, zone, hemisphere,
+		// 0.0d);
+		// GeoPoint gp = new GeoPoint(targetUtm, Math.toDegrees(result.lon),
+		// Math
+		// .toDegrees(result.lat));
+		// UtmPoint up = new UtmPoint(targetUtm);
+		//
+		// return targetUtm.fromGeo(gp, up, targetUtm);
+
 		throw new NotImplementedException("Función no implementada");
 
 	}
@@ -183,17 +192,17 @@ public class GeoToUtmConverter {
 
 		double rn = from_a / Math.sqrt(1.0 - from_esq * ssqlat);
 		double rm = from_a * (1. - from_esq)
-		/ Math.pow((1.0 - from_esq * ssqlat), 1.5);
+				/ Math.pow((1.0 - from_esq * ssqlat), 1.5);
 
 		dlat = (((((-dx * slat * clon - dy * slat * slon) + dz * clat) + (da * ((rn
 				* from_esq * slat * clat) / from_a))) + (df
-						* (rm * adb + rn / adb) * slat * clat)))
-						/ (rm + from.h);
+				* (rm * adb + rn / adb) * slat * clat)))
+				/ (rm + from.h);
 
 		dlon = (-dx * slon + dy * clon) / ((rn + from.h) * clat);
 
 		dh = (dx * clat * clon) + (dy * clat * slon) + (dz * slat)
-		- (da * (from_a / rn)) + ((df * rn * ssqlat) / adb);
+				- (da * (from_a / rn)) + ((df * rn * ssqlat) / adb);
 
 		return new GeodesicPosition(from.lon + dlon, from.lat + dlat, from.h
 				+ dh);

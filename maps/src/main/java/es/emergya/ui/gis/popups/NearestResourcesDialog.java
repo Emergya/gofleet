@@ -72,6 +72,7 @@ import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 
 import org.apache.commons.logging.LogFactory;
+import org.gofleet.context.GoWired;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.coor.EastNorth;
 import org.openstreetmap.josm.data.coor.LatLon;
@@ -99,6 +100,24 @@ import es.emergya.ui.plugins.JButtonCellEditor;
 public class NearestResourcesDialog extends JFrame implements ActionListener {
 	protected static List<Recurso> ALL = RecursoConsultas.getAll(Authentication
 			.getUsuario());
+
+	@GoWired
+	private BasicWindow basicWindow;
+
+	/**
+	 * @return the basicWindow
+	 */
+	public BasicWindow getBasicWindow() {
+		return basicWindow;
+	}
+
+	/**
+	 * @param basicWindow
+	 *            the basicWindow to set
+	 */
+	public void setBasicWindow(BasicWindow basicWindow) {
+		this.basicWindow = basicWindow;
+	}
 
 	private final class CustomTableModel extends DefaultTableModel {
 		private static final long serialVersionUID = -6354135444747786582L;
@@ -182,9 +201,9 @@ public class NearestResourcesDialog extends JFrame implements ActionListener {
 			notification.updateUI();
 		}
 
-//		setTitle(getString("window.nearest.titleBar.incidencia") + " "
-//				+ i.getReferenciaHumana());
-//		setName(i.getReferenciaHumana());
+		// setTitle(getString("window.nearest.titleBar.incidencia") + " "
+		// + i.getReferenciaHumana());
+		// setName(i.getReferenciaHumana());
 	}
 
 	/**
@@ -204,7 +223,7 @@ public class NearestResourcesDialog extends JFrame implements ActionListener {
 			this.point = ll;
 			setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 			setTitle(getString("window.nearest.titleBar.puntoGenerico"));
-			setIconImage(BasicWindow.getFrame().getIconImage());
+			setIconImage(getBasicWindow().getFrame().getIconImage());
 			JPanel base = new JPanel();
 			base.setBackground(Color.WHITE);
 			base.setLayout(new BoxLayout(base, BoxLayout.Y_AXIS));
@@ -212,8 +231,8 @@ public class NearestResourcesDialog extends JFrame implements ActionListener {
 			// Icono del titulo
 			JPanel title = new JPanel(new FlowLayout(FlowLayout.LEADING));
 			final JLabel labelTitle = new JLabel(
-					getString("window.nearest.title"), LogicConstants
-							.getIcon("tittleventana_icon_mascercano"),
+					getString("window.nearest.title"),
+					LogicConstants.getIcon("tittleventana_icon_mascercano"),
 					JLabel.LEFT);
 			labelTitle.setFont(LogicConstants.deriveBoldFont(12.0f));
 			title.add(labelTitle);
@@ -315,8 +334,8 @@ public class NearestResourcesDialog extends JFrame implements ActionListener {
 			JPanel buttons = new JPanel();
 			buttons.setOpaque(false);
 			buttons.setLayout(new BoxLayout(buttons, BoxLayout.X_AXIS));
-			search = new JButton(getString("Buttons.refresh"), LogicConstants
-					.getIcon("button_refrescar"));
+			search = new JButton(getString("Buttons.refresh"),
+					LogicConstants.getIcon("button_refrescar"));
 			search.addActionListener(this);
 			buttons.add(search);
 			buttons.add(Box.createHorizontalGlue());
@@ -336,7 +355,7 @@ public class NearestResourcesDialog extends JFrame implements ActionListener {
 			log.error("Error al mostrar los más cercanos.", t);
 		}
 		pack();
-		setLocationRelativeTo(BasicWindow.getFrame());
+		setLocationRelativeTo(getBasicWindow().getFrame());
 	}
 
 	private void printCoordinates(LatLon ll) {
@@ -367,8 +386,8 @@ public class NearestResourcesDialog extends JFrame implements ActionListener {
 	}
 
 	private Action centerIn(final LatLon ll, final Recurso r) {
-		return new AbstractAction("", LogicConstants
-				.getIcon("map_button_centrar")) {
+		return new AbstractAction("",
+				LogicConstants.getIcon("map_button_centrar")) {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -388,8 +407,10 @@ public class NearestResourcesDialog extends JFrame implements ActionListener {
 
 	private boolean isVisible(Recurso r) {
 		try {
-			boolean res = r.getHistoricoGps().getMarcaTemporal().after(
-					new Date(System.currentTimeMillis()
+			boolean res = r
+					.getHistoricoGps()
+					.getMarcaTemporal()
+					.after(new Date(System.currentTimeMillis()
 							- LogicConstants.getInt("AVL_TIMEOUT") * 60000));
 
 			res = res && ALL.contains(r);
@@ -435,24 +456,22 @@ public class NearestResourcesDialog extends JFrame implements ActionListener {
 								if (ultimaPosicionRecurso != null
 										&& !ultimaPosicionRecurso
 												.getMarcaTemporal()
-												.before(
-														new Date(
-																System
-																		.currentTimeMillis()
-																		- LogicConstants
-																				.getInt("AVL_TIMEOUT")
-																		* 6000))) {
-									point = new LatLon(ultimaPosicionRecurso
-											.getPosY(), ultimaPosicionRecurso
-											.getPosX());
+												.before(new Date(
+														System.currentTimeMillis()
+																- LogicConstants
+																		.getInt("AVL_TIMEOUT")
+																* 6000))) {
+									point = new LatLon(
+											ultimaPosicionRecurso.getPosY(),
+											ultimaPosicionRecurso.getPosX());
 									printCoordinates(point);
 								}
 							}
 
 							log.info("Buscamos los más cercanos a " + point);
-							Recurso[] rs = RecursoConsultas.getNearest(point
-									.getX(), point.getY(), num, Authentication
-									.getUsuario());
+							Recurso[] rs = RecursoConsultas.getNearest(
+									point.getX(), point.getY(), num,
+									Authentication.getUsuario());
 							log.info("Tenemos los más cercanos a " + point
 									+ ", que son " + rs.length);
 							Vector<Vector<Object>> rows = new Vector<Vector<Object>>();

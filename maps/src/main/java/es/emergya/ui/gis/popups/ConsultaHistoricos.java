@@ -88,6 +88,7 @@ import org.apache.commons.logging.LogFactory;
 import org.freixas.jcalendar.DateEvent;
 import org.freixas.jcalendar.DateListener;
 import org.freixas.jcalendar.JCalendarCombo;
+import org.gofleet.context.GoWired;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.gpx.GpxData;
@@ -152,6 +153,22 @@ public class ConsultaHistoricos extends JFrame {
 	private HistoryMapViewer visorHistorico = null;
 	private final static Locale LOCALE = new Locale("es", "ES");
 
+	@GoWired
+	private BasicWindow basicWindow;
+
+	/**
+	 * @return the basicWindow
+	 */
+	public BasicWindow getBasicWindow() {
+		return basicWindow;
+	}
+
+	/**
+	 * @param basicWindow the basicWindow to set
+	 */
+	public void setBasicWindow(BasicWindow basicWindow) {
+		this.basicWindow = basicWindow;
+	}
 	public synchronized static void close() {
 		if (self != null)
 			self.closing.actionPerformed(null);
@@ -280,7 +297,7 @@ public class ConsultaHistoricos extends JFrame {
 		setAlwaysOnTop(true);
 		this.mapView = mapView;
 		this.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
-		this.setIconImage(BasicWindow.getIconImage());
+		this.setIconImage(getBasicWindow().getIconImage());
 
 		dateFormat = new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
 		// explicitly set timezone of input if needed

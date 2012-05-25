@@ -6,25 +6,26 @@
 	<parent>
 		<groupId>org.gofleet</groupId>
 		<artifactId>gofleet</artifactId>
-		<version>0.0.2-SNAPSHOT</version>
+		<version>0.0.3-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
+	
 
-	<groupId>org.gofleet</groupId>
+	<distributionManagement>
+		<repository>
+			<id>gofleet</id>
+			<url>http://nexus.emergya.es/nexus/content/repositories/gofleet</url>
+		</repository>
+		<snapshotRepository>
+			<id>gofleet-snap</id>
+			<url>http://nexus.emergya.es/nexus/content/repositories/gofleet-snapshots</url>
+		</snapshotRepository>
+	</distributionManagement>
+	
+
 	<artifactId>client</artifactId>
 	<name>client</name>
-	<version>0.0.2-SNAPSHOT</version>
 	<description>${projectname} Client</description>
-	<distributionManagement>
-		<snapshotRepository>
-			<id>gofleet</id>
-			<url>http://gis.emergya.info/nexus/content/repositories/gofleet</url>
-		</snapshotRepository>
-		<repository>
-			<id>gofleet_releases</id>
-			<url>http://gis.emergya.info/nexus/content/repositories/gofleet_releases</url>
-		</repository>
-	</distributionManagement>
 
 	<build>
 		<pluginManagement>
@@ -132,7 +133,7 @@
 						<!--<index>true</index> -->
 						<manifest>
 							<addDefaultImplementationEntries>true
-                        </addDefaultImplementationEntries>
+							</addDefaultImplementationEntries>
 							<mainClass>${mainClass}</mainClass>
 							<packageName>es.emergya.cliente</packageName>
 							<classpathPrefix>lib/</classpathPrefix>
@@ -211,20 +212,6 @@
 		</plugins>
 	</build>
 
-	<repositories>
-		<repository>
-			<releases>
-				<checksumPolicy>warn</checksumPolicy>
-			</releases>
-			<snapshots>
-				<checksumPolicy>ignore</checksumPolicy>
-			</snapshots>
-			<id>GoFleet</id>
-			<name>GoFleet</name>
-			<url>http://gis.emergya.info/nexus/content/groups/Gofleet</url>
-		</repository>
-	</repositories>
-
 	<pluginRepositories>
 		<pluginRepository>
 			<releases>
@@ -245,33 +232,24 @@
 	</pluginRepositories>
 	<dependencies>
 		<dependency>
+			<groupId>org.gofleet</groupId>
+			<artifactId>context-loader</artifactId>
+			<version>0.1.0</version>
+		</dependency>
+		<dependency>
 			<groupId>${project.parent.groupId}.module</groupId>
 			<artifactId>modules</artifactId>
-			<version>0.0.2-SNAPSHOT</version>
+			<version>0.0.3-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>${project.parent.groupId}</groupId>
 			<artifactId>core</artifactId>
-			<version>0.0.2-SNAPSHOT</version>
+			<version>0.0.3-SNAPSHOT</version>
 		</dependency>
-		
-		<!-- plugins -->
 		<dependency>
-			<groupId>org.gofleet.module</groupId>
-			<artifactId>dummy</artifactId>
-			<version>0.0.2-SNAPSHOT</version>
-		</dependency><dependency>
-			<groupId>org.gofleet.module</groupId>
-			<artifactId>admin</artifactId>
-			<version>0.0.2-SNAPSHOT</version>
-		</dependency><dependency>
-			<groupId>org.gofleet.module</groupId>
-			<artifactId>maps</artifactId>
-			<version>0.0.2-SNAPSHOT</version>
-		</dependency><dependency>
-			<groupId>org.gofleet.module</groupId>
-			<artifactId>issuesList</artifactId>
-			<version>0.0.2-SNAPSHOT</version>
+			<groupId>org.gofleet</groupId>
+			<artifactId>internacionalization</artifactId>
+			<version>1.1.0</version>
 		</dependency>
 	</dependencies>
 	<reporting>
@@ -311,6 +289,14 @@
 			</plugin>
 		</plugins>
 	</reporting>
+
+	<repositories>
+		<repository>
+			<id>Emergya Nexus</id>
+			<name>Emergya Nexus</name>
+			<url>http://nexus.emergya.es/nexus/content/groups/public/</url>
+		</repository>
+	</repositories>
 
 	<profiles>
 		<profile>

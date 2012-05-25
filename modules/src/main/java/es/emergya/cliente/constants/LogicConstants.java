@@ -52,8 +52,7 @@ import javax.swing.ImageIcon;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
-import es.emergya.tools.ExtensionClassLoader;
+import org.gofleet.context.GoClassLoader;
 
 /**
  * Contains the constants for the logic layer
@@ -79,10 +78,9 @@ public class LogicConstants {
 	static {
 		getIcon("image_missing");
 		LogicConstants.p = new Properties();
-
+ 
 		try {
-			ExtensionClassLoader ecl = new ExtensionClassLoader();
-			InputStream is = ecl
+			InputStream is = GoClassLoader.getGoClassLoader()
 					.getResourceAsStream(LogicConstants.constantsProperties);
 			if (is == null) {
 				is = LogicConstants.class

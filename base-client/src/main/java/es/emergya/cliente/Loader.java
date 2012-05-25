@@ -23,14 +23,12 @@ import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 
 import org.apache.commons.logging.LogFactory;
+import org.gofleet.internacionalization.I18n;
 import org.gofleet.scheduler.Job;
 import org.springframework.transaction.TransactionException;
 
-import es.emergya.i18n.Internacionalization;
 import es.emergya.scheduler.CustomScheduler;
 import es.emergya.tools.ExtensionClassLoader;
-import es.emergya.ui.base.BasicWindow;
-import es.emergya.ui.base.LoginWindow;
 import es.emergya.ui.base.plugins.AbstractPlugin;
 import es.emergya.ui.base.plugins.PluginContainer;
 
@@ -38,9 +36,8 @@ public abstract class Loader {
 
 	protected static Loader _this = null;
 
-	private static final org.apache.commons.logging.Log LOG = LogFactory
+	static final org.apache.commons.logging.Log LOG = LogFactory
 			.getLog(Loader.class);
-	protected static PluginContainer container = new PluginContainer();
 
 	/**
 	 * Starts the app.
@@ -68,7 +65,7 @@ public abstract class Loader {
 		}
 
 		try {
-			TimeZone.setDefault(TimeZone.getTimeZone("CET")); //$NON-NLS-1$
+			TimeZone.setDefault(TimeZone.getTimeZone("CET"));
 			SwingUtilities.invokeLater(new Initializer());
 		} catch (Throwable t) {
 			LOG.error("Fallo el SwingUtilities.invokeLater", t);
@@ -128,7 +125,7 @@ public abstract class Loader {
 		}
 	}
 
-	protected void loadModules() {
+	protected void loadModules(PluginContainer container) {
 		try {
 			ExtensionClassLoader ecl = new ExtensionClassLoader();
 			List<File> modules = ecl.getModules();
@@ -152,51 +149,24 @@ public abstract class Loader {
 		}
 	}
 
-	/**
-	 * Initializes the GUI.
-	 * 
-	 */
-	static class Initializer implements Runnable {
-
-		/** Initializtes the GUI. */
-		@Override
-		public void run() {
-			try {
-				if (_this == null)
-					throw new NullPointerException("We have no Main");
-
-				_this.configureUI();
-				_this.createAndShowGUI();
-				_this.loadModules();
-				_this.loadJobs();
-
-				BasicWindow.setPluginContainer(container);
-				LoginWindow.showLogin();
-			} catch (Throwable t) {
-				LOG.error("Fallo al inicializar la aplicacion", t);
-				showError(t);
-			}
-		}
-	}
-
 	public static void showError(Throwable t) {
 		String errorCause = t.toString();
 		try {
 			LOG.fatal("Error al iniciar la aplicación", t);
 
 			if (t instanceof TransactionException) {
-				errorCause = Internacionalization
-						.getString("Main.Error.database");
+				errorCause = (new I18n()).getString("Main.Error.database");
 			}
 
 			Object[] options = { "Ver más detalle", "Cerrar" };
 
-			if (JOptionPane.showOptionDialog(null, "<html><p>"
-					+ Internacionalization.getString("Main.Error") + ":</p><p>"
-					+ errorCause + "</p><html>",
-					Internacionalization.getString("Main.Error"),
-					JOptionPane.YES_NO_OPTION, JOptionPane.ERROR_MESSAGE, null,
-					options, options[1]) == 0) {
+			I18n i18n = new I18n();
+
+			if (JOptionPane.showOptionDialog(null,
+					"<html><p>" + i18n.getString("Main.Error") + ":</p><p>"
+							+ errorCause + "</p><html>",
+					i18n.getString("Main.Error"), JOptionPane.YES_NO_OPTION,
+					JOptionPane.ERROR_MESSAGE, null, options, options[1]) == 0) {
 				final JFrame error = new JFrame();
 				error.setAlwaysOnTop(true);
 				error.setBackground(Color.WHITE);

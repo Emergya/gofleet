@@ -60,6 +60,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.geotools.geometry.jts.JTS;
 import org.geotools.referencing.CRS;
+import org.gofleet.context.GoWired;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
 import org.opengis.referencing.operation.MathTransform;
 import org.openstreetmap.josm.data.coor.EastNorth;
@@ -99,6 +100,22 @@ public class RouteDialog extends JFrame implements ActionListener {
 	CustomMapView view;
 	OsmDataLayer route;
 
+	@GoWired
+	private BasicWindow basicWindow;
+
+	/**
+	 * @return the basicWindow
+	 */
+	public BasicWindow getBasicWindow() {
+		return basicWindow;
+	}
+
+	/**
+	 * @param basicWindow the basicWindow to set
+	 */
+	public void setBasicWindow(BasicWindow basicWindow) {
+		this.basicWindow = basicWindow;
+	}
 	private RouteDialog() {
 		super();
 		setAlwaysOnTop(true);
@@ -122,7 +139,7 @@ public class RouteDialog extends JFrame implements ActionListener {
 		});
 		setTitle(getString("window.route.titleBar"));
 		setMinimumSize(new Dimension(400, 200));
-		setIconImage(BasicWindow.getFrame().getIconImage());
+		setIconImage(getBasicWindow().getFrame().getIconImage());
 		JPanel base = new JPanel();
 		base.setBackground(Color.WHITE);
 		base.setLayout(new BoxLayout(base, BoxLayout.Y_AXIS));
@@ -198,7 +215,7 @@ public class RouteDialog extends JFrame implements ActionListener {
 		int x;
 		int y;
 
-		Container myParent = BasicWindow.getFrame().getContentPane();
+		Container myParent = getBasicWindow().getFrame().getContentPane();
 		java.awt.Point topLeft = myParent.getLocationOnScreen();
 		Dimension parentSize = myParent.getSize();
 

@@ -41,9 +41,9 @@ import javax.swing.JPanel;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.gofleet.context.GoClassLoader;
 import org.gofleet.module.IModule;
 
-import es.emergya.utils.ExtensionClassLoader;
 import es.emergya.utils.LogicConstants;
 
 @SuppressWarnings("serial")
@@ -70,8 +70,8 @@ public abstract class AbstractPlugin extends JPanel implements
 		Properties p = new Properties();
 
 		try {
-			ExtensionClassLoader ecl = new ExtensionClassLoader();
-			InputStream is = ecl.getResourceAsStream(file);
+			InputStream is = GoClassLoader.getGoClassLoader()
+					.getResourceAsStream(file);
 			if (is == null)
 				is = LogicConstants.class.getResourceAsStream(file);
 			p.load(is);

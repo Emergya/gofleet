@@ -3,29 +3,15 @@
 	<parent>
 		<artifactId>gofleet</artifactId>
 		<groupId>org.gofleet</groupId>
-		<version>0.0.2-SNAPSHOT</version>
+		<version>0.0.3-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>${project.parent.groupId}.module</groupId>
 	<artifactId>modules</artifactId>
-	<version>0.0.2-SNAPSHOT</version>
 	<name>modules</name>
 	<description>Module Core Base System</description>
 	<packaging>jar</packaging>
-
-	<distributionManagement>
-		<snapshotRepository>
-			<id>gofleet</id>
-			<name>Gofleet</name>
-			<url>http://gis.emergya.info/nexus/content/repositories/gofleet</url>
-		</snapshotRepository>
-		<repository>
-			<id>gofleet_releases</id>
-			<name>Gofleet</name>
-			<url>http://gis.emergya.info/nexus/content/repositories/gofleet_releases</url>
-		</repository>
-	</distributionManagement>
 
 	<build>
 		<pluginManagement>
@@ -56,17 +42,26 @@
 		<dependency>
 			<groupId>org.gofleet</groupId>
 			<artifactId>core</artifactId>
-			<version>0.0.2-SNAPSHOT</version>
+			<version>0.0.3-SNAPSHOT</version>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.gofleet</groupId>
-			<artifactId>i18n</artifactId>
-			<version>0.0.2-SNAPSHOT</version>
+			<artifactId>context-loader</artifactId>
+			<version>0.1.0</version>
+			<scope>provided</scope>
+		</dependency>
+		<!-- Available on the source code of GoFleetLS -->
+		<dependency>
+			<groupId>org.gofleet</groupId>
+			<artifactId>internacionalization</artifactId>
+			<version>1.1.0</version>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.gofleet</groupId>
 			<artifactId>ws-client</artifactId>
-			<version>0.0.2-SNAPSHOT</version>
+			<version>0.0.3-SNAPSHOT</version>
 			<scope>compile</scope>
 		</dependency>
 		<!-- SwingX -->
@@ -76,18 +71,24 @@
 			<version>1.6</version>
 		</dependency>
 	</dependencies>
-
 	<repositories>
 		<repository>
-			<releases>
-				<checksumPolicy>warn</checksumPolicy>
-			</releases>
-			<snapshots>
-				<checksumPolicy>ignore</checksumPolicy>
-			</snapshots>
-			<id>GoFleet</id>
-			<name>GoFleet</name>
-			<url>http://gis.emergya.info/nexus/content/groups/Gofleet</url>
+			<id>Emergya Nexus</id>
+			<name>Emergya Nexus</name>
+			<url>http://nexus.emergya.es/nexus/content/groups/public/</url>
 		</repository>
 	</repositories>
+
+
+	<distributionManagement>
+		<repository>
+			<id>gofleet</id>
+			<url>http://nexus.emergya.es/nexus/content/repositories/gofleet</url>
+		</repository>
+		<snapshotRepository>
+			<id>gofleet-snap</id>
+			<url>http://nexus.emergya.es/nexus/content/repositories/gofleet-snapshots</url>
+		</snapshotRepository>
+	</distributionManagement>
+
 </project>

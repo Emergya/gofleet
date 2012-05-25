@@ -47,6 +47,7 @@ import javax.swing.SwingWorker;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.gofleet.context.GoClassLoader;
 import org.openstreetmap.gui.jmapviewer.MemoryTileCache;
 import org.openstreetmap.josm.gui.layer.Layer;
 
@@ -72,6 +73,8 @@ public class LayerSelectionDialog extends JDialog implements ActionListener {
 	private JPanel list;
 	JLabel actualizando;
 	JDialog self;
+	private static final org.apache.commons.logging.Log LOG = LogFactory
+			.getLog(LayerSelectionDialog.class);
 
 	public LayerSelectionDialog(CustomMapView gmv) {
 		super();
@@ -81,7 +84,12 @@ public class LayerSelectionDialog extends JDialog implements ActionListener {
 		this.setAlwaysOnTop(true);
 		this.mv = gmv;
 		this.layers = new ArrayList<LayerElement>();
-		setIconImage(BasicWindow.getIconImage());
+		try {
+			setIconImage(((BasicWindow) GoClassLoader.getGoClassLoader().load(
+					BasicWindow.class)).getIconImage());
+		} catch (Throwable e1) {
+			LOG.error("Couldn't find icon image", e1);
+		}
 
 		JPanel base = new JPanel();
 		base.setPreferredSize(new Dimension(240, 150));

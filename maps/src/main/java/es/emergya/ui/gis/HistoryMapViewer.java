@@ -52,6 +52,7 @@ import javax.swing.event.PopupMenuListener;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.gofleet.context.GoWired;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.gui.layer.Layer;
 
@@ -78,6 +79,10 @@ public class HistoryMapViewer extends MapViewer {
 	private JToggleButton gpxToggleButton;
 	private static JToggleButton resultadoHistorico;
 	private MouseEvent eventOriginal;
+	
+	@GoWired
+	private ListaCapas listaCapas;
+	
 
 	/**
 	 * @param title
@@ -176,10 +181,10 @@ public class HistoryMapViewer extends MapViewer {
 				@Override
 				public void actionPerformed(ActionEvent e) {
 					if (gpxToggleButton.isSelected()) {
-						ListaCapas.showListaCapas(mapView,
+						getListaCapas().showListaCapas(mapView,
 								HistoryMapViewer.this);
 					} else {
-						ListaCapas.hideListaCapas();
+						getListaCapas().hideListaCapas();
 					}
 
 				}
@@ -295,6 +300,20 @@ public class HistoryMapViewer extends MapViewer {
 			}
 		});
 		return menu;
+	}
+
+	/**
+	 * @return the listaCapas
+	 */
+	public ListaCapas getListaCapas() {
+		return listaCapas;
+	}
+
+	/**
+	 * @param listaCapas the listaCapas to set
+	 */
+	public void setListaCapas(ListaCapas listaCapas) {
+		this.listaCapas = listaCapas;
 	}
 
 	class HistoricoActionListener implements ActionListener {

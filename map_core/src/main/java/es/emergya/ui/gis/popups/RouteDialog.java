@@ -60,6 +60,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.geotools.geometry.jts.JTS;
 import org.geotools.referencing.CRS;
+import org.gofleet.context.GoClassLoader;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
 import org.opengis.referencing.operation.MathTransform;
 import org.openstreetmap.josm.data.coor.EastNorth;
@@ -98,6 +99,7 @@ public class RouteDialog extends JFrame implements ActionListener {
 	JButton search, clear;
 	CustomMapView view;
 	OsmDataLayer route;
+	private static final Log LOG = LogFactory.getLog(RouteDialog.class);
 
 	private RouteDialog() {
 		super();
@@ -106,8 +108,8 @@ public class RouteDialog extends JFrame implements ActionListener {
 		iconTransparente = LogicConstants.getIcon("48x48_transparente");
 		iconEnviando = LogicConstants.getIcon("anim_calculando");
 		try {
-			route = new OsmDataLayer(new DataSet(), "route", File
-					.createTempFile("route", "route"));
+			route = new OsmDataLayer(new DataSet(), "route",
+					File.createTempFile("route", "route"));
 		} catch (IOException e) {
 			log.error(e.getMessage(), e);
 		}
@@ -122,7 +124,13 @@ public class RouteDialog extends JFrame implements ActionListener {
 		});
 		setTitle(getString("window.route.titleBar"));
 		setMinimumSize(new Dimension(400, 200));
-		setIconImage(BasicWindow.getFrame().getIconImage());
+		try {
+			setIconImage(((BasicWindow) GoClassLoader.getGoClassLoader().load(
+					BasicWindow.class)).getFrame().getIconImage());
+		} catch (Throwable e) {
+			LOG.error("There is no icon image", e);
+		}
+
 		JPanel base = new JPanel();
 		base.setBackground(Color.WHITE);
 		base.setLayout(new BoxLayout(base, BoxLayout.Y_AXIS));
@@ -176,12 +184,12 @@ public class RouteDialog extends JFrame implements ActionListener {
 		JPanel buttons = new JPanel();
 		buttons.setOpaque(false);
 		buttons.setLayout(new BoxLayout(buttons, BoxLayout.X_AXIS));
-		search = new JButton(getString("window.route.calcular"), LogicConstants
-				.getIcon("ventanacontextual_button_calcularruta"));
+		search = new JButton(getString("window.route.calcular"),
+				LogicConstants.getIcon("ventanacontextual_button_calcularruta"));
 		search.addActionListener(this);
 		buttons.add(search);
-		clear = new JButton(getString("window.route.limpiar"), LogicConstants
-				.getIcon("button_limpiar"));
+		clear = new JButton(getString("window.route.limpiar"),
+				LogicConstants.getIcon("button_limpiar"));
 		clear.addActionListener(this);
 		buttons.add(clear);
 		buttons.add(Box.createHorizontalGlue());
@@ -198,23 +206,29 @@ public class RouteDialog extends JFrame implements ActionListener {
 		int x;
 		int y;
 
-		Container myParent = BasicWindow.getFrame().getContentPane();
-		java.awt.Point topLeft = myParent.getLocationOnScreen();
-		Dimension parentSize = myParent.getSize();
+		Container myParent;
+		try {
+			myParent = ((BasicWindow) GoClassLoader.getGoClassLoader().load(
+					BasicWindow.class)).getFrame().getContentPane();
+			java.awt.Point topLeft = myParent.getLocationOnScreen();
+			Dimension parentSize = myParent.getSize();
 
-		Dimension mySize = getSize();
+			Dimension mySize = getSize();
 
-		if (parentSize.width > mySize.width)
-			x = ((parentSize.width - mySize.width) / 2) + topLeft.x;
-		else
-			x = topLeft.x;
+			if (parentSize.width > mySize.width)
+				x = ((parentSize.width - mySize.width) / 2) + topLeft.x;
+			else
+				x = topLeft.x;
 
-		if (parentSize.height > mySize.height)
-			y = ((parentSize.height - mySize.height) / 2) + topLeft.y;
-		else
-			y = topLeft.y;
+			if (parentSize.height > mySize.height)
+				y = ((parentSize.height - mySize.height) / 2) + topLeft.y;
+			else
+				y = topLeft.y;
 
-		setLocation(x, y);
+			setLocation(x, y);
+		} catch (Throwable e1) {
+			LOG.error("There is no basic window!", e1);
+		}
 	}
 
 	/**
@@ -259,7 +273,8 @@ public class RouteDialog extends JFrame implements ActionListener {
 		}
 	}
 
-	public static void showRouteDialog(LatLon from, LatLon to, CustomMapView view) {
+	public static void showRouteDialog(LatLon from, LatLon to,
+			CustomMapView view) {
 		JFrame f = getRouteDialog(from, to, view);
 		f.setVisible(true);
 		f.setExtendedState(JFrame.NORMAL);
@@ -419,12 +434,12 @@ public class RouteDialog extends JFrame implements ActionListener {
 				for (Coordinate coordenada : ((LineString) mls.getGeometryN(i))
 						.getCoordinates()) {
 					Point p = f.createPoint(coordenada);
-					p = (Point) JTS.transform(p, CRS.findMathTransform(
-							targetCRS, sourceCRS));
+					p = (Point) JTS.transform(p,
+							CRS.findMathTransform(targetCRS, sourceCRS));
 					LatLon ll = new LatLon(p.getY(), p.getX());
 					way.addNode(new Node(ll));
-//					if (log.isTraceEnabled())
-//						BasicWindow.showOnMap(ll, 1);
+					// if (log.isTraceEnabled())
+					// BasicWindow.showOnMap(ll, 1);
 				}
 				res.add(way);
 			}

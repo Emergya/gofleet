@@ -46,42 +46,52 @@ import javax.swing.border.MatteBorder;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.gofleet.context.GoWired;
 
 import es.emergya.cliente.constants.LogicConstants;
 
 public class Message {
-	private static final long serialVersionUID = -6691454170753397497L;
-	private static Stack<String> colaMensajes;
-	private static Font font = null;
-	private static Color color;
-	private static Date fecha;
-	static final Log log = LogFactory.getLog(Message.class);
+	private final long serialVersionUID = -6691454170753397497L;
+	private Stack<String> colaMensajes;
+	private Font font = null;
+	private Color color;
+	private Date fecha;
+	final Log log = LogFactory.getLog(this.getClass());
+
+	@GoWired
+	public BasicWindow window;
+
+	public void setWindow(BasicWindow window) {
+		this.window = window;
+	}
 
 	/** Message font size. */
-	private static final float MESSAGE_FONT_SIZE = 20.0f;
+	private final float MESSAGE_FONT_SIZE = 20.0f;
 
-	static {
+	{
 		colaMensajes = new java.util.Stack<String>();
 		color = new Color(248, 216, 152);
 
-		Message.fecha = Calendar.getInstance().getTime();
+		this.fecha = Calendar.getInstance().getTime();
 
 		font = LogicConstants.deriveBoldFont(MESSAGE_FONT_SIZE);
 
 	}
 
-	private static void inicializar(final String texto) {
+	private void inicializar(final String texto) {
 		log.trace("inicializar(" + texto + ")");
+		final Message message_ = this;
+		
 		SwingUtilities.invokeLater(new Runnable() {
 
 			@Override
 			public void run() {
 				log.trace("Sacamos un nuevo mensaje: " + texto);
-				JDialog frame = new JDialog(BasicWindow.getFrame(), true);
+				JDialog frame = new JDialog(window.getFrame(), true);
 				frame.setUndecorated(true);
 				frame.getContentPane().setBackground(Color.WHITE);
-				frame.setLocation(150, BasicWindow.getHeight() - 140);
-				frame.setSize(new Dimension(BasicWindow.getWidth() - 160, 130));
+				frame.setLocation(150, window.getHeight() - 140);
+				frame.setSize(new Dimension(window.getWidth() - 160, 130));
 				frame.setName("Incoming Message");
 				frame.setBackground(Color.WHITE);
 				frame.getRootPane().setBorder(
@@ -91,12 +101,12 @@ public class Message {
 				if (font != null)
 					frame.setFont(font);
 
-				JLabel icon = new JLabel(new ImageIcon(Message.class
+				JLabel icon = new JLabel(new ImageIcon(this.getClass()
 						.getResource("/images/button-ok.png")));
 				icon.setToolTipText("Cerrar");
 
 				icon.removeMouseListener(null);
-				icon.addMouseListener(new Cerrar(frame));
+				icon.addMouseListener(new Cerrar(frame, message_));
 
 				JLabel text = new JLabel(texto);
 				text.setBackground(Color.WHITE);
@@ -109,7 +119,7 @@ public class Message {
 		});
 	}
 
-	public static void setMessage(String message) {
+	public void setMessage(String message) {
 
 		if (message == null || message.trim().equals(""))
 			return;
@@ -120,13 +130,13 @@ public class Message {
 		getNext();
 	}
 
-	public static void updateAll() {
+	public void updateAll() {
 		try {
-			// List<Avisos> avisos = AvisosHome.getNotRead(Message.fecha);
+			// List<Avisos> avisos = AvisosHome.getNotRead(this.fecha);
 			// for (Avisos a : avisos) {
 			// setMessage(a.getTexto());
-			// if (a.getHora().after(Message.fecha))
-			// Message.fecha = a.getHora();
+			// if (a.getHora().after(this.fecha))
+			// this.fecha = a.getHora();
 			// }
 
 			// getNext();
@@ -135,15 +145,15 @@ public class Message {
 		}
 	}
 
-	public static void changeColor(Color color) {
+	public void changeColor(Color color) {
 		log.trace("changeColor()");
-		Message.color = color;
+		this.color = color;
 	}
 
-	protected static void getNext() {
+	protected void getNext() {
 		log.trace("getNext()");
 
-		if (!BasicWindow.isAuthenticated())
+		if (!window.isAuthenticated())
 			return;
 
 		try {
@@ -166,19 +176,20 @@ public class Message {
 class Cerrar extends MouseAdapter {
 
 	private JDialog frame = null;
-
-	Cerrar(JDialog frame) {
+	private Message m = null;
+	
+	Cerrar(JDialog frame, Message m) {
 		super();
 		this.frame = frame;
+		this.m = m;
 	}
 
 	@Override
 	public void mouseClicked(MouseEvent e) {
 		if (e.getClickCount() == 1) {
-			Message.log.trace("mouseClicked");
 			if (this.frame != null)
 				this.frame.dispose();
-			Message.getNext();
+			this.m.getNext();
 		}
 	}
 }

@@ -43,6 +43,7 @@ import javax.swing.Icon;
 import javax.swing.JFrame;
 
 import org.apache.commons.logging.LogFactory;
+import org.gofleet.context.GoWired;
 
 import es.emergya.actions.Authentication;
 import es.emergya.ui.base.BasicWindow;
@@ -65,6 +66,13 @@ public class DetachedTab extends JFrame {
 
 	private final PluggableJTabbedPane pane = new PluggableJTabbedPane();
 
+	@GoWired
+	public BasicWindow window;
+
+	public void setWindow(BasicWindow window) {
+		this.window = window;
+	}
+
 	/**
 	 * @param original_pane
 	 * @param title
@@ -78,7 +86,7 @@ public class DetachedTab extends JFrame {
 			String tip, int original_positon, Component detached_tab, Icon icon)
 			throws HeadlessException {
 		super(title);
-		this.setIconImage(BasicWindow.getFrame().getIconImage());
+		this.setIconImage(window.getFrame().getIconImage());
 		this.original_pane = original_pane;
 		this.tip = tip;
 		this.original_positon = original_positon;

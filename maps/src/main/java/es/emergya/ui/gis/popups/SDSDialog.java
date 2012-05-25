@@ -61,6 +61,8 @@ import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.PlainDocument;
 
+import org.gofleet.context.GoWired;
+
 import es.emergya.bbdd.bean.Outbox;
 import es.emergya.bbdd.bean.Recurso;
 import es.emergya.bbdd.bean.TipoMensaje;
@@ -82,6 +84,22 @@ public class SDSDialog extends JFrame implements ActionListener {
 	JTextArea sds;
 	JButton send, cancel;
 
+	@GoWired
+	private BasicWindow basicWindow;
+
+	/**
+	 * @return the basicWindow
+	 */
+	public BasicWindow getBasicWindow() {
+		return basicWindow;
+	}
+
+	/**
+	 * @param basicWindow the basicWindow to set
+	 */
+	public void setBasicWindow(BasicWindow basicWindow) {
+		this.basicWindow = basicWindow;
+	}
 	public SDSDialog(Recurso r) {
 		super();
 		setAlwaysOnTop(true);
@@ -100,7 +118,7 @@ public class SDSDialog extends JFrame implements ActionListener {
 
 		// setPreferredSize(new Dimension(400, 150));
 		setTitle(getString("window.sds.titleBar") + " " + r.getIdentificador());
-		setIconImage(BasicWindow.getFrame().getIconImage());
+		setIconImage(getBasicWindow().getFrame().getIconImage());
 
 		JPanel base = new JPanel();
 
@@ -197,7 +215,7 @@ public class SDSDialog extends JFrame implements ActionListener {
 
 		int x;
 		int y;
-		Container myParent = BasicWindow.getFrame().getContentPane();
+		Container myParent = getBasicWindow().getFrame().getContentPane();
 		Point topLeft = myParent.getLocationOnScreen();
 		Dimension parentSize = myParent.getSize();
 		Dimension mySize = getSize();

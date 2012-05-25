@@ -63,6 +63,7 @@ import javax.swing.text.PlainDocument;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.LogFactory;
+import org.gofleet.context.GoWired;
 
 import es.emergya.actions.RecursoAdmin;
 import es.emergya.bbdd.bean.Patrulla;
@@ -83,6 +84,24 @@ public class RecursoDialog extends JFrame {
 	private static final org.apache.commons.logging.Log log = LogFactory
 			.getLog(RecursoDialog.class);
 	private Boolean cambios = false;
+	@GoWired
+	private BasicWindow basicWindow;
+
+	/**
+	 * @return the basicWindow
+	 */
+	public BasicWindow getBasicWindow() {
+		return basicWindow;
+	}
+
+	/**
+	 * @param basicWindow
+	 *            the basicWindow to set
+	 */
+	public void setBasicWindow(BasicWindow basicWindow) {
+		this.basicWindow = basicWindow;
+	}
+
 	private DocumentListener changeListener = new DocumentListener() {
 
 		@Override
@@ -141,7 +160,7 @@ public class RecursoDialog extends JFrame {
 		} else {
 			setTitle(getString("Resources.summary.titleWindow.new"));
 		}
-		setIconImage(BasicWindow.getFrame().getIconImage());
+		setIconImage(getBasicWindow().getFrame().getIconImage());
 		JPanel base = new JPanel();
 		base.setBackground(Color.WHITE);
 		base.setLayout(new BoxLayout(base, BoxLayout.Y_AXIS));
@@ -240,8 +259,8 @@ public class RecursoDialog extends JFrame {
 
 		// Subflota y patrulla
 		mid.add(new JLabel(getString("Resources.subfleet"), JLabel.RIGHT));
-		final JComboBox subfleets = new JComboBox(FlotaConsultas
-				.getAllHabilitadas());
+		final JComboBox subfleets = new JComboBox(
+				FlotaConsultas.getAllHabilitadas());
 		subfleets.addActionListener(changeSelectionListener);
 		if (r != null) {
 			subfleets.setSelectedItem(r.getFlotas());
@@ -255,9 +274,9 @@ public class RecursoDialog extends JFrame {
 		// Referencia humana
 		mid.add(new JLabel(getString("Resources.incidences"), JLabel.RIGHT));
 		final JTextField rhumana = new JTextField();
-//		if (r != null && r.getIncidencias() != null) {
-//			rhumana.setText(r.getIncidencias().getReferenciaHumana());
-//		}
+		// if (r != null && r.getIncidencias() != null) {
+		// rhumana.setText(r.getIncidencias().getReferenciaHumana());
+		// }
 		rhumana.setEditable(false);
 		mid.add(rhumana);
 
@@ -353,11 +372,11 @@ public class RecursoDialog extends JFrame {
 		buttons.setOpaque(false);
 		JButton accept = null;
 		if (r == null) {
-			accept = new JButton("Crear", LogicConstants
-					.getIcon("button_crear"));
+			accept = new JButton("Crear",
+					LogicConstants.getIcon("button_crear"));
 		} else {
-			accept = new JButton("Guardar", LogicConstants
-					.getIcon("button_save"));
+			accept = new JButton("Guardar",
+					LogicConstants.getIcon("button_save"));
 		}
 		accept.addActionListener(new ActionListener() {
 
@@ -421,16 +440,15 @@ public class RecursoDialog extends JFrame {
 									&& r != null
 									&& r.getId() != null
 									&& RecursoConsultas.alreadyExists(
-											new Integer(issi.getText()), r
-													.getId())) {
+											new Integer(issi.getText()),
+											r.getId())) {
 								JOptionPane
 										.showMessageDialog(
 												RecursoDialog.this,
 												getString("admin.recursos.popup.error.issiUnico"));
 							} else if (issi.getText() != null
 									&& issi.getText().length() > 0
-									&& !LogicConstants
-											.isNumeric(issi.getText())) {
+									&& !LogicConstants.isNumeric(issi.getText())) {
 								JOptionPane
 										.showMessageDialog(
 												RecursoDialog.this,
@@ -518,8 +536,8 @@ public class RecursoDialog extends JFrame {
 		});
 		buttons.add(accept);
 
-		JButton cancelar = new JButton("Cancelar", LogicConstants
-				.getIcon("button_cancel"));
+		JButton cancelar = new JButton("Cancelar",
+				LogicConstants.getIcon("button_cancel"));
 
 		cancelar.addActionListener(new ActionListener() {
 
@@ -556,7 +574,8 @@ public class RecursoDialog extends JFrame {
 		int x;
 		int y;
 
-		Container myParent = BasicWindow.getPluginContainer().getDetachedTab(0);
+		Container myParent = getBasicWindow().getPluginContainer()
+				.getDetachedTab(0);
 		Point topLeft = myParent.getLocationOnScreen();
 		Dimension parentSize = myParent.getSize();
 

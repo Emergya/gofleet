@@ -78,6 +78,8 @@ import java.util.zip.ZipInputStream;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import es.emergya.utils.JarSearcher;
+
 /**
  * This is a URLClassLoader with some minor functionality added. It has a
  * Singleton instance which is globally accessible, and it also has a method
@@ -178,14 +180,14 @@ public class ExtensionClassLoader extends ClassLoader {
 	public List<File> getModules() {
 
 		ArrayList<File> res = new ArrayList<File>();
-		
+
 		String module_suffix = ".module";
 		String path_lib = System.getProperty("user.dir")
 				+ System.getProperty("file.separator") + "lib";
 		String path_target_lib = System.getProperty("user.dir")
-		+ System.getProperty("file.separator") + "target"
-		+ System.getProperty("file.separator") + "lib";
-		
+				+ System.getProperty("file.separator") + "target"
+				+ System.getProperty("file.separator") + "lib";
+
 		findModulesInPath(res, module_suffix, path_lib);
 		findModulesInPath(res, module_suffix, path_target_lib);
 		

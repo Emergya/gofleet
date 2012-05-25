@@ -60,6 +60,7 @@ import javax.swing.filechooser.FileFilter;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.gofleet.context.GoWired;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.gui.layer.GpxLayer;
 import org.openstreetmap.josm.gui.layer.Layer;
@@ -69,7 +70,6 @@ import org.openstreetmap.josm.io.GpxImporter;
 import es.emergya.cliente.constants.LogicConstants;
 import es.emergya.ui.base.BasicWindow;
 import es.emergya.ui.gis.CustomMapView;
-import es.emergya.ui.gis.ICustomMapView;
 import es.emergya.ui.gis.IMapViewer;
 
 public class ListaCapas extends JDialog implements ActionListener {
@@ -83,7 +83,25 @@ public class ListaCapas extends JDialog implements ActionListener {
 	CustomMapView mapView;
 	List<Layer> capasActuales = new LinkedList<Layer>();
 
-	public synchronized static void showListaCapas(CustomMapView mapView,
+	@GoWired
+	private BasicWindow basicWindow;
+
+	/**
+	 * @return the basicWindow
+	 */
+	public BasicWindow getBasicWindow() {
+		return basicWindow;
+	}
+
+	/**
+	 * @param basicWindow
+	 *            the basicWindow to set
+	 */
+	public void setBasicWindow(BasicWindow basicWindow) {
+		this.basicWindow = basicWindow;
+	}
+
+	public synchronized void showListaCapas(CustomMapView mapView,
 			IMapViewer historyMapViewer) {
 		if (self == null) {
 			self = new ListaCapas(mapView, historyMapViewer);
@@ -92,7 +110,7 @@ public class ListaCapas extends JDialog implements ActionListener {
 		self.setVisible(true);
 	}
 
-	public synchronized static void hideListaCapas() {
+	public synchronized void hideListaCapas() {
 		if (self != null) {
 			self.setVisible(false);
 		}
@@ -108,12 +126,14 @@ public class ListaCapas extends JDialog implements ActionListener {
 	}
 
 	private ListaCapas(CustomMapView mapView, final IMapViewer historyMapViewer) {
-		super(BasicWindow.getFrame(), getString("window.gpx.titleBar"));
+		super();
+		setTitle(getString("window.gpx.titleBar"));
+		setLocationRelativeTo(getBasicWindow().getFrame());
 		setResizable(false);
 		setAlwaysOnTop(true);
 		this.mapView = mapView;
 		this.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
-		setIconImage(BasicWindow.getFrame().getIconImage());
+		setIconImage(getBasicWindow().getFrame().getIconImage());
 		JPanel dialogo = new JPanel(new BorderLayout());
 		dialogo.setBackground(Color.WHITE);
 		dialogo.setBorder(new EmptyBorder(10, 10, 10, 10));
@@ -143,7 +163,7 @@ public class ListaCapas extends JDialog implements ActionListener {
 			@Override
 			public void windowClosing(WindowEvent e) {
 				super.windowClosed(e);
-//				historyMapViewer.getGPXButton().setSelected(false);
+				// historyMapViewer.getGPXButton().setSelected(false);
 			}
 		});
 
@@ -179,7 +199,7 @@ public class ListaCapas extends JDialog implements ActionListener {
 					}
 				} catch (Throwable t) {
 					log.error("Error al cargar GPX " + t);
-					JOptionPane.showMessageDialog(BasicWindow.getFrame(),
+					JOptionPane.showMessageDialog(getBasicWindow().getFrame(),
 							getString("window.gpx.loadError"));
 				}
 			}

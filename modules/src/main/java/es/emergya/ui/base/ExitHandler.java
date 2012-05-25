@@ -34,6 +34,8 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.gofleet.context.GoWired;
+
 import es.emergya.actions.Authentication;
 
 /**
@@ -45,6 +47,11 @@ import es.emergya.actions.Authentication;
 public class ExitHandler implements ActionListener {
 
 	List<ActionListener> listeners = new ArrayList<ActionListener>();
+
+	@GoWired
+	public BasicWindow window;
+	@GoWired
+	public LoginWindow lwindow;
 
 	/**
 	 * Log out the application.
@@ -63,9 +70,9 @@ public class ExitHandler implements ActionListener {
 		for (Frame f : Frame.getFrames())
 			f.dispose();
 
-		BasicWindow.getFrame().setVisible(false);
-		LoginWindow.showLogin();
+		window.getFrame().setVisible(false);
+		lwindow.showLogin();
 
-		BasicWindow.getPluginContainer().cleanUp();
+		window.getPluginContainer().cleanUp();
 	}
 }

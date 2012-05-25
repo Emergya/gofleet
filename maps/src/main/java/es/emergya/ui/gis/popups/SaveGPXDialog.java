@@ -54,6 +54,7 @@ import javax.swing.border.EmptyBorder;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.gofleet.context.GoWired;
 import org.openstreetmap.josm.gui.layer.GpxLayer;
 import org.openstreetmap.josm.gui.layer.Layer;
 import org.openstreetmap.josm.io.GpxWriter;
@@ -67,6 +68,22 @@ public class SaveGPXDialog extends JFrame {
 	private static final long serialVersionUID = -6066807198392103411L;
 	private static SaveGPXDialog self;
 
+	@GoWired
+	private BasicWindow basicWindow;
+
+	/**
+	 * @return the basicWindow
+	 */
+	public BasicWindow getBasicWindow() {
+		return basicWindow;
+	}
+
+	/**
+	 * @param basicWindow the basicWindow to set
+	 */
+	public void setBasicWindow(BasicWindow basicWindow) {
+		this.basicWindow = basicWindow;
+	}
 	public synchronized static void close() {
 		if (self != null)
 			self.dispose();
@@ -84,7 +101,7 @@ public class SaveGPXDialog extends JFrame {
 		super("Consulta de Posiciones GPS");
 		setResizable(false);
 		setAlwaysOnTop(true);
-		this.setIconImage(BasicWindow.getIconImage());
+		this.setIconImage(getBasicWindow().getIconImage());
 		this.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 		JPanel dialogo = new JPanel(new BorderLayout());
 		dialogo.setBackground(Color.WHITE);
@@ -215,7 +232,7 @@ public class SaveGPXDialog extends JFrame {
 		int x;
 		int y;
 
-		Container myParent = BasicWindow.getFrame().getContentPane();
+		Container myParent = getBasicWindow().getFrame().getContentPane();
 		Point topLeft = myParent.getLocationOnScreen();
 		Dimension parentSize = myParent.getSize();
 

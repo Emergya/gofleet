@@ -34,8 +34,7 @@ import java.util.Properties;
 import java.util.Set;
 
 import org.apache.commons.logging.LogFactory;
-
-import es.emergya.tools.ExtensionClassLoader;
+import org.gofleet.context.GoClassLoader;
 
 public class PluginType implements Comparable<PluginType> {
 	private static final String UNKNOWN = "UNKNOWN";
@@ -84,10 +83,9 @@ class PluginTypeContainer extends HashMap<String, PluginType> {
 		put("ADMIN", pluginType);
 		put("MAP", new PluginType("MAP"));
 
-		final ExtensionClassLoader ecl = new ExtensionClassLoader();
 		final Properties p = new Properties();
 		try {
-			InputStream resourceAsStream = ecl
+			InputStream resourceAsStream = GoClassLoader.getGoClassLoader()
 					.getResourceAsStream("moduletypes");
 			if (resourceAsStream == null)
 				throw new NullPointerException(

@@ -51,6 +51,7 @@ import javax.swing.plaf.metal.MetalTabbedPaneUI;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.gofleet.context.GoWired;
 
 import es.emergya.cliente.constants.LogicConstants;
 import es.emergya.ui.base.BasicWindow;
@@ -71,6 +72,13 @@ public class PluggableJTabbedPane extends JTabbedPane implements MouseListener {
 
 	public void addFloatingButton(JComponent c) {
 		botones_flotantes.add(c);
+	}
+
+	@GoWired
+	public BasicWindow window;
+
+	public void setWindow(BasicWindow window) {
+		this.window = window;
 	}
 
 	public PluggableJTabbedPane() {
@@ -257,6 +265,12 @@ public class PluggableJTabbedPane extends JTabbedPane implements MouseListener {
 }
 
 class MyTabbedPaneUI extends MetalTabbedPaneUI {
+	@GoWired
+	public BasicWindow window;
+
+	public void setWindow(BasicWindow window) {
+		this.window = window;
+	}
 
 	protected final Log log = LogFactory.getLog(getClass());
 	private PluggableJTabbedPane pane = null;
@@ -286,11 +300,12 @@ class MyTabbedPaneUI extends MetalTabbedPaneUI {
 	@Override
 	protected void installListeners() {
 		super.installListeners();
+		final BasicWindow window_ = window;
 		this.tabPane.addChangeListener(new ChangeListener() {
 
 			@Override
 			public void stateChanged(ChangeEvent e) {
-				BasicWindow.recolorAlert();
+				window_.recolorAlert();
 
 				if (((PluggableJTabbedPane) e.getSource()).getSelectedIndex() == 0) {
 					Component c = ((PluggableJTabbedPane) e.getSource())

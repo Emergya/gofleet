@@ -41,10 +41,11 @@ import javax.swing.JFrame;
 import javax.swing.SwingWorker;
 
 import org.apache.commons.logging.LogFactory;
+import org.gofleet.context.GoWired;
+import org.gofleet.internacionalization.I18n;
 
 import es.emergya.actions.Authentication;
 import es.emergya.bbdd.bean.Usuario;
-import es.emergya.i18n.Internacionalization;
 import es.emergya.ui.base.BasicWindow;
 
 /**
@@ -57,6 +58,20 @@ public class PluginContainer extends AbstractPluggable {
 
 	private static final long serialVersionUID = -494763572856676601L;
 	private Modes mode = Modes.DESKTOP;
+
+	@GoWired
+	public I18n i18n;
+
+	public void setI18n(I18n i18n) {
+		this.i18n = i18n;
+	}
+
+	@GoWired
+	public BasicWindow window;
+
+	public void setWindow(BasicWindow window) {
+		this.window = window;
+	}
 
 	public enum Modes {
 		MOBILE, DESKTOP
@@ -109,7 +124,7 @@ public class PluginContainer extends AbstractPluggable {
 					options.put(plugin.getType(),
 							new ArrayList<AbstractPlugin>());
 				}
-				if(plugin.getType() == null)
+				if (plugin.getType() == null)
 					plugin.setType(PluginType.getDefault());
 				options.get(plugin.getType()).add(plugin);
 			}
@@ -128,8 +143,8 @@ public class PluginContainer extends AbstractPluggable {
 						}
 				}
 				if (!exist) {
-					tabs.add(new Tab(Internacionalization.getString(type.type),
-							type, tabs.size()));
+					tabs.add(new Tab(i18n.getString(type.type), type, tabs
+							.size()));
 				}
 			} catch (Throwable t) {
 				log.error("Error loading plugin", t);
@@ -159,10 +174,8 @@ public class PluginContainer extends AbstractPluggable {
 				// Detaches all the detachables panels
 				if (tab.getDetachable() && mode == Modes.DESKTOP) {
 					log.trace("tab detachable: " + tab);
-					DetachedTab f = getPane()
-							.detach(tab,
-									Internacionalization
-											.getString("Main.Administration.titleWindow"));
+					DetachedTab f = getPane().detach(tab,
+							i18n.getString("Main.Administration.titleWindow"));
 					f.setVisible(true);
 					f.setRetatchOnClose(false);
 				}
@@ -224,7 +237,7 @@ public class PluginContainer extends AbstractPluggable {
 						log.error("Error on cleanUp " + ap, t);
 					}
 
-				for (DetachedTab t : BasicWindow.getPluginContainer().getPane()
+				for (DetachedTab t : window.getPluginContainer().getPane()
 						.getDetachedTabs())
 					try {
 						t.dispose();

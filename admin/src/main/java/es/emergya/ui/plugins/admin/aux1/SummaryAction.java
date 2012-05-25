@@ -80,6 +80,7 @@ import javax.swing.event.DocumentListener;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.gofleet.context.GoWired;
 
 import es.emergya.cliente.constants.LogicConstants;
 import es.emergya.consultas.FlotaConsultas;
@@ -147,9 +148,27 @@ public abstract class SummaryAction extends AbstractAction {
 			textfieldSize / 3);
 	protected final JComboBox comboTipoCapa = new JComboBox(
 			new DefaultComboBoxModel());
-	protected final JButton izquierda = new JButton(LogicConstants
-			.getIcon("button_left"));
+	protected final JButton izquierda = new JButton(
+			LogicConstants.getIcon("button_left"));
 	protected boolean abriendo = false;
+
+	@GoWired
+	private BasicWindow basicWindow;
+
+	/**
+	 * @return the basicWindow
+	 */
+	public BasicWindow getBasicWindow() {
+		return basicWindow;
+	}
+
+	/**
+	 * @param basicWindow
+	 *            the basicWindow to set
+	 */
+	public void setBasicWindow(BasicWindow basicWindow) {
+		this.basicWindow = basicWindow;
+	}
 
 	/**
 	 * 
@@ -214,8 +233,8 @@ public abstract class SummaryAction extends AbstractAction {
 						int x;
 						int y;
 
-						Container myParent = BasicWindow.getPluginContainer()
-								.getDetachedTab(0);
+						Container myParent = getBasicWindow()
+								.getPluginContainer().getDetachedTab(0);
 						Point topLeft = myParent.getLocationOnScreen();
 						Dimension parentSize = myParent.getSize();
 
@@ -237,8 +256,7 @@ public abstract class SummaryAction extends AbstractAction {
 
 						d.setLocation(x, y);
 					} else {
-						log
-								.error("No pude abrir la ficha por un motivo desconocido");
+						log.error("No pude abrir la ficha por un motivo desconocido");
 					}
 					return null;
 				} catch (Throwable t) {
@@ -409,8 +427,8 @@ public abstract class SummaryAction extends AbstractAction {
 	}
 
 	private JButton getCancelBtn(final JFrame d) {
-		JButton cancelar = new JButton("Cancelar", LogicConstants
-				.getIcon("button_cancel"));
+		JButton cancelar = new JButton("Cancelar",
+				LogicConstants.getIcon("button_cancel"));
 		cancelar.addActionListener(new ActionListener() {
 
 			@Override
@@ -542,7 +560,7 @@ public abstract class SummaryAction extends AbstractAction {
 		final JFrame d = new JFrame(titulo);
 		d.setResizable(false);
 		d.setAlwaysOnTop(true);
-		d.setIconImage(BasicWindow.getIconImage());
+		d.setIconImage(getBasicWindow().getIconImage());
 		d.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
 		d.addWindowListener(new WindowAdapter() {
 
@@ -637,8 +655,8 @@ public abstract class SummaryAction extends AbstractAction {
 			up.setBorderPainted(false);
 			up.setOpaque(false);
 			up.setContentAreaFilled(false);
-			final JButton down = new JButton(LogicConstants
-					.getIcon("button_down"));
+			final JButton down = new JButton(
+					LogicConstants.getIcon("button_down"));
 			down.addActionListener(new ActionListener() {
 
 				@Override
@@ -1109,12 +1127,10 @@ public abstract class SummaryAction extends AbstractAction {
 				public void actionPerformed(ActionEvent e) {
 					cambios = true;
 					if (iconos.getSelectedItem() != null) {
-						i
-								.setIcon(LogicConstants
-										.getIcon(LogicConstants.DIRECTORIO_ICONOS_FLOTAS
-												+ iconos.getSelectedItem()
-														.toString()
-												+ "_flota_preview"));
+						i.setIcon(LogicConstants
+								.getIcon(LogicConstants.DIRECTORIO_ICONOS_FLOTAS
+										+ iconos.getSelectedItem().toString()
+										+ "_flota_preview"));
 					}
 					i.updateUI();
 				}

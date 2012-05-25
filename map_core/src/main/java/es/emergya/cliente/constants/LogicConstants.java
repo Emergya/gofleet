@@ -54,17 +54,16 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.geotools.geometry.jts.JTS;
 import org.geotools.referencing.CRS;
+import org.gofleet.context.GoClassLoader;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
 import org.opengis.referencing.operation.MathTransform;
 
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.Point;
 
-import es.emergya.tools.ExtensionClassLoader;
-
 /**
  * Contains the constants for the logic layer
- *
+ * 
  * @author aromero
  */
 public class LogicConstants {
@@ -88,8 +87,7 @@ public class LogicConstants {
 		LogicConstants.p = new Properties();
 
 		try {
-			ExtensionClassLoader ecl = new ExtensionClassLoader();
-			InputStream is = ecl
+			InputStream is = GoClassLoader.getGoClassLoader()
 					.getResourceAsStream(LogicConstants.constantsProperties);
 			if (is == null) {
 				is = LogicConstants.class
@@ -98,8 +96,7 @@ public class LogicConstants {
 			LogicConstants.p.load(is);
 		} catch (FileNotFoundException fnf) {
 			LogicConstants.LOG
-					.error(
-							"Fichero de configuarcion conf/contants.properties no encontrado",
+					.error("Fichero de configuarcion conf/contants.properties no encontrado",
 							fnf);
 		} catch (IOException e) {
 			LogicConstants.LOG.error(e);
@@ -136,8 +133,8 @@ public class LogicConstants {
 	private static Font getFont(Integer type, String font) {
 		Font f;
 		try {
-			f = Font.createFont(Font.TRUETYPE_FONT, LogicConstants.class
-					.getResourceAsStream(font));
+			f = Font.createFont(Font.TRUETYPE_FONT,
+					LogicConstants.class.getResourceAsStream(font));
 		} catch (Exception e) {
 			LogicConstants.LOG.error("No se pudo cargar el font bold", e);
 			GraphicsEnvironment ge = GraphicsEnvironment
@@ -304,14 +301,14 @@ public class LogicConstants {
 	}
 
 	public static int getInt(String string, int defaultValue) {
-		String s = LogicConstants.p.getProperty(string, Integer
-				.toString(defaultValue));
+		String s = LogicConstants.p.getProperty(string,
+				Integer.toString(defaultValue));
 		return Integer.valueOf(s);
 	}
 
 	public static double getDouble(String string, double defaultValue) {
-		String s = LogicConstants.p.getProperty(string, Double
-				.toString(defaultValue));
+		String s = LogicConstants.p.getProperty(string,
+				Double.toString(defaultValue));
 		return Double.valueOf(s);
 	}
 
