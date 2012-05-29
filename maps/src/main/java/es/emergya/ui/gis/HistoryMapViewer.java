@@ -59,6 +59,7 @@ import edu.emory.mathcs.backport.java.util.Collections;
 import es.emergya.actions.Authentication;
 import es.emergya.cliente.constants.LogicConstants;
 import es.emergya.ui.base.plugins.PluginType;
+import es.emergya.ui.gis.popups.ConsultaHistoricos;
 import es.emergya.ui.gis.popups.ListaCapas;
 import es.emergya.ui.gis.popups.SaveGPXDialog;
 

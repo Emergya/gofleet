@@ -76,6 +76,7 @@ import es.emergya.ui.base.plugins.PluginType;
 import es.emergya.ui.gis.markers.CustomMarker;
 import es.emergya.ui.gis.popups.GPSDialog;
 import es.emergya.ui.gis.popups.IncidenceDialog;
+import es.emergya.ui.gis.popups.NearestResourcesDialog;
 import es.emergya.ui.gis.popups.RouteDialog;
 import es.emergya.ui.gis.popups.SummaryDialog;
 
@@ -352,7 +353,7 @@ public class FleetControlMapViewer extends MapViewer implements ActionListener {
 
 		// Título
 		final JMenuItem titulo = new JMenuItem(
-				getString("map.menu.titulo.puntoGenerico"));
+				i18n.getString("map.menu.titulo.puntoGenerico"));
 		titulo.setFont(LogicConstants.deriveBoldFont(10.0f));
 		titulo.setBackground(Color.decode("#A4A4A4"));
 		titulo.setFocusable(false);

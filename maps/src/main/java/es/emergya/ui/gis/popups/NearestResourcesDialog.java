@@ -29,8 +29,6 @@
  */
 package es.emergya.ui.gis.popups;
 
-import static es.emergya.i18n.Internacionalization.getString;
-
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
@@ -73,6 +71,7 @@ import javax.swing.table.TableRowSorter;
 
 import org.apache.commons.logging.LogFactory;
 import org.gofleet.context.GoWired;
+import org.gofleet.internacionalization.I18n;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.coor.EastNorth;
 import org.openstreetmap.josm.data.coor.LatLon;
@@ -117,6 +116,24 @@ public class NearestResourcesDialog extends JFrame implements ActionListener {
 	 */
 	public void setBasicWindow(BasicWindow basicWindow) {
 		this.basicWindow = basicWindow;
+	}
+
+	@GoWired
+	public I18n i18n;
+
+	/**
+	 * @return the i18n
+	 */
+	public I18n getI18n() {
+		return i18n;
+	}
+
+	/**
+	 * @param i18n
+	 *            the i18n to set
+	 */
+	public void setI18n(I18n i18n) {
+		this.i18n = i18n;
 	}
 
 	private final class CustomTableModel extends DefaultTableModel {
@@ -183,10 +200,11 @@ public class NearestResourcesDialog extends JFrame implements ActionListener {
 				.getPosX()), view);
 		if (!isVisible(r)) {
 			notification
-					.setText(getString("window.nearest.notificacion.resourceNotVisible"));
+					.setText(i18n
+							.getString("window.nearest.notificacion.resourceNotVisible"));
 			notification.updateUI();
 		}
-		setTitle(getString("window.nearest.titleBar.recurso") + " "
+		setTitle(i18n.getString("window.nearest.titleBar.recurso") + " "
 				+ r.getIdentificador());
 		setName(r.getIdentificador());
 		this.recurso = r;
@@ -196,12 +214,12 @@ public class NearestResourcesDialog extends JFrame implements ActionListener {
 		this(ll, view);
 		i = IncidenciaConsultas.get(i.getId());
 		if (i.getEstado().getId().equals(6l)) {
-			notification
-					.setText(getString("window.nearest.notificacion.closedIncidence"));
+			notification.setText(i18n
+					.getString("window.nearest.notificacion.closedIncidence"));
 			notification.updateUI();
 		}
 
-		// setTitle(getString("window.nearest.titleBar.incidencia") + " "
+		// setTitle(i18n.getString("window.nearest.titleBar.incidencia") + " "
 		// + i.getReferenciaHumana());
 		// setName(i.getReferenciaHumana());
 	}
@@ -222,7 +240,7 @@ public class NearestResourcesDialog extends JFrame implements ActionListener {
 			this.view = view;
 			this.point = ll;
 			setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-			setTitle(getString("window.nearest.titleBar.puntoGenerico"));
+			setTitle(i18n.getString("window.nearest.titleBar.puntoGenerico"));
 			setIconImage(getBasicWindow().getFrame().getIconImage());
 			JPanel base = new JPanel();
 			base.setBackground(Color.WHITE);
@@ -231,7 +249,7 @@ public class NearestResourcesDialog extends JFrame implements ActionListener {
 			// Icono del titulo
 			JPanel title = new JPanel(new FlowLayout(FlowLayout.LEADING));
 			final JLabel labelTitle = new JLabel(
-					getString("window.nearest.title"),
+					i18n.getString("window.nearest.title"),
 					LogicConstants.getIcon("tittleventana_icon_mascercano"),
 					JLabel.LEFT);
 			labelTitle.setFont(LogicConstants.deriveBoldFont(12.0f));
@@ -243,7 +261,7 @@ public class NearestResourcesDialog extends JFrame implements ActionListener {
 			content.setOpaque(false);
 
 			// Coordenadas
-			content.add(new JLabel(getString("map.location"), JLabel.RIGHT));
+			content.add(new JLabel(i18n.getString("map.location"), JLabel.RIGHT));
 			JPanel coords = new JPanel(new GridLayout(1, 2));
 			coords.setOpaque(false);
 			coordX = new JTextField(8);
@@ -256,7 +274,8 @@ public class NearestResourcesDialog extends JFrame implements ActionListener {
 			printCoordinates(ll);
 
 			// Fecha y hora
-			content.add(new JLabel(getString("Admin.dateTime"), JLabel.RIGHT));
+			content.add(new JLabel(i18n.getString("Admin.dateTime"),
+					JLabel.RIGHT));
 			datetime = new JTextField(df.format(Calendar.getInstance()
 					.getTime()));
 			datetime.setEditable(false);
@@ -268,12 +287,12 @@ public class NearestResourcesDialog extends JFrame implements ActionListener {
 
 			// Tabla con los resultados
 			DefaultTableModel model = new CustomTableModel(new String[] {
-					getString("window.nearest.table.title.orden"),
-					getString("window.nearest.table.title.nombre"),
-					getString("window.nearest.table.title.patrulla"),
-					getString("window.nearest.table.title.estado"),
-					getString("window.nearest.table.title.distancia") + "(m)",
-					"" }, 0);
+					i18n.getString("window.nearest.table.title.orden"),
+					i18n.getString("window.nearest.table.title.nombre"),
+					i18n.getString("window.nearest.table.title.patrulla"),
+					i18n.getString("window.nearest.table.title.estado"),
+					i18n.getString("window.nearest.table.title.distancia")
+							+ "(m)", "" }, 0);
 			results = new JTable(model);
 
 			RowSorter<TableModel> sorter = new TableRowSorter<TableModel>(model);
@@ -318,8 +337,8 @@ public class NearestResourcesDialog extends JFrame implements ActionListener {
 			JScrollPane scroll = new JScrollPane(results);
 			scroll.setBackground(Color.WHITE);
 			scroll.setBorder(new TitledBorder(BorderFactory
-					.createLineBorder(Color.BLACK),
-					getString("window.nearest.table.scroll.titulo")));
+					.createLineBorder(Color.BLACK), i18n
+					.getString("window.nearest.table.scroll.titulo")));
 
 			base.add(scroll);
 
@@ -334,7 +353,7 @@ public class NearestResourcesDialog extends JFrame implements ActionListener {
 			JPanel buttons = new JPanel();
 			buttons.setOpaque(false);
 			buttons.setLayout(new BoxLayout(buttons, BoxLayout.X_AXIS));
-			search = new JButton(getString("Buttons.refresh"),
+			search = new JButton(i18n.getString("Buttons.refresh"),
 					LogicConstants.getIcon("button_refrescar"));
 			search.addActionListener(this);
 			buttons.add(search);
@@ -342,7 +361,7 @@ public class NearestResourcesDialog extends JFrame implements ActionListener {
 			progressIcon = new JLabel(iconTransparente);
 			buttons.add(progressIcon);
 			buttons.add(Box.createHorizontalGlue());
-			JButton cancel = new JButton(getString("Buttons.cancel"),
+			JButton cancel = new JButton(i18n.getString("Buttons.cancel"),
 					LogicConstants.getIcon("button_cancel"));
 			cancel.addActionListener(this);
 			buttons.add(cancel);
@@ -395,7 +414,8 @@ public class NearestResourcesDialog extends JFrame implements ActionListener {
 
 				if (!isVisible(r)) {
 					notification
-							.setText(getString("window.nearest.notificacion.noDisponible"));
+							.setText(i18n
+									.getString("window.nearest.notificacion.noDisponible"));
 					notification.updateUI();
 				} else {
 					notification.setText("");
@@ -425,7 +445,7 @@ public class NearestResourcesDialog extends JFrame implements ActionListener {
 	private void calculaMasCercanos(JButton b) {
 		ALL = RecursoConsultas.getAll(Authentication.getUsuario());
 		try {
-			if (b.getActionCommand().equals(getString("Buttons.refresh"))) {
+			if (b.getActionCommand().equals(i18n.getString("Buttons.refresh"))) {
 
 				b.setEnabled(false);
 				progressIcon.setIcon(iconEnviando);
@@ -545,7 +565,7 @@ public class NearestResourcesDialog extends JFrame implements ActionListener {
 				w.execute();
 			}
 
-			if (b.getActionCommand().equals(getString("Buttons.cancel"))) {
+			if (b.getActionCommand().equals(i18n.getString("Buttons.cancel"))) {
 				dispose();
 			}
 		} catch (Throwable t) {
