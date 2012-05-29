@@ -27,8 +27,6 @@
  */
 package org.gofleet.module.routing;
 
-import static es.emergya.i18n.Internacionalization.getString;
-
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dialog.ModalityType;
@@ -68,6 +66,8 @@ import javax.swing.SwingWorker;
 import javax.swing.filechooser.FileFilter;
 
 import org.apache.commons.logging.LogFactory;
+import org.gofleet.context.GoWired;
+import org.gofleet.internacionalization.I18n;
 import org.gofleet.openls.RoutingServiceStub;
 import org.gofleet.openls.RoutingServiceStub.GetTravellingSalesmanPlan;
 import org.gofleet.openls.RoutingServiceStub.GetTravellingSalesmanPlanResponse;
@@ -92,7 +92,6 @@ import es.emergya.actions.Authentication;
 import es.emergya.cliente.constants.LogicConstants;
 import es.emergya.consultas.IncidenciaConsultas;
 import es.emergya.consultas.RecursoConsultas;
-import es.emergya.i18n.Internacionalization;
 import es.emergya.ui.base.BasicWindow;
 import es.emergya.ui.base.plugins.PluginType;
 import es.emergya.ui.gis.CustomMapView.InitAdapter;
@@ -103,10 +102,6 @@ public class RoutingMap extends MapViewer implements ActionListener {
 	private static final org.apache.commons.logging.Log log = LogFactory
 			.getLog(RoutingMap.class);
 	private static final long serialVersionUID = -1837324556102054550L;
-	static final private String mapMenuTituloPlanning = getString(
-			"map.menu.titulo.planning", "Planning Routes");
-	static final String mapMenuNewPlanning = Internacionalization.getString(
-			"map.menu.new.planning", "New Plan");
 	private final WKTReader wktReader = new WKTReader();
 
 	/**
@@ -127,6 +122,42 @@ public class RoutingMap extends MapViewer implements ActionListener {
 		super(title, type, order, icon, layers, mouseWheelListener,
 				mouseListener, mouseMotionListener, initAdapter);
 
+	}
+
+	@GoWired
+	public I18n i18n;
+
+	/**
+	 * @return the i18n
+	 */
+	public I18n getI18n() {
+		return i18n;
+	}
+
+	/**
+	 * @param i18n
+	 *            the i18n to set
+	 */
+	public void setI18n(I18n i18n) {
+		this.i18n = i18n;
+	}
+
+	@GoWired
+	public BasicWindow basicWindow;
+
+	/**
+	 * @return the i18n
+	 */
+	public BasicWindow getBasicWindow() {
+		return basicWindow;
+	}
+
+	/**
+	 * @param i18n
+	 *            the i18n to set
+	 */
+	public void setBasicWindow(BasicWindow basicWindow) {
+		this.basicWindow = basicWindow;
 	}
 
 	/**
@@ -157,7 +188,8 @@ public class RoutingMap extends MapViewer implements ActionListener {
 		SwingWorker<Object, Object> sw = new SwingWorker<Object, Object>() {
 			@Override
 			protected Object doInBackground() throws Exception {
-
+				String mapMenuNewPlanning = i18n
+						.getString("map.menu.new.planning");
 				try {
 					if (e.getActionCommand().equals(mapMenuNewPlanning)) {
 						LatLon from = RoutingMap.this.mapView
@@ -184,12 +216,12 @@ public class RoutingMap extends MapViewer implements ActionListener {
 	}
 
 	private void newPlan(LatLon from) {
-		JDialog d = new JDialog(BasicWindow.getFrame(), "Generating New Plan");
+		JDialog d = new JDialog(basicWindow.getFrame(), "Generating New Plan");
 		try {
 			JFileChooser fc = new JFileChooser();
 			fc.addChoosableFileFilter(new RoutingFilter());
 			fc.setAcceptAllFileFilterUsed(true);
-			int returnVal = fc.showOpenDialog(BasicWindow.getFrame());
+			int returnVal = fc.showOpenDialog(basicWindow.getFrame());
 			if (returnVal == JFileChooser.APPROVE_OPTION) {
 				File file = fc.getSelectedFile();
 				log.debug("Opening: " + file.getName());
@@ -227,10 +259,9 @@ public class RoutingMap extends MapViewer implements ActionListener {
 			}
 		} catch (Throwable t) {
 			log.error("Error computing new plan", t);
-			JOptionPane.showMessageDialog(BasicWindow.getFrame(), "<html><p>"
-					+ Internacionalization.getString("Main.Error") + ":</p><p>"
-					+ t.toString() + "</p><html>",
-					Internacionalization.getString("Main.Error"),
+			JOptionPane.showMessageDialog(basicWindow.getFrame(), "<html><p>"
+					+ i18n.getString("Main.Error") + ":</p><p>" + t.toString()
+					+ "</p><html>", i18n.getString("Main.Error"),
 					JOptionPane.ERROR_MESSAGE);
 		} finally {
 			d.setVisible(false);
@@ -241,7 +272,7 @@ public class RoutingMap extends MapViewer implements ActionListener {
 
 	private Map<String, String> getValues(LatLon from) {
 		final Map<String, String> mapa = new HashMap<String, String>();
-		final JDialog frame = new JDialog(BasicWindow.getFrame(),
+		final JDialog frame = new JDialog(basicWindow.getFrame(),
 				"Configuration");
 		JPanel panel = new JPanel(new GridLayout(0, 2));
 		int width = 10;
@@ -442,10 +473,9 @@ public class RoutingMap extends MapViewer implements ActionListener {
 
 			return tspplan;
 		} catch (Throwable t) {
-			JOptionPane.showMessageDialog(BasicWindow.getFrame(), "<html><p>"
+			JOptionPane.showMessageDialog(basicWindow.getFrame(), "<html><p>"
 					+ "Error" + ":</p><p>" + t.toString() + "</p><html>",
-					Internacionalization.getString("Main.Error"),
-					JOptionPane.ERROR_MESSAGE);
+					i18n.getString("Main.Error"), JOptionPane.ERROR_MESSAGE);
 			log.error(t, t);
 		}
 		return new TSPPlan[0];
@@ -500,6 +530,9 @@ public class RoutingMap extends MapViewer implements ActionListener {
 
 		menu.setBackground(Color.decode("#E8EDF6"));
 
+		String mapMenuTituloPlanning = i18n
+				.getString("map.menu.titulo.planning");
+		String mapMenuNewPlanning = i18n.getString("map.menu.new.planning");
 		// Título
 		final JMenuItem titulo = new JMenuItem(mapMenuTituloPlanning);
 		titulo.setFont(LogicConstants.deriveBoldFont(10.0f));

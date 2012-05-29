@@ -28,8 +28,6 @@
  */
 package es.emergya.ui.plugins.list;
 
-import static es.emergya.i18n.Internacionalization.getString;
-
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.util.Calendar;
@@ -40,6 +38,8 @@ import javax.swing.AbstractAction;
 import javax.swing.JFrame;
 import javax.swing.JTable;
 
+import org.gofleet.context.GoWired;
+import org.gofleet.internacionalization.I18n;
 import org.openstreetmap.josm.data.coor.LatLon;
 
 import com.vividsolutions.jts.geom.Point;
@@ -50,7 +50,6 @@ import es.emergya.bbdd.bean.Incidencia;
 import es.emergya.cliente.constants.LogicConstants;
 import es.emergya.consultas.FlotaConsultas;
 import es.emergya.consultas.IncidenciaConsultas;
-import es.emergya.ui.base.BasicWindow;
 import es.emergya.ui.base.plugins.Option;
 import es.emergya.ui.base.plugins.PluginEvent;
 import es.emergya.ui.base.plugins.PluginType;
@@ -82,13 +81,31 @@ public class ListIncidences extends Option {
 			Point geom = objeto.getGeometria().getCentroid();
 			LatLon ll = new LatLon(geom.getCoordinate().y,
 					geom.getCoordinate().x);
-//			BasicWindow.showOnMap(ll, 1);
+			// BasicWindow.showOnMap(ll, 1);
 		}
+	}
+
+	@GoWired
+	public I18n i18n;
+
+	/**
+	 * @return the i18n
+	 */
+	public I18n getI18n() {
+		return i18n;
+	}
+
+	/**
+	 * @param i18n
+	 *            the i18n to set
+	 */
+	public void setI18n(I18n i18n) {
+		this.i18n = i18n;
 	}
 
 	private static final long serialVersionUID = -2978632104068099705L;
 	private static String ICON = "tittlemanage_icon_incidences";
-	private static String string = getString("Incidences.incidences");
+	private static String string_ = "Incidences.incidences";
 	private String[] categorias = new String[0];
 	private static String[] prioridades = LogicConstants.getPriorities(true);
 	private String[] statuses = new String[0];
@@ -97,8 +114,8 @@ public class ListIncidences extends Option {
 	private HashMap<String, Incidencia> incidenciasMostradas = new HashMap<String, Incidencia>();
 
 	public ListIncidences() {
-		super(string, PluginType.getType("LIST"), 1, "subtab_icon_incidences", null);
-
+		super("", PluginType.getType("LIST"), 1, "subtab_icon_incidences", null);
+		setTitle(i18n.getString(string_));
 		Object[] tmp = IncidenciaConsultas.getCategorias(true);
 		categorias = new String[tmp.length];
 		for (int i = 0; i < categorias.length; i++)
@@ -109,8 +126,8 @@ public class ListIncidences extends Option {
 		for (int i = 0; i < statuses.length; i++)
 			statuses[i] = tmp[i].toString();
 
-		listado = new AdminPanel(string, LogicConstants.getIcon(ICON), this,
-				true, false);
+		listado = new AdminPanel(i18n.getString(string_),
+				LogicConstants.getIcon(ICON), this, true, false);
 		listado.setNewAction(getSummaryAction(null));
 		listado.addInvisibleFilterCol(5);
 		listado.setMyRendererColoring(listado.new MyRendererColoring() {
@@ -124,13 +141,15 @@ public class ListIncidences extends Option {
 							+ i.getEstado().getId(), "#000000"));
 			}
 		});
-		listado.generateTable(new String[] { getString("Incidences.title"),
-				getString("Incidences.category"),
-				getString("Incidences.priority"),
-				getString("Incidences.status"), getString("Incidences.zoom"),
-				getString("tabla.ficha") }, new String[][] { {}, categorias,
-				prioridades, statuses }, getNoFiltrarAction(),
-				getFiltrarAction());
+		listado.generateTable(
+				new String[] { i18n.getString("Incidences.title"),
+						i18n.getString("Incidences.category"),
+						i18n.getString("Incidences.priority"),
+						i18n.getString("Incidences.status"),
+						i18n.getString("Incidences.zoom"),
+						i18n.getString("tabla.ficha") }, new String[][] { {},
+						categorias, prioridades, statuses },
+				getNoFiltrarAction(), getFiltrarAction());
 		listado.addColumnWidth(5, 65);
 		listado.setTableData(getAll(lastExample));
 		this.add(listado);
@@ -218,12 +237,12 @@ public class ListIncidences extends Option {
 
 			@Override
 			protected JFrame getSummaryDialog() {
-				String titulo = getString("Incidences.nuevaIncidencia");
+				String titulo = i18n.getString("Incidences.nuevaIncidencia");
 				if (f != null)
 					titulo = f.getTitulo();
 				IncidenceDialog id = new IncidenceDialog(f,
-						getString("Incidences.summary.title") + " " + titulo,
-						"tittleficha_icon_recurso");
+						i18n.getString("Incidences.summary.title") + " "
+								+ titulo, "tittleficha_icon_recurso");
 				return id;
 			}
 		};

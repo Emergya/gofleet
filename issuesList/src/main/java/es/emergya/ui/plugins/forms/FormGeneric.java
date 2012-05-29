@@ -28,8 +28,6 @@
  */
 package es.emergya.ui.plugins.forms;
 
-import static es.emergya.i18n.Internacionalization.getString;
-
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
@@ -54,6 +52,8 @@ import javax.swing.SpringLayout;
 
 import org.apache.commons.logging.LogFactory;
 import org.freixas.jcalendar.JCalendarCombo;
+import org.gofleet.context.GoWired;
+import org.gofleet.internacionalization.I18n;
 
 import es.emergya.cliente.constants.LogicConstants;
 import es.emergya.ui.SpringUtilities;
@@ -76,8 +76,27 @@ public abstract class FormGeneric extends Option {
 	protected JPanel title;
 	protected LinkedList<Component> componentes = new LinkedList<Component>();
 
+	@GoWired
+	public I18n i18n;
+
+	/**
+	 * @return the i18n
+	 */
+	public I18n getI18n() {
+		return i18n;
+	}
+
+	/**
+	 * @param i18n
+	 *            the i18n to set
+	 */
+	public void setI18n(I18n i18n) {
+		this.i18n = i18n;
+	}
+
 	public FormGeneric(String title, int order) {
-		super(getString(title, title), PluginType.getType("FORMS"), order, null);
+		super("", PluginType.getType("FORMS"), order, null);
+		setTitle(i18n.getString(title));
 		generatePanel();
 	}
 
@@ -126,8 +145,8 @@ public abstract class FormGeneric extends Option {
 		buttons = new JPanel();
 
 		buttons.setBackground(Color.WHITE);
-		JButton accept = new JButton(getString("Buttons.ok"), LogicConstants
-				.getIcon("button_accept"));
+		JButton accept = new JButton(i18n.getString("Buttons.ok"),
+				LogicConstants.getIcon("button_accept"));
 
 		accept.addActionListener(new ActionListener() {
 
@@ -138,7 +157,7 @@ public abstract class FormGeneric extends Option {
 			}
 		});
 
-		JButton cancel = new JButton(getString("Buttons.cancel"),
+		JButton cancel = new JButton(i18n.getString("Buttons.cancel"),
 				LogicConstants.getIcon("button_cancel"));
 		cancel.addActionListener(new ActionListener() {
 
@@ -168,14 +187,14 @@ public abstract class FormGeneric extends Option {
 		jtextField.setEditable(true);
 		jtextField.setColumns(colsLength[0]);
 		panel.add(jtextField);
-		mid.add(new JLabel(getString(pairs[0][0]), JLabel.RIGHT));
+		mid.add(new JLabel(i18n.getString(pairs[0][0]), JLabel.RIGHT));
 
 		for (int i = 1; i < pairs.length; i++) {
 			String[] pair = pairs[i];
 			if (pair.length != 2)
 				log.error("Par desconocido");
 			else {
-				panel.add(new JLabel(getString(pair[0]), JLabel.RIGHT));
+				panel.add(new JLabel(i18n.getString(pair[0]), JLabel.RIGHT));
 				jtextField = new JTextField(pair[1]);
 				jtextField.setEditable(true);
 				panel.add(jtextField);
@@ -203,7 +222,7 @@ public abstract class FormGeneric extends Option {
 				log.error("Par desconocido");
 			else {
 				columnas += 2;
-				mid.add(new JLabel(getString(pair[0]), JLabel.RIGHT));
+				mid.add(new JLabel(i18n.getString(pair[0]), JLabel.RIGHT));
 				JTextField jtextField = new JTextField(pair[1]);
 				jtextField.setEditable(true);
 				mid.add(jtextField);
@@ -217,7 +236,7 @@ public abstract class FormGeneric extends Option {
 
 	protected void addString(String texto, String label) {
 		rows++;
-		mid.add(new JLabel(getString(label), JLabel.RIGHT));
+		mid.add(new JLabel(i18n.getString(label), JLabel.RIGHT));
 		JTextField jtextField = new JTextField(texto);
 		jtextField.setName(label);
 		jtextField.setEditable(true);
@@ -229,7 +248,7 @@ public abstract class FormGeneric extends Option {
 
 	protected void addString_Fixed(String texto, String label) {
 		rows++;
-		mid.add(new JLabel(getString(label), JLabel.RIGHT));
+		mid.add(new JLabel(i18n.getString(label), JLabel.RIGHT));
 		JTextField jtextField = new JTextField(texto);
 		jtextField.setEditable(false);
 		mid.add(jtextField);
@@ -239,7 +258,7 @@ public abstract class FormGeneric extends Option {
 
 	protected void addComboBox(Object selected, Object[] options, String title) {
 		rows++;
-		mid.add(new JLabel(getString(title), JLabel.RIGHT));
+		mid.add(new JLabel(i18n.getString(title), JLabel.RIGHT));
 		JComboBox cb = new JComboBox(options);
 		cb.setSelectedItem(selected);
 		cb.setName(title);
@@ -252,7 +271,7 @@ public abstract class FormGeneric extends Option {
 	protected void addDate(Date fecha, String title, boolean editable) {
 		rows++;
 		// TODO editable
-		mid.add(new JLabel(getString(title), JLabel.RIGHT));
+		mid.add(new JLabel(i18n.getString(title), JLabel.RIGHT));
 		JPanel panel = new JPanel();
 		panel.setOpaque(false);
 		JCalendarCombo calendar = new JCalendarCombo();
@@ -281,7 +300,7 @@ public abstract class FormGeneric extends Option {
 
 	protected void addList(Object[] lista, String label) {
 		rows++;
-		mid.add(new JLabel(getString(label), JLabel.RIGHT));
+		mid.add(new JLabel(i18n.getString(label), JLabel.RIGHT));
 		if (lista != null) {
 			JList jlist = new JList(lista);
 			final JScrollPane jScrollPane = new JScrollPane(jlist);
