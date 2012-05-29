@@ -28,8 +28,6 @@
  */
 package es.emergya.ui.plugins.admin.aux1;
 
-import static es.emergya.i18n.Internacionalization.getString;
-
 import java.awt.Color;
 import java.awt.Container;
 import java.awt.Dimension;
@@ -42,6 +40,7 @@ import java.awt.event.WindowEvent;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -64,6 +63,7 @@ import javax.swing.text.PlainDocument;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.LogFactory;
 import org.gofleet.context.GoWired;
+import org.gofleet.internacionalization.I18n;
 
 import es.emergya.actions.RecursoAdmin;
 import es.emergya.bbdd.bean.Patrulla;
@@ -126,6 +126,24 @@ public class RecursoDialog extends JFrame {
 		}
 	};
 
+	@GoWired
+	public I18n i18n;
+
+	/**
+	 * @return the i18n
+	 */
+	public I18n getI18n() {
+		return i18n;
+	}
+
+	/**
+	 * @param i18n
+	 *            the i18n to set
+	 */
+	public void setI18n(I18n i18n) {
+		this.i18n = i18n;
+	}
+
 	public RecursoDialog(final Recurso rec, final AdminResources adminResources) {
 		super();
 		setAlwaysOnTop(true);
@@ -155,10 +173,10 @@ public class RecursoDialog extends JFrame {
 		final Recurso r = (rec == null) ? null : RecursoConsultas.get(rec
 				.getId());
 		if (r != null) {
-			setTitle(getString("Resources.summary.titleWindow") + " "
+			setTitle(i18n.getString("Resources.summary.titleWindow") + " "
 					+ r.getIdentificador());
 		} else {
-			setTitle(getString("Resources.summary.titleWindow.new"));
+			setTitle(i18n.getString("Resources.summary.titleWindow.new"));
 		}
 		setIconImage(getBasicWindow().getFrame().getIconImage());
 		JPanel base = new JPanel();
@@ -170,12 +188,13 @@ public class RecursoDialog extends JFrame {
 		title.setOpaque(false);
 		JLabel labelTitulo = null;
 		if (r != null) {
-			labelTitulo = new JLabel(getString("Resources.summary"),
+			labelTitulo = new JLabel(i18n.getString("Resources.summary"),
 					LogicConstants.getIcon("tittleficha_icon_recurso"),
 					JLabel.LEFT);
 
 		} else {
-			labelTitulo = new JLabel(getString("Resources.cabecera.nuevo"),
+			labelTitulo = new JLabel(
+					i18n.getString("Resources.cabecera.nuevo"),
 					LogicConstants.getIcon("tittleficha_icon_recurso"),
 					JLabel.LEFT);
 
@@ -187,7 +206,7 @@ public class RecursoDialog extends JFrame {
 		// Nombre
 		JPanel mid = new JPanel(new SpringLayout());
 		mid.setOpaque(false);
-		mid.add(new JLabel(getString("Resources.name"), JLabel.RIGHT));
+		mid.add(new JLabel(i18n.getString("Resources.name"), JLabel.RIGHT));
 		final JTextField name = new JTextField(25);
 		if (r != null) {
 			name.setText(r.getNombre());
@@ -198,8 +217,8 @@ public class RecursoDialog extends JFrame {
 		mid.add(name);
 
 		// patrullas
-		final JLabel labelSquads = new JLabel(getString("Resources.squad"),
-				JLabel.RIGHT);
+		final JLabel labelSquads = new JLabel(
+				i18n.getString("Resources.squad"), JLabel.RIGHT);
 		mid.add(labelSquads);
 		List<Patrulla> pl = PatrullaConsultas.getAll();
 		pl.add(0, null);
@@ -219,7 +238,7 @@ public class RecursoDialog extends JFrame {
 
 		// // Identificador
 		// mid.setOpaque(false);
-		// mid.add(new JLabel(getString("Resources.identificador"),
+		// mid.add(new JLabel(i18n.getString("Resources.identificador"),
 		// JLabel.RIGHT));
 		// final JTextField identificador = new JTextField("");
 		// if (r != null) {
@@ -234,7 +253,7 @@ public class RecursoDialog extends JFrame {
 
 		// Tipo
 		final JLabel labelTipoRecursos = new JLabel(
-				getString("Resources.type"), JLabel.RIGHT);
+				i18n.getString("Resources.type"), JLabel.RIGHT);
 		mid.add(labelTipoRecursos);
 		final JComboBox types = new JComboBox(RecursoConsultas.getTipos());
 		labelTipoRecursos.setLabelFor(types);
@@ -249,7 +268,7 @@ public class RecursoDialog extends JFrame {
 		mid.add(types);
 
 		// Estado Eurocop
-		mid.add(new JLabel(getString("Resources.status"), JLabel.RIGHT));
+		mid.add(new JLabel(i18n.getString("Resources.status"), JLabel.RIGHT));
 		final JTextField status = new JTextField();
 		if (r != null && r.getEstadoEurocop() != null) {
 			status.setText(r.getEstadoEurocop().getIdentificador());
@@ -258,7 +277,7 @@ public class RecursoDialog extends JFrame {
 		mid.add(status);
 
 		// Subflota y patrulla
-		mid.add(new JLabel(getString("Resources.subfleet"), JLabel.RIGHT));
+		mid.add(new JLabel(i18n.getString("Resources.subfleet"), JLabel.RIGHT));
 		final JComboBox subfleets = new JComboBox(
 				FlotaConsultas.getAllHabilitadas());
 		subfleets.addActionListener(changeSelectionListener);
@@ -272,7 +291,7 @@ public class RecursoDialog extends JFrame {
 		mid.add(subfleets);
 
 		// Referencia humana
-		mid.add(new JLabel(getString("Resources.incidences"), JLabel.RIGHT));
+		mid.add(new JLabel(i18n.getString("Resources.incidences"), JLabel.RIGHT));
 		final JTextField rhumana = new JTextField();
 		// if (r != null && r.getIncidencias() != null) {
 		// rhumana.setText(r.getIncidencias().getReferenciaHumana());
@@ -281,7 +300,7 @@ public class RecursoDialog extends JFrame {
 		mid.add(rhumana);
 
 		// dispositivo
-		mid.add(new JLabel(getString("Resources.device"), JLabel.RIGHT));
+		mid.add(new JLabel(i18n.getString("Resources.device"), JLabel.RIGHT));
 		final PlainDocument plainDocument = new PlainDocument() {
 
 			private static final long serialVersionUID = 4929271093724956016L;
@@ -299,7 +318,7 @@ public class RecursoDialog extends JFrame {
 		plainDocument.addDocumentListener(changeListener);
 		issi.setEditable(true);
 		mid.add(issi);
-		mid.add(new JLabel(getString("Resources.enabled"), JLabel.RIGHT));
+		mid.add(new JLabel(i18n.getString("Resources.enabled"), JLabel.RIGHT));
 		final JCheckBox enabled = new JCheckBox("", true);
 		enabled.addActionListener(changeSelectionListener);
 		enabled.addActionListener(new ActionListener() {
@@ -328,7 +347,8 @@ public class RecursoDialog extends JFrame {
 		mid.add(enabled);
 
 		// Fecha ultimo gps
-		mid.add(new JLabel(getString("Resources.lastPosition"), JLabel.RIGHT));
+		mid.add(new JLabel(i18n.getString("Resources.lastPosition"),
+				JLabel.RIGHT));
 		JTextField lastGPS = new JTextField();
 		final Date lastGPSDateForRecurso = HistoricoGPSConsultas
 				.lastGPSDateForRecurso(r);
@@ -347,7 +367,7 @@ public class RecursoDialog extends JFrame {
 		JPanel infoPanel = new JPanel(new SpringLayout());
 		final JTextField info = new JTextField(25);
 		info.getDocument().addDocumentListener(changeListener);
-		infoPanel.add(new JLabel(getString("Resources.info")));
+		infoPanel.add(new JLabel(i18n.getString("Resources.info")));
 		infoPanel.add(info);
 		infoPanel.setOpaque(false);
 		info.setOpaque(false);
@@ -390,20 +410,18 @@ public class RecursoDialog extends JFrame {
 							// uno nuevo
 							if (RecursoConsultas.alreadyExists(name.getText())) {
 								shithappens = false;
-								JOptionPane
-										.showMessageDialog(
-												RecursoDialog.this,
-												getString("admin.recursos.popup.error.nombreUnico"));
+								JOptionPane.showMessageDialog(
+										RecursoDialog.this,
+										i18n.getString("admin.recursos.popup.error.nombreUnico"));
 							} else if (issi.getText() != null
 									&& issi.getText().length() > 0
 									&& StringUtils.trimToEmpty(issi.getText())
 											.length() != LogicConstants.LONGITUD_ISSI) {
-								JOptionPane
-										.showMessageDialog(
-												RecursoDialog.this,
-												getString(
-														"admin.recursos.popup.error.faltanCifras",
-														LogicConstants.LONGITUD_ISSI));
+								JOptionPane.showMessageDialog(
+										RecursoDialog.this,
+										i18n.getString(Locale.ROOT,
+												"admin.recursos.popup.error.faltanCifras",
+												LogicConstants.LONGITUD_ISSI));
 								shithappens = false;
 							} else if (issi.getText() != null
 									&& issi.getText().length() > 0
@@ -412,28 +430,26 @@ public class RecursoDialog extends JFrame {
 											.alreadyExists(new Integer(issi
 													.getText()))) {
 								shithappens = false;
-								JOptionPane
-										.showMessageDialog(
-												RecursoDialog.this,
-												getString("admin.recursos.popup.error.dispositivoUnico"));
+								JOptionPane.showMessageDialog(
+										RecursoDialog.this,
+										i18n.getString("admin.recursos.popup.error.dispositivoUnico"));
 							}
 						}
 						if (shithappens) {
 							if (name.getText().isEmpty()) {
-								JOptionPane
-										.showMessageDialog(
-												RecursoDialog.this,
-												getString("admin.recursos.popup.error.nombreNulo"));
+								JOptionPane.showMessageDialog(
+										RecursoDialog.this,
+										i18n.getString("admin.recursos.popup.error.nombreNulo"));
 							} else if (issi.getText() != null
 									&& issi.getText().length() > 0
 									&& StringUtils.trimToEmpty(issi.getText())
 											.length() != LogicConstants.LONGITUD_ISSI) {
-								JOptionPane
-										.showMessageDialog(
-												RecursoDialog.this,
-												getString(
-														"admin.recursos.popup.error.faltanCifras",
-														LogicConstants.LONGITUD_ISSI));
+								JOptionPane.showMessageDialog(
+										RecursoDialog.this,
+										i18n.getString(
+												Locale.ROOT,
+												"admin.recursos.popup.error.faltanCifras",
+												LogicConstants.LONGITUD_ISSI));
 							} else if (issi.getText() != null
 									&& issi.getText().length() > 0
 									&& LogicConstants.isNumeric(issi.getText())
@@ -442,42 +458,37 @@ public class RecursoDialog extends JFrame {
 									&& RecursoConsultas.alreadyExists(
 											new Integer(issi.getText()),
 											r.getId())) {
-								JOptionPane
-										.showMessageDialog(
-												RecursoDialog.this,
-												getString("admin.recursos.popup.error.issiUnico"));
+								JOptionPane.showMessageDialog(
+										RecursoDialog.this,
+										i18n.getString("admin.recursos.popup.error.issiUnico"));
 							} else if (issi.getText() != null
 									&& issi.getText().length() > 0
 									&& !LogicConstants.isNumeric(issi.getText())) {
-								JOptionPane
-										.showMessageDialog(
-												RecursoDialog.this,
-												getString("admin.recursos.popup.error.noNumerico"));
+								JOptionPane.showMessageDialog(
+										RecursoDialog.this,
+										i18n.getString("admin.recursos.popup.error.noNumerico"));
 								// } else if (identificador.getText().isEmpty())
 								// {
 								// JOptionPane
 								// .showMessageDialog(
 								// RecursoDialog.this,
-								// getString("admin.recursos.popup.error.identificadorNulo"));
+								// i18n.getString("admin.recursos.popup.error.identificadorNulo"));
 							} else if (subfleets.getSelectedIndex() == -1) {
-								JOptionPane
-										.showMessageDialog(
-												RecursoDialog.this,
-												getString("admin.recursos.popup.error.noSubflota"));
+								JOptionPane.showMessageDialog(
+										RecursoDialog.this,
+										i18n.getString("admin.recursos.popup.error.noSubflota"));
 							} else if (types.getSelectedItem() == null
 									|| types.getSelectedItem().toString()
 											.trim().isEmpty()) {
-								JOptionPane
-										.showMessageDialog(
-												RecursoDialog.this,
-												getString("admin.recursos.popup.error.noTipo"));
+								JOptionPane.showMessageDialog(
+										RecursoDialog.this,
+										i18n.getString("admin.recursos.popup.error.noTipo"));
 							} else {
-								int i = JOptionPane
-										.showConfirmDialog(
-												RecursoDialog.this,
-												getString("admin.recursos.popup.dialogo.guardar.titulo"),
-												getString("admin.recursos.popup.dialogo.guardar.guardar"),
-												JOptionPane.YES_NO_CANCEL_OPTION);
+								int i = JOptionPane.showConfirmDialog(
+										RecursoDialog.this,
+										i18n.getString("admin.recursos.popup.dialogo.guardar.titulo"),
+										i18n.getString("admin.recursos.popup.dialogo.guardar.guardar"),
+										JOptionPane.YES_NO_CANCEL_OPTION);
 
 								if (i == JOptionPane.YES_OPTION) {
 

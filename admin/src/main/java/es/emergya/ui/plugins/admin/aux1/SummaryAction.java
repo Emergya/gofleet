@@ -1,4 +1,5 @@
 /*
+
  * Copyright (C) 2010, Emergya (http://www.emergya.es)
  *
  * @author <a href="mailto:jlrodriguez@emergya.es">Juan Luís Rodríguez</a>
@@ -30,7 +31,6 @@
 package es.emergya.ui.plugins.admin.aux1;
 
 import static es.emergya.cliente.constants.LogicConstants.getIcon;
-import static es.emergya.i18n.Internacionalization.getString;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -81,6 +81,7 @@ import javax.swing.event.DocumentListener;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.gofleet.context.GoWired;
+import org.gofleet.internacionalization.I18n;
 
 import es.emergya.cliente.constants.LogicConstants;
 import es.emergya.consultas.FlotaConsultas;
@@ -170,13 +171,31 @@ public abstract class SummaryAction extends AbstractAction {
 		this.basicWindow = basicWindow;
 	}
 
+	@GoWired
+	public I18n i18n;
+
+	/**
+	 * @return the i18n
+	 */
+	public I18n getI18n() {
+		return i18n;
+	}
+
+	/**
+	 * @param i18n
+	 *            the i18n to set
+	 */
+	public void setI18n(I18n i18n) {
+		this.i18n = i18n;
+	}
+
 	/**
 	 * 
 	 * @param o
 	 *            objeto a borrar
 	 */
 	public SummaryAction(Object o) {
-		super(null, getIcon(getString("Admin.summary")));
+		super(null, getIcon("Admin.summary"));
 		iconos.setPreferredSize(DIMENSION_COMBO);
 		rol.setPreferredSize(DIMENSION_COMBO);
 		comboTipoCapa.setPreferredSize(DIMENSION_COMBO);
@@ -846,7 +865,7 @@ public abstract class SummaryAction extends AbstractAction {
 		left_filtro.add(filtro, gbc);
 
 		AbstractAction actionStartFilter = new AbstractAction(null,
-				getIcon(getString("Buttons.noFiltrar"))) {
+				getIcon(i18n.getString("Buttons.noFiltrar"))) {
 
 			private static final long serialVersionUID = -4737487889360372801L;
 
@@ -867,7 +886,7 @@ public abstract class SummaryAction extends AbstractAction {
 			}
 		};
 		AbstractAction actionStopFilter = new AbstractAction(null,
-				getIcon(getString("Buttons.filtrar"))) {
+				getIcon(i18n.getString("Buttons.filtrar"))) {
 
 			private static final long serialVersionUID = 6570608476764008290L;
 

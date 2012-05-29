@@ -28,8 +28,6 @@
  */
 package es.emergya.ui.plugins.admin;
 
-import static es.emergya.i18n.Internacionalization.getString;
-
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.FlowLayout;
@@ -41,6 +39,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Vector;
 
@@ -62,6 +61,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.gofleet.context.GoWired;
+import org.gofleet.internacionalization.I18n;
 import org.gvsig.remoteClient.wms.ICancellable;
 import org.gvsig.remoteClient.wms.WMSClient;
 import org.gvsig.remoteClient.wms.WMSLayer;
@@ -108,10 +108,28 @@ public class AdminLayers extends Option {
 		this.basicWindow = basicWindow;
 	}
 
+	@GoWired
+	public I18n i18n;
+
+	/**
+	 * @return the i18n
+	 */
+	public I18n getI18n() {
+		return i18n;
+	}
+
+	/**
+	 * @param i18n
+	 *            the i18n to set
+	 */
+	public void setI18n(I18n i18n) {
+		this.i18n = i18n;
+	}
+
 	public AdminLayers() {
-		super(getString("Layers.layers"), PluginType.getType("ADMIN"), 5,
-				"subtab_icon_capas", null);
-		layers = new AdminPanel(getString("admin.capas.titulo"),
+		super("", PluginType.getType("ADMIN"), 5, "subtab_icon_capas", null);
+		super.setTitle(i18n.getString("Layers.layers"));
+		layers = new AdminPanel(i18n.getString("admin.capas.titulo"),
 				LogicConstants.getIcon(ICON), this);
 		layers.setColumnToReselect(2);
 		layers.addColumnWidth(1, 40);
@@ -123,21 +141,22 @@ public class AdminLayers extends Option {
 		layers.addInvisibleFilterCol(6);
 		layers.addInvisibleFilterCol(7);
 		layers.setNewAction(getSummaryAction(null));
-		layers.generateTable(new String[] {
-				getString("admin.capas.tabla.titulo.orden"),
-				getString("admin.capas.tabla.titulo.nombre"),
-				getString("admin.capas.tabla.titulo.url"),
-				getString("admin.capas.tabla.titulo.tipo"),
-				getString("admin.capas.tabla.titulo.habilitado"),
-				getString("admin.capas.tabla.titulo.subir"),
-				getString("admin.capas.tabla.titulo.bajar"),
-				getString("admin.capas.tabla.titulo.ficha"),
-				getString("admin.capas.tabla.titulo.eliminar"), },
+		layers.generateTable(
+				new String[] {
+						i18n.getString("admin.capas.tabla.titulo.orden"),
+						i18n.getString("admin.capas.tabla.titulo.nombre"),
+						i18n.getString("admin.capas.tabla.titulo.url"),
+						i18n.getString("admin.capas.tabla.titulo.tipo"),
+						i18n.getString("admin.capas.tabla.titulo.habilitado"),
+						i18n.getString("admin.capas.tabla.titulo.subir"),
+						i18n.getString("admin.capas.tabla.titulo.bajar"),
+						i18n.getString("admin.capas.tabla.titulo.ficha"),
+						i18n.getString("admin.capas.tabla.titulo.eliminar"), },
 				new Object[][] { {}, {}, {}, { "", "Base", "Opcional" },
 						{ "", "Habilitada", "Deshabilitada" } },
 				getNoFiltrarAction(), getFiltrarAction());
 		layers.setTableData(getAll(new CapaInformacion()));
-		layers.setErrorCause(getString("Layers.errorCause"));
+		layers.setErrorCause(i18n.getString("Layers.errorCause"));
 		this.add(layers);
 	}
 
@@ -259,14 +278,15 @@ public class AdminLayers extends Option {
 
 			private JDialog getJDialog() {
 				final JDialog dialog = new JDialog();
-				dialog.setTitle(getString("admin.capas.nueva.titleBar"));
+				dialog.setTitle(i18n.getString("admin.capas.nueva.titleBar"));
 				dialog.setIconImage(getBasicWindow().getIconImage());
 
 				dialog.setLayout(new BorderLayout());
 
 				JPanel centro = new JPanel(new FlowLayout());
 				centro.setOpaque(false);
-				JLabel label = new JLabel(getString("admin.capas.nueva.url"));
+				JLabel label = new JLabel(
+						i18n.getString("admin.capas.nueva.url"));
 				final JTextField url = new JTextField(50);
 				final JLabel icono = new JLabel(
 						LogicConstants.getIcon("48x48_transparente"));
@@ -279,10 +299,10 @@ public class AdminLayers extends Option {
 				JPanel pie = new JPanel(new FlowLayout(FlowLayout.TRAILING));
 				pie.setOpaque(false);
 				final JButton siguiente = new JButton(
-						getString("admin.capas.nueva.boton.siguiente"),
+						i18n.getString("admin.capas.nueva.boton.siguiente"),
 						LogicConstants.getIcon("button_next"));
 				JButton cancelar = new JButton(
-						getString("admin.capas.nueva.boton.cancelar"),
+						i18n.getString("admin.capas.nueva.boton.cancelar"),
 						LogicConstants.getIcon("button_cancel"));
 				final SiguienteActionListener siguienteActionListener = new SiguienteActionListener(
 						url, dialog, icono, siguiente);
@@ -316,26 +336,36 @@ public class AdminLayers extends Option {
 					JOptionPane
 							.showMessageDialog(
 									AdminLayers.this,
-									getString("admin.capas.nueva.error.noCapasEnServicio"));
+									i18n.getString("admin.capas.nueva.error.noCapasEnServicio"));
 				} else {
 
-					final String label_cabecera = getString("admin.capas.nueva.nombreCapa");
-					final String label_pie = getString("admin.capas.nueva.infoAdicional");
-					final String centered_label = getString("admin.capas.nueva.origenDatos");
-					final String left_label = getString("admin.capas.nueva.subcapasDisponibles");
+					final String label_cabecera = i18n
+							.getString("admin.capas.nueva.nombreCapa");
+					final String label_pie = i18n
+							.getString("admin.capas.nueva.infoAdicional");
+					final String centered_label = i18n
+							.getString("admin.capas.nueva.origenDatos");
+					final String left_label = i18n
+							.getString("admin.capas.nueva.subcapasDisponibles");
 					final String right_label;
 					if (left_items != null) {
-						right_label = getString("admin.capas.nueva.capasSeleccionadas");
+						right_label = i18n
+								.getString("admin.capas.nueva.capasSeleccionadas");
 					} else {
-						right_label = getString("admin.capas.ficha.capasSeleccionadas");
+						right_label = i18n
+								.getString("admin.capas.ficha.capasSeleccionadas");
 					}
 					final String tituloVentana, cabecera;
 					if (c.getNombre() == null) {
-						tituloVentana = getString("admin.capas.nueva.titulo.nuevaCapa");
-						cabecera = getString("admin.capas.nueva.cabecera.nuevaCapa");
+						tituloVentana = i18n
+								.getString("admin.capas.nueva.titulo.nuevaCapa");
+						cabecera = i18n
+								.getString("admin.capas.nueva.cabecera.nuevaCapa");
 					} else {
-						tituloVentana = getString("admin.capas.nueva.titulo.ficha");
-						cabecera = getString("admin.capas.nueva.cabecera.ficha");
+						tituloVentana = i18n
+								.getString("admin.capas.nueva.titulo.ficha");
+						cabecera = i18n
+								.getString("admin.capas.nueva.cabecera.ficha");
 					}
 
 					final Capa[] right_items = c.getCapas()
@@ -355,27 +385,27 @@ public class AdminLayers extends Option {
 								JOptionPane
 										.showMessageDialog(
 												super.frame,
-												getString("admin.capas.nueva.error.nombreCapaYaExiste"));
+												i18n.getString("admin.capas.nueva.error.nombreCapaYaExiste"));
 
 							} else if (textfieldCabecera.getText().isEmpty()) {
 								JOptionPane
 										.showMessageDialog(
 												super.frame,
-												getString("admin.capas.nueva.error.nombreCapaEnBlanco"));
+												i18n.getString("admin.capas.nueva.error.nombreCapaEnBlanco"));
 
 							} else if (((DefaultListModel) right.getModel())
 									.size() == 0) {
 								JOptionPane
 										.showMessageDialog(
 												super.frame,
-												getString("admin.capas.nueva.error.noCapasSeleccionadas"));
+												i18n.getString("admin.capas.nueva.error.noCapasSeleccionadas"));
 
 							} else if (cambios) {
 								int i = JOptionPane
 										.showConfirmDialog(
 												super.frame,
-												getString("admin.capas.nueva.confirmar.guardar.titulo"),
-												getString("admin.capas.nueva.confirmar.boton.guardar"),
+												i18n.getString("admin.capas.nueva.confirmar.guardar.titulo"),
+												i18n.getString("admin.capas.nueva.confirmar.boton.guardar"),
 												JOptionPane.YES_NO_CANCEL_OPTION);
 
 								if (i == JOptionPane.YES_OPTION) {
@@ -622,23 +652,29 @@ public class AdminLayers extends Option {
 										res.add(capa);
 										if (!hasTransparency) {
 											errorStack
-													.add(getString(
-															"admin.capas.nueva.error.capaNoTransparente",
-															layer.getTitle()));
+													.add(i18n
+															.getString(
+																	Locale.ROOT,
+																	"admin.capas.nueva.error.capaNoTransparente",
+																	layer.getTitle()));
 										}
 									} else {
 										String error = "";
 										// if (opaque)
 										// error += "<li>Es opaca</li>";
 										if (!image) {
-											error += getString("admin.capas.nueva.error.formatoPNG");
+											error += i18n
+													.getString("admin.capas.nueva.error.formatoPNG");
 										}
 										if (!epsg) {
-											error += getString("admin.capas.nueva.error.projeccion");
+											error += i18n
+													.getString("admin.capas.nueva.error.projeccion");
 										}
-										final String cadena = getString(
-												"admin.capas.nueva.error.errorCapa",
-												new Object[] { s, error });
+										final String cadena = i18n
+												.getString(
+														Locale.ROOT,
+														"admin.capas.nueva.error.errorCapa",
+														new Object[] { s, error });
 										errorStack.add(cadena);
 									}
 								}
@@ -651,7 +687,7 @@ public class AdminLayers extends Option {
 								JOptionPane
 										.showMessageDialog(
 												dialog,
-												getString("admin.capas.nueva.error.errorParseoWMS"));
+												i18n.getString("admin.capas.nueva.error.errorParseoWMS"));
 
 								siguiente.setEnabled(true);
 							}

@@ -28,8 +28,6 @@
  */
 package es.emergya.ui.plugins.admin;
 
-import static es.emergya.i18n.Internacionalization.getString;
-
 import java.awt.event.ActionEvent;
 import java.util.Calendar;
 import java.util.HashSet;
@@ -42,6 +40,8 @@ import javax.swing.JTable;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.gofleet.context.GoWired;
+import org.gofleet.internacionalization.I18n;
 
 import es.emergya.actions.PatrullaAdmin;
 import es.emergya.bbdd.bean.Patrulla;
@@ -60,236 +60,261 @@ import es.emergya.ui.plugins.admin.aux1.SummaryAction;
 
 public class AdminSquads extends Option {
 
-    static final Log log = LogFactory.getLog(AdminSquads.class);
-    private static final long serialVersionUID = 5819715270912726259L;
-    private static String ICON = "tittlemanage_icon_patrullas";
-    AdminPanel squads;
-    private Patrulla lastExample = new Patrulla();
+	static final Log log = LogFactory.getLog(AdminSquads.class);
+	private static final long serialVersionUID = 5819715270912726259L;
+	private static String ICON = "tittlemanage_icon_patrullas";
+	AdminPanel squads;
+	private Patrulla lastExample = new Patrulla();
 
-    public AdminSquads() {
-        super(getString("Squads.squads"), PluginType.getType("ADMIN"), 2,
-                "subtab_icon_patrullas", null);
-        squads = new AdminPanel(getString("admin.patrullas.titulo"),
-                LogicConstants.getIcon(ICON), this);
-        squads.setNewAction(getSummaryAction(null));
-        squads.generateTable(new String[]{
-                    getString("admin.patrullas.tabla.titulo.nombre"),
-                    getString("admin.patrullas.tabla.titulo.ficha"),
-                    getString("admin.patrullas.tabla.titulo.eliminar")},
-                new String[][]{{}}, getNoFiltrarAction(), getFiltrarAction());
+	@GoWired
+	public I18n i18n;
 
-        squads.setTableData(getAll(new Patrulla()));
-        squads.setErrorCause(getString("Squads.errorCause"));
-        this.add(squads);
-    }
+	/**
+	 * @return the i18n
+	 */
+	public I18n getI18n() {
+		return i18n;
+	}
 
-    private FiltrarAction getFiltrarAction() {
-        return squads.new FiltrarAction() {
+	/**
+	 * @param i18n
+	 *            the i18n to set
+	 */
+	public void setI18n(I18n i18n) {
+		this.i18n = i18n;
+	}
 
-            private static final long serialVersionUID = -1096192874098385825L;
+	public AdminSquads() {
+		super("", PluginType.getType("ADMIN"), 2, "subtab_icon_patrullas", null);
+		super.setTitle(i18n.getString("Squads.squads"));
+		squads = new AdminPanel(i18n.getString("admin.patrullas.titulo"),
+				LogicConstants.getIcon(ICON), this);
+		squads.setNewAction(getSummaryAction(null));
+		squads.generateTable(
+				new String[] {
+						i18n.getString("admin.patrullas.tabla.titulo.nombre"),
+						i18n.getString("admin.patrullas.tabla.titulo.ficha"),
+						i18n.getString("admin.patrullas.tabla.titulo.eliminar") },
+				new String[][] { {} }, getNoFiltrarAction(), getFiltrarAction());
 
-            @Override
-            protected void applyFilter(JTable filters) {
-                final Patrulla example = new Patrulla();
-                final Object valueAt = filters.getValueAt(0, 1);
-                if (valueAt != null && valueAt.toString().length() > 0) {
-                    example.setNombre(valueAt.toString());
-                }
-                squads.setTableData(getAll(example));
-            }
-        };
-    }
+		squads.setTableData(getAll(new Patrulla()));
+		squads.setErrorCause(i18n.getString("Squads.errorCause"));
+		this.add(squads);
+	}
 
-    private NoFiltrarAction getNoFiltrarAction() {
-        return squads.new NoFiltrarAction() {
+	private FiltrarAction getFiltrarAction() {
+		return squads.new FiltrarAction() {
 
-            private static final long serialVersionUID = -6566681011645411911L;
+			private static final long serialVersionUID = -1096192874098385825L;
 
-            @Override
-            protected void applyFilter() {
-                squads.setTableData(getAll(new Patrulla()));
-            }
-        };
-    }
+			@Override
+			protected void applyFilter(JTable filters) {
+				final Patrulla example = new Patrulla();
+				final Object valueAt = filters.getValueAt(0, 1);
+				if (valueAt != null && valueAt.toString().length() > 0) {
+					example.setNombre(valueAt.toString());
+				}
+				squads.setTableData(getAll(example));
+			}
+		};
+	}
 
-    /**
-     * Rellena la tabla con una busqueda de todas las patrullas que se parecen
-     * al ejemplo
-     *
-     * @param example
-     * @return
-     */
-    private Object[][] getAll(Patrulla example) {
-        lastExample = example;
-        List<Patrulla> patrullas = PatrullaConsultas.getByExample(example);
+	private NoFiltrarAction getNoFiltrarAction() {
+		return squads.new NoFiltrarAction() {
 
-        int showed = patrullas.size();
-        int total = PatrullaConsultas.getTotal();
-        squads.setCuenta(showed, total);
+			private static final long serialVersionUID = -6566681011645411911L;
 
-        Object[][] res = new Object[patrullas.size()][3];
+			@Override
+			protected void applyFilter() {
+				squads.setTableData(getAll(new Patrulla()));
+			}
+		};
+	}
 
-        int i = 0;
-        for (Patrulla p : patrullas) {
-            res[i][0] = p.getNombre();
-            res[i][1] = getSummaryAction(p);
-            res[i++][2] = getDeleteAction(p);
-        }
+	/**
+	 * Rellena la tabla con una busqueda de todas las patrullas que se parecen
+	 * al ejemplo
+	 * 
+	 * @param example
+	 * @return
+	 */
+	private Object[][] getAll(Patrulla example) {
+		lastExample = example;
+		List<Patrulla> patrullas = PatrullaConsultas.getByExample(example);
 
-        return res;
-    }
+		int showed = patrullas.size();
+		int total = PatrullaConsultas.getTotal();
+		squads.setCuenta(showed, total);
 
-    protected SummaryAction getSummaryAction(final Patrulla p) {
-        SummaryAction action = new SummaryAction(p) {
+		Object[][] res = new Object[patrullas.size()][3];
 
-            private static final long serialVersionUID = -8344125339845145826L;
+		int i = 0;
+		for (Patrulla p : patrullas) {
+			res[i][0] = p.getNombre();
+			res[i][1] = getSummaryAction(p);
+			res[i++][2] = getDeleteAction(p);
+		}
 
-            @Override
-            protected JFrame getSummaryDialog() {
-                final String label_cabecera = "Nombre Patrulla:";
-                final String label_pie = "Info Adicional:";
-                final String centered_label = "Recursos:";
-                final String left_label = "Recursos disponibles";
-                final String right_label = "Recursos asignados";
-                final String titulo, cabecera;
-                if (isNew) {
-                    titulo = getString("Squads.barraTitulo.nuevo");
-                    cabecera = getString("Squads.cabecera.nuevo");
+		return res;
+	}
 
-                } else {
-                    titulo = getString("Squads.barraTitulo.existente");
-                    cabecera = getString("Squads.cabecera.existente");
-                }
-                final Recurso[] left_items = RecursoConsultas.getNotAsigned(p);
-                for(Recurso r : left_items)
-                	r.setTipoToString(Recurso.TIPO_TOSTRING.PATRULLA);
-                final Recurso[] right_items = RecursoConsultas.getAsigned(p);
-                for(Recurso r : right_items)
-                	r.setTipoToString(Recurso.TIPO_TOSTRING.PATRULLA);
-                final AdminPanel.SaveOrUpdateAction<Patrulla> guardar = squads.new SaveOrUpdateAction<Patrulla>(
-                        p) {
+	protected SummaryAction getSummaryAction(final Patrulla p) {
+		SummaryAction action = new SummaryAction(p) {
 
-                    private static final long serialVersionUID = 7447770296943341404L;
+			private static final long serialVersionUID = -8344125339845145826L;
 
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
+			@Override
+			protected JFrame getSummaryDialog() {
+				final String label_cabecera = "Nombre Patrulla:";
+				final String label_pie = "Info Adicional:";
+				final String centered_label = "Recursos:";
+				final String left_label = "Recursos disponibles";
+				final String right_label = "Recursos asignados";
+				final String titulo, cabecera;
+				if (isNew) {
+					titulo = i18n.getString("Squads.barraTitulo.nuevo");
+					cabecera = i18n.getString("Squads.cabecera.nuevo");
 
-                        if (isNew
-                                && PatrullaConsultas.alreadyExists(textfieldCabecera.getText())) {
-                            JOptionPane.showMessageDialog(super.frame,
-                                    "Ya existe una patrulla con ese nombre.");
-                        } else if (textfieldCabecera.getText().isEmpty()) {
-                            JOptionPane.showMessageDialog(super.frame,
-                                    "El nombre es obligatorio.");
-                        } else if (cambios) {
-                            int i = JOptionPane.showConfirmDialog(super.frame,
-                                    "¿Desea guardar los cambios?", "Guardar",
-                                    JOptionPane.YES_NO_CANCEL_OPTION);
+				} else {
+					titulo = i18n.getString("Squads.barraTitulo.existente");
+					cabecera = i18n.getString("Squads.cabecera.existente");
+				}
+				final Recurso[] left_items = RecursoConsultas.getNotAsigned(p);
+				for (Recurso r : left_items)
+					r.setTipoToString(Recurso.TIPO_TOSTRING.PATRULLA);
+				final Recurso[] right_items = RecursoConsultas.getAsigned(p);
+				for (Recurso r : right_items)
+					r.setTipoToString(Recurso.TIPO_TOSTRING.PATRULLA);
+				final AdminPanel.SaveOrUpdateAction<Patrulla> guardar = squads.new SaveOrUpdateAction<Patrulla>(
+						p) {
 
-                            if (i == JOptionPane.YES_OPTION) {
+					private static final long serialVersionUID = 7447770296943341404L;
 
-                                if (original == null) {
-                                    original = new Patrulla();
-                                }
+					@Override
+					public void actionPerformed(ActionEvent e) {
 
-                                original.setInfoAdicional(textfieldPie.getText());
-                                original.setNombre(textfieldCabecera.getText());
+						if (isNew
+								&& PatrullaConsultas
+										.alreadyExists(textfieldCabecera
+												.getText())) {
+							JOptionPane.showMessageDialog(super.frame,
+									"Ya existe una patrulla con ese nombre.");
+						} else if (textfieldCabecera.getText().isEmpty()) {
+							JOptionPane.showMessageDialog(super.frame,
+									"El nombre es obligatorio.");
+						} else if (cambios) {
+							int i = JOptionPane.showConfirmDialog(super.frame,
+									"¿Desea guardar los cambios?", "Guardar",
+									JOptionPane.YES_NO_CANCEL_OPTION);
 
-                                HashSet<Recurso> recursos = new HashSet<Recurso>();
-                                for (Object r : ((DefaultListModel) right.getModel()).toArray()) {
-                                    if (r instanceof Recurso) {
-                                        recursos.add((Recurso) r);
-                                        ((Recurso) r).setPatrullas(original);
-                                    } else {
-                                        log.error("El objeto no era un recurso");
-                                    }
-                                }
-                                original.setRecursos(recursos);
+							if (i == JOptionPane.YES_OPTION) {
 
-                                PatrullaAdmin.saveOrUpdate(original);
-                                PluginEventHandler.fireChange(AdminSquads.this);
+								if (original == null) {
+									original = new Patrulla();
+								}
 
-                                cambios = false;
-                                original = null;
+								original.setInfoAdicional(textfieldPie
+										.getText());
+								original.setNombre(textfieldCabecera.getText());
 
-                                squads.setTableData(getAll(new Patrulla()));
+								HashSet<Recurso> recursos = new HashSet<Recurso>();
+								for (Object r : ((DefaultListModel) right
+										.getModel()).toArray()) {
+									if (r instanceof Recurso) {
+										recursos.add((Recurso) r);
+										((Recurso) r).setPatrullas(original);
+									} else {
+										log.error("El objeto no era un recurso");
+									}
+								}
+								original.setRecursos(recursos);
 
-                                closeFrame();
-                            } else if (i == JOptionPane.NO_OPTION) {
-                                closeFrame();
-                            }
-                        } else {
-                            closeFrame();
-                        }
-                    }
-                };
+								PatrullaAdmin.saveOrUpdate(original);
+								PluginEventHandler.fireChange(AdminSquads.this);
 
-                // if (d == null)
-                d = generateIconDialog(label_cabecera, label_pie,
-                        centered_label, titulo, left_items, right_items,
-                        left_label, right_label, guardar, LogicConstants.getIcon("tittleficha_icon_patrulla"),
-                        cabecera, null);
+								cambios = false;
+								original = null;
 
-                if (p != null) {
-                    textfieldCabecera.setText(p.getNombre());
-                    textfieldPie.setText(p.getInfoAdicional());
-                    textfieldCabecera.setEditable(false);
-                } else {
-                    textfieldCabecera.setText("");
-                    textfieldPie.setText("");
-                }
-                cambios = false;
+								squads.setTableData(getAll(new Patrulla()));
 
-                return d;
-            }
-        };
+								closeFrame();
+							} else if (i == JOptionPane.NO_OPTION) {
+								closeFrame();
+							}
+						} else {
+							closeFrame();
+						}
+					}
+				};
 
-        return action;
-    }
+				// if (d == null)
+				d = generateIconDialog(label_cabecera, label_pie,
+						centered_label, titulo, left_items, right_items,
+						left_label, right_label, guardar,
+						LogicConstants.getIcon("tittleficha_icon_patrulla"),
+						cabecera, null);
 
-    protected AdminPanel.DeleteAction<Patrulla> getDeleteAction(Patrulla p) {
-        AdminPanel.DeleteAction<Patrulla> action = squads.new DeleteAction<Patrulla>(
-                p) {
+				if (p != null) {
+					textfieldCabecera.setText(p.getNombre());
+					textfieldPie.setText(p.getInfoAdicional());
+					textfieldCabecera.setEditable(false);
+				} else {
+					textfieldCabecera.setText("");
+					textfieldPie.setText("");
+				}
+				cambios = false;
 
-            private static final long serialVersionUID = -7933848051133871938L;
+				return d;
+			}
+		};
 
-            @Override
-            protected boolean delete(boolean show_alert) {
-                boolean res = PatrullaAdmin.delete(this.target);
-                if (!res && show_alert) {
-                    JOptionPane.showMessageDialog(AdminSquads.this,
-                            "No se pudo borrar la patrulla. \n"
-                            + getString("Squads.errorCause"), null,
-                            JOptionPane.ERROR_MESSAGE);
-                } else {
-                    PluginEventHandler.fireChange(AdminSquads.this);
-                }
-                return res;
-            }
-        };
+		return action;
+	}
 
-        return action;
-    }
+	protected AdminPanel.DeleteAction<Patrulla> getDeleteAction(Patrulla p) {
+		AdminPanel.DeleteAction<Patrulla> action = squads.new DeleteAction<Patrulla>(
+				p) {
 
-    @Override
-    public void refresh(PluginEvent event) {
-        super.refresh(event);
-        squads.setTableData(getAll(lastExample));
-    }
+			private static final long serialVersionUID = -7933848051133871938L;
 
-    @Override
-    public boolean needsUpdating() {
-        final Calendar lastUpdated2 = PatrullaConsultas.lastUpdated();
-        if (lastUpdated2 == null && this.squads.getTotalSize() != 0) {
-            return true;
-        }
+			@Override
+			protected boolean delete(boolean show_alert) {
+				boolean res = PatrullaAdmin.delete(this.target);
+				if (!res && show_alert) {
+					JOptionPane.showMessageDialog(
+							AdminSquads.this,
+							"No se pudo borrar la patrulla. \n"
+									+ i18n.getString("Squads.errorCause"),
+							null, JOptionPane.ERROR_MESSAGE);
+				} else {
+					PluginEventHandler.fireChange(AdminSquads.this);
+				}
+				return res;
+			}
+		};
 
-        return lastUpdated2.after(super.lastUpdated);
-    }
+		return action;
+	}
 
-    @Override
-    public void reboot() {
-        getNoFiltrarAction().actionPerformed(null);
-        this.squads.unckeckAll();
-    }
+	@Override
+	public void refresh(PluginEvent event) {
+		super.refresh(event);
+		squads.setTableData(getAll(lastExample));
+	}
+
+	@Override
+	public boolean needsUpdating() {
+		final Calendar lastUpdated2 = PatrullaConsultas.lastUpdated();
+		if (lastUpdated2 == null && this.squads.getTotalSize() != 0) {
+			return true;
+		}
+
+		return lastUpdated2.after(super.lastUpdated);
+	}
+
+	@Override
+	public void reboot() {
+		getNoFiltrarAction().actionPerformed(null);
+		this.squads.unckeckAll();
+	}
 }

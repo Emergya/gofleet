@@ -28,8 +28,6 @@
  */
 package es.emergya.ui.plugins.admin;
 
-import static es.emergya.i18n.Internacionalization.getString;
-
 import java.awt.event.ActionEvent;
 import java.util.Calendar;
 import java.util.LinkedList;
@@ -38,6 +36,9 @@ import java.util.List;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
+
+import org.gofleet.context.GoWired;
+import org.gofleet.internacionalization.I18n;
 
 import es.emergya.actions.UsuarioAdmin;
 import es.emergya.bbdd.bean.Usuario;
@@ -61,32 +62,51 @@ public class AdminUsers extends Option {
 	AdminPanel usuarios;
 	private Usuario lastExample = new Usuario();
 
+	@GoWired
+	public I18n i18n;
+
+	/**
+	 * @return the i18n
+	 */
+	public I18n getI18n() {
+		return i18n;
+	}
+
+	/**
+	 * @param i18n
+	 *            the i18n to set
+	 */
+	public void setI18n(I18n i18n) {
+		this.i18n = i18n;
+	}
+
 	public AdminUsers() {
-		super(getString("Users.users"), PluginType.getType("ADMIN"), 1,
-				"subtab_icon_usuarios", null);
-		usuarios = new AdminPanel(getString("admin.usuarios.titulo"),
+		super("", PluginType.getType("ADMIN"), 1, "subtab_icon_usuarios", null);
+		setTitle(i18n.getString("Users.users"));
+		usuarios = new AdminPanel(i18n.getString("admin.usuarios.titulo"),
 				LogicConstants.getIcon(ICON), this);
 		usuarios.setNewAction(getSummaryAction(null));
 		usuarios.addColumnWidth(6, 65);
 		final List<String> allNames = new LinkedList<String>();
 		allNames.add("");
 		allNames.addAll(RolConsultas.getAllNames());
-		usuarios.generateTable(new String[] {
-				getString("admin.usuarios.tabla.titulo.nombreUsuario"),
-				getString("admin.usuarios.tabla.titulo.nombre"),
-				getString("admin.usuarios.tabla.titulo.apellidos"),
-				getString("admin.usuarios.tabla.titulo.rol"),
-				getString("admin.usuarios.tabla.titulo.admin"),
-				getString("admin.usuarios.tabla.titulo.habilitado"),
-				getString("admin.usuarios.tabla.titulo.ficha"),
-				getString("admin.usuarios.tabla.titulo.eliminar") },
+		usuarios.generateTable(
+				new String[] {
+						i18n.getString("admin.usuarios.tabla.titulo.nombreUsuario"),
+						i18n.getString("admin.usuarios.tabla.titulo.nombre"),
+						i18n.getString("admin.usuarios.tabla.titulo.apellidos"),
+						i18n.getString("admin.usuarios.tabla.titulo.rol"),
+						i18n.getString("admin.usuarios.tabla.titulo.admin"),
+						i18n.getString("admin.usuarios.tabla.titulo.habilitado"),
+						i18n.getString("admin.usuarios.tabla.titulo.ficha"),
+						i18n.getString("admin.usuarios.tabla.titulo.eliminar") },
 				new String[][] { {}, {}, {}, allNames.toArray(new String[0]),
 						{ "", "Si", "No" },
 						{ "", "Habilitado", "Deshabilitado" } },
 				getNoFiltrarAction(), getFiltrarAction());
 		usuarios.setTableData(getAll(new Usuario()));
 
-		usuarios.setErrorCause(getString("Users.errorCause"));
+		usuarios.setErrorCause(i18n.getString("Users.errorCause"));
 		this.add(usuarios);
 	}
 
@@ -179,8 +199,7 @@ public class AdminUsers extends Option {
 
 				valueAt = filters.getValueAt(0, 4);
 				if (valueAt != null && valueAt.toString().trim().length() > 0) {
-					example.setRoles(RolConsultas
-							.findByName(valueAt.toString()));
+					example.setRoles(RolConsultas.findByName(valueAt.toString()));
 				}
 
 				valueAt = filters.getValueAt(0, 5);
@@ -210,8 +229,8 @@ public class AdminUsers extends Option {
 				@Override
 				public void actionPerformed(ActionEvent e) {
 
-					final String password = new String(contrasenya
-							.getPassword());
+					final String password = new String(
+							contrasenya.getPassword());
 					final String string = new String(repetir.getPassword());
 					if (textfieldCabecera.getText().trim().isEmpty()) {
 						JOptionPane.showMessageDialog(super.frame,
@@ -298,16 +317,21 @@ public class AdminUsers extends Option {
 				final String titulo;
 				final String cabecera;
 				if (u == null) {
-					titulo = getString("admin.usuarios.ficha.tituloVentana.nuevo");
-					cabecera = getString("admin.usuarios.ficha.cabecera.nuevo");
+					titulo = i18n
+							.getString("admin.usuarios.ficha.tituloVentana.nuevo");
+					cabecera = i18n
+							.getString("admin.usuarios.ficha.cabecera.nuevo");
 				} else {
-					titulo = getString("admin.usuarios.ficha.tituloVentana.existente");
-					cabecera = getString("admin.usuarios.ficha.cabecera.existente");
+					titulo = i18n
+							.getString("admin.usuarios.ficha.tituloVentana.existente");
+					cabecera = i18n
+							.getString("admin.usuarios.ficha.cabecera.existente");
 				}
 				// if (d == null)
 				d = generateSimpleDialog(label_cabecera, label_pie, titulo,
-						guardar, LogicConstants
-								.getIcon("tittleficha_icon_usuario"), cabecera);
+						guardar,
+						LogicConstants.getIcon("tittleficha_icon_usuario"),
+						cabecera);
 				d.setResizable(false);
 
 				if (u != null && u.getId() != null) {

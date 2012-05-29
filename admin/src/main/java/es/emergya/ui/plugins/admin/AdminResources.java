@@ -28,8 +28,6 @@
  */
 package es.emergya.ui.plugins.admin;
 
-import static es.emergya.i18n.Internacionalization.getString;
-
 import java.util.Calendar;
 import java.util.List;
 
@@ -37,6 +35,8 @@ import javax.swing.JFrame;
 import javax.swing.JTable;
 
 import org.apache.commons.lang.StringUtils;
+import org.gofleet.context.GoWired;
+import org.gofleet.internacionalization.I18n;
 
 import es.emergya.actions.RecursoAdmin;
 import es.emergya.bbdd.bean.Recurso;
@@ -64,10 +64,28 @@ public class AdminResources extends Option {
 	protected static String[] flotas;
 	private Recurso lastExample = new Recurso();
 
+	@GoWired
+	public I18n i18n;
+
+	/**
+	 * @return the i18n
+	 */
+	public I18n getI18n() {
+		return i18n;
+	}
+
+	/**
+	 * @param i18n
+	 *            the i18n to set
+	 */
+	public void setI18n(I18n i18n) {
+		this.i18n = i18n;
+	}
+
 	public AdminResources() {
-		super(getString("Resources.resources"), PluginType.getType("ADMIN"), 4,
-				"subtab_icon_recursos", null);
-		resources = new AdminPanel(getString("admin.recursos.titulo"),
+		super("", PluginType.getType("ADMIN"), 4, "subtab_icon_recursos", null);
+		setTitle(i18n.getString("Resources.resources"));
+		resources = new AdminPanel(i18n.getString("admin.recursos.titulo"),
 				LogicConstants.getIcon(ICON), this);
 		resources.addColumnWidth(2, 60);
 		resources.addColumnWidth(5, 90);
@@ -75,20 +93,22 @@ public class AdminResources extends Option {
 		resources.setNewAction(getSummaryAction(null));
 		flotas = FlotaConsultas.getAllFilter();
 		patrullas = PatrullaConsultas.getAllFilter();
-		resources.generateTable(new String[] {
-				getString("admin.recursos.tabla.titulo.nombre"),
-				getString("admin.recursos.tabla.titulo.tipo"),
-				getString("admin.recursos.tabla.titulo.subflota"),
-				getString("admin.recursos.tabla.titulo.patrulla"),
-				getString("admin.recursos.tabla.titulo.dispositivo"),
-				getString("admin.recursos.tabla.titulo.habilitado"),
-				getString("admin.recursos.tabla.titulo.ficha"),
-				getString("admin.recursos.tabla.titulo.eliminar") },
-				new String[][] { {}, TIPO_VEHICULOS, flotas, patrullas, {},
-						{ "", "Habilitado", "Deshabilitado" } },
-				getNoFiltrarAction(), getFiltrarAction());
+		resources
+				.generateTable(
+						new String[] {
+								i18n.getString("admin.recursos.tabla.titulo.nombre"),
+								i18n.getString("admin.recursos.tabla.titulo.tipo"),
+								i18n.getString("admin.recursos.tabla.titulo.subflota"),
+								i18n.getString("admin.recursos.tabla.titulo.patrulla"),
+								i18n.getString("admin.recursos.tabla.titulo.dispositivo"),
+								i18n.getString("admin.recursos.tabla.titulo.habilitado"),
+								i18n.getString("admin.recursos.tabla.titulo.ficha"),
+								i18n.getString("admin.recursos.tabla.titulo.eliminar") },
+						new String[][] { {}, TIPO_VEHICULOS, flotas, patrullas,
+								{}, { "", "Habilitado", "Deshabilitado" } },
+						getNoFiltrarAction(), getFiltrarAction());
 		resources.setTableData(getAll(new Recurso()));
-		resources.setErrorCause(getString("Resources.errorCause"));
+		resources.setErrorCause(i18n.getString("Resources.errorCause"));
 		this.add(resources);
 	}
 

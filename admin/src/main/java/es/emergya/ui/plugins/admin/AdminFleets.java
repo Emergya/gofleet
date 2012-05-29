@@ -28,19 +28,21 @@
  */
 package es.emergya.ui.plugins.admin;
 
-import static es.emergya.i18n.Internacionalization.getString;
-
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 
 import javax.swing.DefaultListModel;
 import javax.swing.Icon;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
+
+import org.gofleet.context.GoWired;
+import org.gofleet.internacionalization.I18n;
 
 import es.emergya.actions.FlotaAdmin;
 import es.emergya.bbdd.bean.Flota;
@@ -65,25 +67,44 @@ public class AdminFleets extends Option {
 	AdminPanel flotas;
 	private Flota lastExample = new Flota();
 
+	@GoWired
+	public I18n i18n;
+
+	/**
+	 * @return the i18n
+	 */
+	public I18n getI18n() {
+		return i18n;
+	}
+
+	/**
+	 * @param i18n
+	 *            the i18n to set
+	 */
+	public void setI18n(I18n i18n) {
+		this.i18n = i18n;
+	}
+
 	public AdminFleets() {
-		super(getString("Fleets.subfleets"), PluginType.getType("ADMIN"), 6,
-				"subtab_icon_subflotas", null);
-		flotas = new AdminPanel(getString("admin.flotas.titulo"),
+		super("", PluginType.getType("ADMIN"), 6, "subtab_icon_subflotas", null);
+		setTitle(i18n.getString("Fleets.subfleets"));
+		flotas = new AdminPanel(i18n.getString("admin.flotas.titulo"),
 				LogicConstants.getIcon("tittlemanage_icon_subflotas"), this);
 		flotas.setNewAction(getSummaryAction(null));
 		final List<String> allIcons = new ArrayList<String>();
 		allIcons.add("");
 		allIcons.addAll(FlotaConsultas.getAllIcons("/images/"
 				+ LogicConstants.DIRECTORIO_ICONOS_FLOTAS));
-		flotas.generateTable(new String[] {
-				getString("admin.flotas.tabla.titulo.nombre"),
-				getString("admin.flotas.tabla.titulo.icono"),
-				getString("admin.flotas.tabla.titulo.ficha"),
-				getString("admin.flotas.tabla.titulo.eliminar") },
+		flotas.generateTable(
+				new String[] {
+						i18n.getString("admin.flotas.tabla.titulo.nombre"),
+						i18n.getString("admin.flotas.tabla.titulo.icono"),
+						i18n.getString("admin.flotas.tabla.titulo.ficha"),
+						i18n.getString("admin.flotas.tabla.titulo.eliminar") },
 				new Object[][] { {}, allIcons.toArray() },
 				getNoFiltrarAction(), getFiltrarAction());
 		flotas.setTableData(getAll(new Flota()));
-		flotas.setErrorCause(getString("Fleets.errorCause"));
+		flotas.setErrorCause(i18n.getString("Fleets.errorCause"));
 		this.add(flotas);
 	}
 
@@ -150,19 +171,27 @@ public class AdminFleets extends Option {
 
 			@Override
 			protected JFrame getSummaryDialog() {
-				final String label_cabecera = getString("admin.subflotas.nueva.nombre");
-				final String label_pie = getString("admin.subflotas.nueva.infoAdicional");
-				final String centered_label = getString("admin.subflotas.nueva.recursos");
-				final String left_label = getString("admin.subflotas.nueva.recursosDisponibles");
-				final String right_label = getString("admin.subflotas.nueva.recursosAsignados");
+				final String label_cabecera = i18n
+						.getString("admin.subflotas.nueva.nombre");
+				final String label_pie = i18n
+						.getString("admin.subflotas.nueva.infoAdicional");
+				final String centered_label = i18n
+						.getString("admin.subflotas.nueva.recursos");
+				final String left_label = i18n
+						.getString("admin.subflotas.nueva.recursosDisponibles");
+				final String right_label = i18n
+						.getString("admin.subflotas.nueva.recursosAsignados");
 				String tituloVentana = null;
 				String tituloCabecera = null;
 				if (isNew) {
-					tituloVentana = getString("admin.subflotas.nueva.titleBar");
+					tituloVentana = i18n
+							.getString("admin.subflotas.nueva.titleBar");
 					tituloCabecera = tituloVentana;
 				} else {
-					tituloVentana = getString("admin.subflotas.existente.titleBar");
-					tituloCabecera = getString("admin.subflotas.existente.cabecera");
+					tituloVentana = i18n
+							.getString("admin.subflotas.existente.titleBar");
+					tituloCabecera = i18n
+							.getString("admin.subflotas.existente.cabecera");
 				}
 
 				final Recurso[] left_items = RecursoConsultas.getNotAsigned(f);
@@ -186,22 +215,22 @@ public class AdminFleets extends Option {
 							JOptionPane
 									.showMessageDialog(
 											super.frame,
-											getString("admin.subflotas.nueva.validacion.nombreVacio"));
+											i18n.getString("admin.subflotas.nueva.validacion.nombreVacio"));
 						} else if ((original == null || original.getId() == null)
 								&& FlotaConsultas.existe(textfieldCabecera
 										.getText())) {
 							JOptionPane
 									.showMessageDialog(
 											super.frame,
-											getString("admin.subflotas.nueva.validacion.nombreExistente"));
+											i18n.getString("admin.subflotas.nueva.validacion.nombreExistente"));
 
 						} else if (cambios) {
 
 							int i = JOptionPane
 									.showConfirmDialog(
 											super.frame,
-											getString("admin.subflotas.nueva.cambios"),
-											getString("admin.subflotas.nueva.boton.guardar"),
+											i18n.getString("admin.subflotas.nueva.cambios"),
+											i18n.getString("admin.subflotas.nueva.boton.guardar"),
 											JOptionPane.YES_NO_CANCEL_OPTION);
 
 							if (i == JOptionPane.YES_OPTION) {
@@ -284,7 +313,8 @@ public class AdminFleets extends Option {
 						JOptionPane
 								.showMessageDialog(
 										AdminFleets.this,
-										getString(
+										i18n.getString(
+												Locale.ROOT,
 												"admin.subflotas.borrar.error.recursosAsignados",
 												(this.target).getNombre()),
 										null, JOptionPane.ERROR_MESSAGE);

@@ -53,10 +53,7 @@ public abstract class Option extends AbstractPlugin implements PluginListener {
 
 	public Option(String title, PluginType type, int order, String url,
 			JComponent content) {
-		if (title.length() == 0)
-			this.title = title;
-		else
-			this.title = StringUtils.rightPad(title, 25);
+		setTitle(title);
 		this.type = type;
 		this.order = order;
 		this.tip = title;
@@ -73,6 +70,16 @@ public abstract class Option extends AbstractPlugin implements PluginListener {
 		super.tab = content;
 		if (content != null)
 			this.add(content, BorderLayout.CENTER);
+	}
+
+	/**
+	 * @param title
+	 */
+	public void setTitle(String title) {
+		if (title.length() == 0)
+			this.title = title;
+		else
+			this.title = StringUtils.rightPad(title, 25);
 	}
 
 	public Option(String title, PluginType type, int order, JComponent content) {
