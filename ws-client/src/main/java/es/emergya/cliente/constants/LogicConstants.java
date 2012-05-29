@@ -53,8 +53,6 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import es.emergya.tools.ExtensionClassLoader;
-
 
 /**
  * Contains the constants for the logic layer
