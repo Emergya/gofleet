@@ -32,8 +32,6 @@
  */
 package es.emergya.ui.gis;
 
-import static es.emergya.i18n.Internacionalization.getString;
-
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -53,15 +51,14 @@ import javax.swing.event.PopupMenuListener;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.gofleet.context.GoWired;
+import org.gofleet.internacionalization.I18n;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.gui.layer.Layer;
 
 import edu.emory.mathcs.backport.java.util.Collections;
 import es.emergya.actions.Authentication;
 import es.emergya.cliente.constants.LogicConstants;
-import es.emergya.i18n.Internacionalization;
 import es.emergya.ui.base.plugins.PluginType;
-import es.emergya.ui.gis.popups.ConsultaHistoricos;
 import es.emergya.ui.gis.popups.ListaCapas;
 import es.emergya.ui.gis.popups.SaveGPXDialog;
 
@@ -79,10 +76,27 @@ public class HistoryMapViewer extends MapViewer {
 	private JToggleButton gpxToggleButton;
 	private static JToggleButton resultadoHistorico;
 	private MouseEvent eventOriginal;
-	
+
 	@GoWired
 	private ListaCapas listaCapas;
-	
+
+	@GoWired
+	public I18n i18n;
+
+	/**
+	 * @return the i18n
+	 */
+	public I18n getI18n() {
+		return i18n;
+	}
+
+	/**
+	 * @param i18n
+	 *            the i18n to set
+	 */
+	public void setI18n(I18n i18n) {
+		this.i18n = i18n;
+	}
 
 	/**
 	 * @param title
@@ -91,8 +105,9 @@ public class HistoryMapViewer extends MapViewer {
 	 * @param icon
 	 */
 	public HistoryMapViewer() {
-		super(Internacionalization.getString("Main.GPS"), PluginType
-				.getType("GPS"), 2, "tab_icon_historico");
+		super("", PluginType.getType("GPS"), 2, "tab_icon_historico");
+
+		super.setTitle(i18n.getString("Main.GPS"));
 
 		// Colores de los marcadores
 		Main.pref.putColor("text",
@@ -149,7 +164,7 @@ public class HistoryMapViewer extends MapViewer {
 
 	private JToggleButton getResultadosButton() {
 		final JToggleButton jToggleButton = new JToggleButton(
-				getString("map.history.button.results"),
+				i18n.getString("map.history.button.results"),
 				LogicConstants.getIcon("capas_button_resultado"));
 		jToggleButton.addActionListener(new ActionListener() {
 
@@ -174,7 +189,7 @@ public class HistoryMapViewer extends MapViewer {
 	public JToggleButton getGPXButton() {
 		if (gpxToggleButton == null) {
 			gpxToggleButton = new JToggleButton(
-					getString("map.history.button.loadGpx"),
+					i18n.getString("map.history.button.loadGpx"),
 					LogicConstants.getIcon("capas_button_gpx"));
 			gpxToggleButton.addActionListener(new ActionListener() {
 
@@ -196,7 +211,7 @@ public class HistoryMapViewer extends MapViewer {
 	private JToggleButton getConsultaHistoricos() {
 		if (historico == null) {
 			historico = new JToggleButton(
-					getString("map.history.button.showSearchWindow"),
+					i18n.getString("map.history.button.showSearchWindow"),
 					LogicConstants.getIcon("historico_button_consultar"));
 			historico.addActionListener(new HistoricoActionListener((this)));
 		}
@@ -228,7 +243,8 @@ public class HistoryMapViewer extends MapViewer {
 
 	private JToggleButton getSaveGpx() {
 		if (saveGpx == null) {
-			saveGpx = new JToggleButton(getString("map.history.button.save"),
+			saveGpx = new JToggleButton(
+					i18n.getString("map.history.button.save"),
 					LogicConstants.getIcon("historico_button_exportargpx"));
 			saveGpx.addActionListener(new ActionListener() {
 
@@ -270,8 +286,7 @@ public class HistoryMapViewer extends MapViewer {
 	protected JPopupMenu getContextMenu() {
 		JPopupMenu menu = new JPopupMenu();
 		// Centrar aqui
-		JMenuItem cent = new JMenuItem(
-				Internacionalization.getString("map.menu.centerHere"),
+		JMenuItem cent = new JMenuItem(i18n.getString("map.menu.centerHere"),
 				KeyEvent.VK_C);
 		cent.setIcon(LogicConstants.getIcon("menucontextual_icon_centrar"));
 		cent.addActionListener(new ActionListener() {
@@ -310,7 +325,8 @@ public class HistoryMapViewer extends MapViewer {
 	}
 
 	/**
-	 * @param listaCapas the listaCapas to set
+	 * @param listaCapas
+	 *            the listaCapas to set
 	 */
 	public void setListaCapas(ListaCapas listaCapas) {
 		this.listaCapas = listaCapas;

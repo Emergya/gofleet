@@ -33,8 +33,6 @@
 
 package es.emergya.ui.gis;
 
-import static es.emergya.i18n.Internacionalization.getString;
-
 import java.awt.Color;
 import java.awt.Frame;
 import java.awt.Point;
@@ -42,12 +40,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
-import java.awt.event.MouseWheelListener;
 import java.io.File;
 import java.io.IOException;
-import java.util.List;
+import java.util.Locale;
 
 import javax.swing.JFrame;
 import javax.swing.JMenuItem;
@@ -57,6 +52,8 @@ import javax.swing.event.PopupMenuEvent;
 import javax.swing.event.PopupMenuListener;
 
 import org.apache.commons.logging.LogFactory;
+import org.gofleet.context.GoWired;
+import org.gofleet.internacionalization.I18n;
 import org.openstreetmap.josm.data.coor.EastNorth;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.gpx.GpxData;
@@ -75,13 +72,10 @@ import es.emergya.bbdd.bean.Recurso;
 import es.emergya.cliente.constants.LogicConstants;
 import es.emergya.consultas.IncidenciaConsultas;
 import es.emergya.consultas.RecursoConsultas;
-import es.emergya.i18n.Internacionalization;
 import es.emergya.ui.base.plugins.PluginType;
-import es.emergya.ui.gis.CustomMapView.InitAdapter;
 import es.emergya.ui.gis.markers.CustomMarker;
 import es.emergya.ui.gis.popups.GPSDialog;
 import es.emergya.ui.gis.popups.IncidenceDialog;
-import es.emergya.ui.gis.popups.NearestResourcesDialog;
 import es.emergya.ui.gis.popups.RouteDialog;
 import es.emergya.ui.gis.popups.SummaryDialog;
 
@@ -98,6 +92,42 @@ public class FleetControlMapViewer extends MapViewer implements ActionListener {
 	protected EastNorth routeFrom, routeTo;
 	private MouseEvent eventOriginal;
 
+	@GoWired
+	public I18n i18n;
+
+	/**
+	 * @return the i18n
+	 */
+	public I18n getI18n() {
+		return i18n;
+	}
+
+	/**
+	 * @param i18n
+	 *            the i18n to set
+	 */
+	public void setI18n(I18n i18n) {
+		this.i18n = i18n;
+	}
+
+	@GoWired
+	public RouteDialog routeDialog;
+
+	/**
+	 * @return the i18n
+	 */
+	public RouteDialog getRouteDialog() {
+		return routeDialog;
+	}
+
+	/**
+	 * @param i18n
+	 *            the i18n to set
+	 */
+	public void setRouteDialog(RouteDialog routeDialog) {
+		this.routeDialog = routeDialog;
+	}
+
 	/**
 	 * @param title
 	 * @param type
@@ -105,8 +135,8 @@ public class FleetControlMapViewer extends MapViewer implements ActionListener {
 	 * @param icon
 	 */
 	public FleetControlMapViewer() {
-		super(Internacionalization.getString("Main.FleetControl"), PluginType
-				.getType("GPS"), 1, "tab_icon_controlflota");
+		super("", PluginType.getType("GPS"), 1, "tab_icon_controlflota");
+		setTitle(i18n.getString("Main.FleetControl"));
 	}
 
 	@Override
@@ -121,15 +151,13 @@ public class FleetControlMapViewer extends MapViewer implements ActionListener {
 				try {
 					final MouseEvent mouseEvent = FleetControlMapViewer.this.eventOriginal;
 					if (e.getActionCommand().equals(// Centrar aqui
-							Internacionalization
-									.getString("map.menu.centerHere"))) {
+							i18n.getString(Locale.ROOT, "map.menu.centerHere"))) {
 						mapViewLocal.zoomToFactor(mapViewLocal.getEastNorth(
 								mouseEvent.getX(), mouseEvent.getY()),
 								mapViewLocal.zoomFactor);
 
 					} else if (e.getActionCommand().equals(// nueva incidencia
-							Internacionalization
-									.getString("map.menu.newIncidence"))) {
+							i18n.getString("map.menu.newIncidence"))) {
 						Incidencia f = new Incidencia();
 						f.setCreador(Authentication.getUsuario());
 						LatLon from = mapViewLocal.getLatLon(mouseEvent.getX(),
@@ -139,29 +167,26 @@ public class FleetControlMapViewer extends MapViewer implements ActionListener {
 								from.lon(), from.lat())));
 						IncidenceDialog id = new IncidenceDialog(
 								f,
-								getString("Incidences.summary.title")
+								i18n.getString("Incidences.summary.title")
 										+ " "
-										+ getString("Incidences.nuevaIncidencia"),
+										+ i18n.getString("Incidences.nuevaIncidencia"),
 								"tittleficha_icon_recurso");
 						id.setVisible(true);
 
 					} else if (e.getActionCommand().equals(// ruta desde
-							Internacionalization
-									.getString("map.menu.route.from"))) {
-						RouteDialog.showRouteDialog(mapViewLocal.getLatLon(
+							i18n.getString("map.menu.route.from"))) {
+						routeDialog.showRouteDialog(mapViewLocal.getLatLon(
 								mouseEvent.getX(), mouseEvent.getY()), null,
 								mapViewLocal);
 
-					} else if (e
-							.getActionCommand()
-							.equals(// ruta hasta
-							Internacionalization.getString("map.menu.route.to"))) {
-						RouteDialog.showRouteDialog(null,
+					} else if (e.getActionCommand().equals(// ruta hasta
+							i18n.getString("map.menu.route.to"))) {
+						routeDialog.showRouteDialog(null,
 								mapViewLocal.getLatLon(mouseEvent.getX(),
 										mouseEvent.getY()), mapViewLocal);
 
 					} else if (e.getActionCommand().equals(// Actualizar gps
-							Internacionalization.getString("map.menu.gps"))) {
+							i18n.getString("map.menu.gps"))) {
 						if (!(menuObjective instanceof Recurso)) {
 							return null;
 						}
@@ -179,7 +204,7 @@ public class FleetControlMapViewer extends MapViewer implements ActionListener {
 						sdsDialog.setExtendedState(JFrame.NORMAL);
 
 					} else if (e.getActionCommand().equals(// Ficha
-							Internacionalization.getString("map.menu.summary"))) {
+							i18n.getString("map.menu.summary"))) {
 						if (log.isTraceEnabled()) {
 							log.trace("Mostramos la ficha del objetivo del menu");
 						}
@@ -241,7 +266,7 @@ public class FleetControlMapViewer extends MapViewer implements ActionListener {
 									}
 									new IncidenceDialog(
 											(Incidencia) menuObjective,
-											getString("Incidences.summary.title")
+											i18n.getString("Incidences.summary.title")
 													+ " "
 													+ ((Incidencia) menuObjective)
 															.getTitulo(),
@@ -257,8 +282,7 @@ public class FleetControlMapViewer extends MapViewer implements ActionListener {
 						}
 
 					} else if (e.getActionCommand().equals( // Mas cercanos
-							Internacionalization
-									.getString("map.menu.showNearest"))) {
+							i18n.getString("map.menu.showNearest"))) {
 						if (log.isTraceEnabled()) {
 							log.trace("showNearest");
 						}
@@ -338,8 +362,8 @@ public class FleetControlMapViewer extends MapViewer implements ActionListener {
 		menu.addSeparator();
 
 		// Actualizar posición
-		final JMenuItem gps = new JMenuItem(
-				Internacionalization.getString("map.menu.gps"), KeyEvent.VK_P);
+		final JMenuItem gps = new JMenuItem(i18n.getString("map.menu.gps"),
+				KeyEvent.VK_P);
 		gps.setIcon(LogicConstants.getIcon("menucontextual_icon_actualizargps"));
 		menu.add(gps);
 		gps.addActionListener(this);
@@ -349,36 +373,31 @@ public class FleetControlMapViewer extends MapViewer implements ActionListener {
 
 		// Mostrar más cercanos
 		final JMenuItem mmc = new JMenuItem(
-				Internacionalization.getString("map.menu.showNearest"),
-				KeyEvent.VK_M);
+				i18n.getString("map.menu.showNearest"), KeyEvent.VK_M);
 		mmc.setIcon(LogicConstants.getIcon("menucontextual_icon_mascercano"));
 		mmc.addActionListener(this);
 		menu.add(mmc);
 		// Centrar aqui
 		final JMenuItem cent = new JMenuItem(
-				Internacionalization.getString("map.menu.centerHere"),
-				KeyEvent.VK_C);
+				i18n.getString("map.menu.centerHere"), KeyEvent.VK_C);
 		cent.setIcon(LogicConstants.getIcon("menucontextual_icon_centrar"));
 		cent.addActionListener(this);
 		menu.add(cent);
 		// Nueva Incidencia
 		final JMenuItem newIncidence = new JMenuItem(
-				Internacionalization.getString("map.menu.newIncidence"),
-				KeyEvent.VK_I);
+				i18n.getString("map.menu.newIncidence"), KeyEvent.VK_I);
 		newIncidence.setIcon(LogicConstants
 				.getIcon("menucontextual_icon_newIncidence"));
 		newIncidence.addActionListener(this);
 		menu.add(newIncidence);
 		// Calcular ruta desde aqui
 		final JMenuItem from = new JMenuItem(
-				Internacionalization.getString("map.menu.route.from"),
-				KeyEvent.VK_D);
+				i18n.getString("map.menu.route.from"), KeyEvent.VK_D);
 		from.setIcon(LogicConstants.getIcon("menucontextual_icon_origenruta"));
 		from.addActionListener(this);
 		menu.add(from);
 		// Calcular ruta hasta aqui
-		final JMenuItem to = new JMenuItem(
-				Internacionalization.getString("map.menu.route.to"),
+		final JMenuItem to = new JMenuItem(i18n.getString("map.menu.route.to"),
 				KeyEvent.VK_H);
 		to.setIcon(LogicConstants.getIcon("menucontextual_icon_destinoruta"));
 		to.addActionListener(this);
@@ -388,8 +407,7 @@ public class FleetControlMapViewer extends MapViewer implements ActionListener {
 
 		// Ver ficha [recurso / incidencia]
 		final JMenuItem summary = new JMenuItem(
-				Internacionalization.getString("map.menu.summary"),
-				KeyEvent.VK_F);
+				i18n.getString("map.menu.summary"), KeyEvent.VK_F);
 		summary.setIcon(LogicConstants.getIcon("menucontextual_icon_ficha"));
 		summary.addActionListener(this);
 		menu.add(summary);
@@ -403,7 +421,7 @@ public class FleetControlMapViewer extends MapViewer implements ActionListener {
 				eventOriginal = FleetControlMapViewer.this.mapView.lastMEvent;
 				gps.setEnabled(false);
 				summary.setEnabled(false);
-				titulo.setText(getString("map.menu.titulo.puntoGenerico"));
+				titulo.setText(i18n.getString("map.menu.titulo.puntoGenerico"));
 				menuObjective = null;
 				Point p = new Point(mapView.lastMEvent.getX(),
 						mapView.lastMEvent.getY());
@@ -427,10 +445,12 @@ public class FleetControlMapViewer extends MapViewer implements ActionListener {
 									if (r != null) {
 										menuObjective = r;
 										if (r.getPatrullas() != null) {
-											titulo.setText(getString(
-													"map.menu.titulo.recursoPatrulla",
-													r.getIdentificador(),
-													r.getPatrullas()));
+											titulo.setText(i18n
+													.getString(
+															Locale.ROOT,
+															"map.menu.titulo.recursoPatrulla",
+															r.getIdentificador(),
+															r.getPatrullas()));
 										} else {
 											titulo.setText(r.getIdentificador());
 										}
@@ -483,7 +503,7 @@ public class FleetControlMapViewer extends MapViewer implements ActionListener {
 		MarkerLayer incidences = null;
 		try {
 			incidences = new MarkerLayer(new GpxData(),
-					Internacionalization.getString("Incidences.incidences"),
+					i18n.getString("Incidences.incidences"),
 					File.createTempFile("incidences", "tmp"), new GpxLayer(
 							new GpxData()), this.mapView);
 			incidences.visible = Authentication.getUsuario()
@@ -498,8 +518,7 @@ public class FleetControlMapViewer extends MapViewer implements ActionListener {
 		MarkerLayer resources = null;
 		try {
 			resources = new MarkerLayer(new GpxData(),
-					Internacionalization
-							.getString("Resources.resources.people"),
+					i18n.getString("Resources.resources.people"),
 					File.createTempFile("layer_res", "tmp"), new GpxLayer(
 							new GpxData()), this.mapView);
 			resources.visible = Authentication.getUsuario()
@@ -514,8 +533,7 @@ public class FleetControlMapViewer extends MapViewer implements ActionListener {
 		MarkerLayer resources = null;
 		try {
 			resources = new MarkerLayer(new GpxData(),
-					Internacionalization
-							.getString("Resources.resources.vehicles"),
+					i18n.getString("Resources.resources.vehicles"),
 					File.createTempFile("layer_res", "tmp"), new GpxLayer(
 							new GpxData()), this.mapView);
 			resources.visible = Authentication.getUsuario()
