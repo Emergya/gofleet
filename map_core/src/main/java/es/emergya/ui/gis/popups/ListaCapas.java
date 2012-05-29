@@ -28,8 +28,6 @@
  */
 package es.emergya.ui.gis.popups;
 
-import static es.emergya.i18n.Internacionalization.getString;
-
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
@@ -61,6 +59,7 @@ import javax.swing.filechooser.FileFilter;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.gofleet.context.GoWired;
+import org.gofleet.internacionalization.I18n;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.gui.layer.GpxLayer;
 import org.openstreetmap.josm.gui.layer.Layer;
@@ -101,6 +100,22 @@ public class ListaCapas extends JDialog implements ActionListener {
 		this.basicWindow = basicWindow;
 	}
 
+	@GoWired
+	public I18n i18n;
+
+	/**
+	 * @return the i18n
+	 */
+	public I18n getI18n() {
+		return i18n;
+	}
+
+	/**
+	 * @param i18n the i18n to set
+	 */
+	public void setI18n(I18n i18n) {
+		this.i18n = i18n;
+	}
 	public synchronized void showListaCapas(CustomMapView mapView,
 			IMapViewer historyMapViewer) {
 		if (self == null) {
@@ -127,7 +142,7 @@ public class ListaCapas extends JDialog implements ActionListener {
 
 	private ListaCapas(CustomMapView mapView, final IMapViewer historyMapViewer) {
 		super();
-		setTitle(getString("window.gpx.titleBar"));
+		setTitle(i18n.getString("window.gpx.titleBar"));
 		setLocationRelativeTo(getBasicWindow().getFrame());
 		setResizable(false);
 		setAlwaysOnTop(true);
@@ -144,7 +159,7 @@ public class ListaCapas extends JDialog implements ActionListener {
 
 		JScrollPane lista = new JScrollPane(capasGpx);
 		lista.setOpaque(false);
-		lista.setBorder(new TitledBorder(getString("window.gpx.title")));
+		lista.setBorder(new TitledBorder(i18n.getString("window.gpx.title")));
 		dialogo.add(lista, BorderLayout.CENTER);
 
 		JPanel boton = new JPanel(new FlowLayout());
@@ -170,7 +185,7 @@ public class ListaCapas extends JDialog implements ActionListener {
 	}
 
 	private JButton getCargarGPXButton() {
-		JButton cargar = new JButton(getString("window.gpx.button.load"),
+		JButton cargar = new JButton(i18n.getString("window.gpx.button.load"),
 				LogicConstants.getIcon("historico_button_cargargpx"));
 		cargar.addActionListener(new ActionListener() {
 
@@ -189,7 +204,7 @@ public class ListaCapas extends JDialog implements ActionListener {
 
 					@Override
 					public String getDescription() {
-						return getString("window.gpx.filechooser.filter");
+						return i18n.getString("window.gpx.filechooser.filter");
 					}
 				});
 
@@ -200,7 +215,7 @@ public class ListaCapas extends JDialog implements ActionListener {
 				} catch (Throwable t) {
 					log.error("Error al cargar GPX " + t);
 					JOptionPane.showMessageDialog(getBasicWindow().getFrame(),
-							getString("window.gpx.loadError"));
+							i18n.getString("window.gpx.loadError"));
 				}
 			}
 		});
@@ -240,13 +255,14 @@ public class ListaCapas extends JDialog implements ActionListener {
 				.getAbsolutePath());
 		capa.setSelected(layer.visible);
 		capa.setBackground(Color.WHITE);
-		capa.setToolTipText(getString("window.gpx.checkbox.show.tooltip"));
+		capa.setToolTipText(i18n.getString("window.gpx.checkbox.show.tooltip"));
 		capa.setActionCommand(layer.name);
 		capa.addActionListener(this);
 		capaP.add(capa);
 		capaP.add(Box.createHorizontalGlue());
 		JButton eliminar = new JButton(LogicConstants.getIcon("button_delone"));
-		eliminar.setToolTipText(getString("window.gpx.button.delete.tooltip"));
+		eliminar.setToolTipText(i18n
+				.getString("window.gpx.button.delete.tooltip"));
 		eliminar.setBorderPainted(false);
 		eliminar.setContentAreaFilled(false);
 

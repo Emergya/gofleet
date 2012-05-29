@@ -28,8 +28,6 @@
  */
 package es.emergya.ui.gis.popups;
 
-import static es.emergya.i18n.Internacionalization.getString;
-
 import java.awt.Color;
 import java.awt.Container;
 import java.awt.Dimension;
@@ -61,6 +59,8 @@ import org.apache.commons.logging.LogFactory;
 import org.geotools.geometry.jts.JTS;
 import org.geotools.referencing.CRS;
 import org.gofleet.context.GoClassLoader;
+import org.gofleet.context.GoWired;
+import org.gofleet.internacionalization.I18n;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
 import org.opengis.referencing.operation.MathTransform;
 import org.openstreetmap.josm.data.coor.EastNorth;
@@ -101,6 +101,24 @@ public class RouteDialog extends JFrame implements ActionListener {
 	OsmDataLayer route;
 	private static final Log LOG = LogFactory.getLog(RouteDialog.class);
 
+	@GoWired
+	public I18n i18n;
+
+	/**
+	 * @return the i18n
+	 */
+	public I18n getI18n() {
+		return i18n;
+	}
+
+	/**
+	 * @param i18n
+	 *            the i18n to set
+	 */
+	public void setI18n(I18n i18n) {
+		this.i18n = i18n;
+	}
+
 	private RouteDialog() {
 		super();
 		setAlwaysOnTop(true);
@@ -122,7 +140,7 @@ public class RouteDialog extends JFrame implements ActionListener {
 				setVisible(false);
 			}
 		});
-		setTitle(getString("window.route.titleBar"));
+		setTitle(i18n.getString("window.route.titleBar"));
 		setMinimumSize(new Dimension(400, 200));
 		try {
 			setIconImage(((BasicWindow) GoClassLoader.getGoClassLoader().load(
@@ -138,7 +156,8 @@ public class RouteDialog extends JFrame implements ActionListener {
 		// Icono del titulo
 		JPanel title = new JPanel(new FlowLayout(FlowLayout.LEADING));
 		title.setOpaque(false);
-		final JLabel labelTitle = new JLabel(getString("window.route.title"),
+		final JLabel labelTitle = new JLabel(
+				i18n.getString("window.route.title"),
 				LogicConstants.getIcon("tittleventana_icon_calcularruta"),
 				JLabel.LEFT);
 		labelTitle.setFont(LogicConstants.deriveBoldFont(12.0f));
@@ -149,7 +168,8 @@ public class RouteDialog extends JFrame implements ActionListener {
 		content.setOpaque(false);
 
 		// Coordenadas
-		content.add(new JLabel(getString("window.route.origen"), JLabel.LEFT));
+		content.add(new JLabel(i18n.getString("window.route.origen"),
+				JLabel.LEFT));
 		JPanel coords = new JPanel(new GridLayout(1, 2));
 		coords.setOpaque(false);
 		fx = new JTextField(8);
@@ -159,7 +179,8 @@ public class RouteDialog extends JFrame implements ActionListener {
 		coords.add(fy);
 		coords.add(fx);
 		content.add(coords);
-		content.add(new JLabel(getString("window.route.destino"), JLabel.LEFT));
+		content.add(new JLabel(i18n.getString("window.route.destino"),
+				JLabel.LEFT));
 		JPanel coords2 = new JPanel(new GridLayout(1, 2));
 		coords2.setOpaque(false);
 		tx = new JTextField(8);
@@ -184,11 +205,11 @@ public class RouteDialog extends JFrame implements ActionListener {
 		JPanel buttons = new JPanel();
 		buttons.setOpaque(false);
 		buttons.setLayout(new BoxLayout(buttons, BoxLayout.X_AXIS));
-		search = new JButton(getString("window.route.calcular"),
+		search = new JButton(i18n.getString("window.route.calcular"),
 				LogicConstants.getIcon("ventanacontextual_button_calcularruta"));
 		search.addActionListener(this);
 		buttons.add(search);
-		clear = new JButton(getString("window.route.limpiar"),
+		clear = new JButton(i18n.getString("window.route.limpiar"),
 				LogicConstants.getIcon("button_limpiar"));
 		clear.addActionListener(this);
 		buttons.add(clear);
@@ -196,7 +217,7 @@ public class RouteDialog extends JFrame implements ActionListener {
 		progressIcon = new JLabel(iconTransparente);
 		buttons.add(progressIcon);
 		buttons.add(Box.createHorizontalGlue());
-		JButton cancel = new JButton(getString("Buttons.cancel"),
+		JButton cancel = new JButton(i18n.getString("Buttons.cancel"),
 				LogicConstants.getIcon("button_cancel"));
 		cancel.addActionListener(this);
 		buttons.add(cancel);
@@ -273,16 +294,14 @@ public class RouteDialog extends JFrame implements ActionListener {
 		}
 	}
 
-	public static void showRouteDialog(LatLon from, LatLon to,
-			CustomMapView view) {
+	public void showRouteDialog(LatLon from, LatLon to, CustomMapView view) {
 		JFrame f = getRouteDialog(from, to, view);
 		f.setVisible(true);
 		f.setExtendedState(JFrame.NORMAL);
 		f.requestFocus();
 	}
 
-	public static JFrame getRouteDialog(LatLon from, LatLon to,
-			CustomMapView view) {
+	public JFrame getRouteDialog(LatLon from, LatLon to, CustomMapView view) {
 		if (instance == null) {
 			instance = new RouteDialog();
 		}
@@ -291,7 +310,8 @@ public class RouteDialog extends JFrame implements ActionListener {
 		instance.setFrom(from);
 		instance.setTo(to);
 		if (instance.from == null || instance.to == null) {
-			instance.notification.setText(getString("progress.route.nopoints"));
+			instance.notification.setText(i18n
+					.getString("progress.route.nopoints"));
 			instance.notification.setForeground(Color.RED);
 
 			instance.search.setEnabled(false);
@@ -325,7 +345,8 @@ public class RouteDialog extends JFrame implements ActionListener {
 						setRoute(route);
 					} else {
 						notification
-								.setText(getString("window.route.notification.noRoute"));
+								.setText(i18n
+										.getString("window.route.notification.noRoute"));
 						notification.setForeground(Color.RED);
 					}
 					progressIcon.setIcon(iconTransparente);
@@ -341,7 +362,8 @@ public class RouteDialog extends JFrame implements ActionListener {
 						return true;
 					} catch (Throwable t) {
 						log.error("Error al calcular la ruta", t);
-						notification.setText(getString("progress.route.error"));
+						notification.setText(i18n
+								.getString("progress.route.error"));
 						notification.setForeground(Color.RED);
 						return false;
 					}
@@ -360,18 +382,14 @@ public class RouteDialog extends JFrame implements ActionListener {
 			clear.setEnabled(false);
 
 			clearRoute();
-			instance.notification.setText(getString("progress.route.nopoints"));
+			instance.notification.setText(i18n
+					.getString("progress.route.nopoints"));
 			instance.notification.setForeground(Color.RED);
 			notification.updateUI();
 			if (!e.getSource().equals(clear)) {
 				setVisible(false);
 			}
 		}
-	}
-
-	public static void main(String[] args) {
-		getRouteDialog(new LatLon(0, 0), new LatLon(1, 1), null).setVisible(
-				true);
 	}
 
 	private void setRoute(List<Way> ways) {

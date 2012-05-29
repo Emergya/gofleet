@@ -28,8 +28,6 @@
  */
 package es.emergya.ui.gis;
 
-import static es.emergya.i18n.Internacionalization.getString;
-
 import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.FlowLayout;
@@ -64,6 +62,8 @@ import javax.swing.text.JTextComponent;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.gofleet.context.GoWired;
+import org.gofleet.internacionalization.I18n;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.coor.EastNorth;
 import org.openstreetmap.josm.data.coor.LatLon;
@@ -109,6 +109,22 @@ public class ControlPanel extends JPanel implements ActionListener {
 		}
 	};
 
+	@GoWired
+	public I18n i18n;
+
+	/**
+	 * @return the i18n
+	 */
+	public I18n getI18n() {
+		return i18n;
+	}
+
+	/**
+	 * @param i18n the i18n to set
+	 */
+	public void setI18n(I18n i18n) {
+		this.i18n = i18n;
+	}
 	public ControlPanel(final CustomMapView view) {
 		super(new FlowLayout(FlowLayout.LEADING, 12, 0));
 		this.view = view;
@@ -157,10 +173,10 @@ public class ControlPanel extends JPanel implements ActionListener {
 
 		// Panel de centrado: label, desplegable y parte cambiante
 		JPanel centerPanel = new JPanel();
-		centerPanel.add(new JLabel(getString("map.centerIn")));
-		centerOptions = new JComboBox(new String[] { getString("map.street"),
-				getString("map.resource"), getString("map.incidence"),
-				getString("map.location") });
+		centerPanel.add(new JLabel(i18n.getString("map.centerIn")));
+		centerOptions = new JComboBox(new String[] { i18n.getString("map.street"),
+				i18n.getString("map.resource"), i18n.getString("map.incidence"),
+				i18n.getString("map.location") });
 		centerPanel.add(centerOptions);
 
 		centerData = new JPanel(new CardLayout());
@@ -168,16 +184,16 @@ public class ControlPanel extends JPanel implements ActionListener {
 
 		JPanel centerStreet = new JPanel();
 		street = new JTextField(30);
-		street.setName(getString("map.street"));
+		street.setName(i18n.getString("map.street"));
 		autocompleteKeyListener = new AutocompleteKeyListener(street);
 		street.addKeyListener(autocompleteKeyListener);
 		street.addActionListener(this);
 		centerStreet.add(street);
-		centerData.add(centerStreet, getString("map.street"));
+		centerData.add(centerStreet, i18n.getString("map.street"));
 
 		JPanel centerResource = new JPanel();
 		resources = new JComboBox(avaliableResources);
-		resources.setName(getString("map.resource"));
+		resources.setName(i18n.getString("map.resource"));
 		resources.setPrototypeDisplayValue("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
 		resources.addPopupMenuListener(new PopupMenuListener() {
 
@@ -197,12 +213,12 @@ public class ControlPanel extends JPanel implements ActionListener {
 			}
 		});
 		centerResource.add(resources);
-		centerData.add(centerResource, getString("map.resource"));
+		centerData.add(centerResource, i18n.getString("map.resource"));
 
 		centerResource = new JPanel();
 		incidences = new JComboBox(avaliableIncidences);
 		incidences.setPrototypeDisplayValue("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
-		incidences.setName(getString("map.incidence"));
+		incidences.setName(i18n.getString("map.incidence"));
 		incidences.addPopupMenuListener(new PopupMenuListener() {
 
 			@Override
@@ -221,7 +237,7 @@ public class ControlPanel extends JPanel implements ActionListener {
 			}
 		});
 		centerResource.add(incidences);
-		centerData.add(centerResource, getString("map.incidence"));
+		centerData.add(centerResource, i18n.getString("map.incidence"));
 
 		JPanel centerLocation = new JPanel();
 		cx = new JTextField(10);
@@ -232,7 +248,7 @@ public class ControlPanel extends JPanel implements ActionListener {
 		cy.setName("y");
 		cy.addActionListener(this);
 		centerLocation.add(cy);
-		centerData.add(centerLocation, getString("map.location"));
+		centerData.add(centerLocation, i18n.getString("map.location"));
 
 		centerOptions.addItemListener(new ItemListener() {
 
@@ -243,7 +259,7 @@ public class ControlPanel extends JPanel implements ActionListener {
 			}
 		});
 
-		JButton centerButton = new JButton(getString("map.center"));
+		JButton centerButton = new JButton(i18n.getString("map.center"));
 		centerButton.addActionListener(this);
 		centerPanel.add(centerButton);
 		add(centerPanel);
@@ -260,7 +276,7 @@ public class ControlPanel extends JPanel implements ActionListener {
 			protected Object doInBackground() throws Exception {
 
 				if (centerOptions.getSelectedItem().equals(
-						getString("map.location"))) { // Estamos
+						i18n.getString("map.location"))) { // Estamos
 					// centrando
 					// en
 					// x,
@@ -288,7 +304,7 @@ public class ControlPanel extends JPanel implements ActionListener {
 								.getScale());
 					}
 				} else if (centerOptions.getSelectedItem().equals(
-						getString("map.street"))) {
+						i18n.getString("map.street"))) {
 					Routing r = RoutingConsultas.find(street.getText());
 					if (r != null && r.getGeometria() != null) {
 						Point center = r.getGeometria().getCentroid()
@@ -300,7 +316,7 @@ public class ControlPanel extends JPanel implements ActionListener {
 					}
 
 				} else if (centerOptions.getSelectedItem().equals(
-						getString("map.incidence"))) {
+						i18n.getString("map.incidence"))) {
 
 					final Object incidencia = incidences.getSelectedItem();
 					if (incidencia == null) {
@@ -325,7 +341,7 @@ public class ControlPanel extends JPanel implements ActionListener {
 					return null;
 
 				} else if (centerOptions.getSelectedItem().equals(
-						getString("map.resource"))) {
+						i18n.getString("map.resource"))) {
 					final Object selectedItem = resources.getSelectedItem();
 					if (selectedItem == null) {
 						return null;

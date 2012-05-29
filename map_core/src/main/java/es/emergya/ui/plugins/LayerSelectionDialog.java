@@ -48,6 +48,8 @@ import javax.swing.SwingWorker;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.gofleet.context.GoClassLoader;
+import org.gofleet.context.GoWired;
+import org.gofleet.internacionalization.I18n;
 import org.openstreetmap.gui.jmapviewer.MemoryTileCache;
 import org.openstreetmap.josm.gui.layer.Layer;
 
@@ -58,7 +60,6 @@ import es.emergya.bbdd.bean.CapaInformacionUsuario;
 import es.emergya.cliente.constants.LogicConstants;
 import es.emergya.consultas.CapaConsultas;
 import es.emergya.consultas.UsuarioConsultas;
-import es.emergya.i18n.Internacionalization;
 import es.emergya.ui.base.BasicWindow;
 import es.emergya.ui.gis.CustomMapView;
 import es.emergya.ui.gis.WmsTileSource;
@@ -76,6 +77,22 @@ public class LayerSelectionDialog extends JDialog implements ActionListener {
 	private static final org.apache.commons.logging.Log LOG = LogFactory
 			.getLog(LayerSelectionDialog.class);
 
+	@GoWired
+	public I18n i18n;
+
+	/**
+	 * @return the i18n
+	 */
+	public I18n getI18n() {
+		return i18n;
+	}
+
+	/**
+	 * @param i18n the i18n to set
+	 */
+	public void setI18n(I18n i18n) {
+		this.i18n = i18n;
+	}
 	public LayerSelectionDialog(CustomMapView gmv) {
 		super();
 		self = this;
@@ -95,7 +112,7 @@ public class LayerSelectionDialog extends JDialog implements ActionListener {
 		base.setPreferredSize(new Dimension(240, 150));
 		base.setBackground(Color.WHITE);
 		base.setLayout(new BoxLayout(base, BoxLayout.Y_AXIS));
-		base.add(new JLabel(Internacionalization
+		base.add(new JLabel(i18n
 				.getString("map.layers.avaliable")));
 		list = new JPanel();
 		list.setLayout(new BoxLayout(list, BoxLayout.Y_AXIS));

@@ -54,12 +54,13 @@ import javax.swing.border.EmptyBorder;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.gofleet.context.GoClassLoader;
+import org.gofleet.context.GoWired;
+import org.gofleet.internacionalization.I18n;
 import org.openstreetmap.josm.gui.layer.GpxLayer;
 import org.openstreetmap.josm.gui.layer.Layer;
 import org.openstreetmap.josm.io.GpxWriter;
 
 import es.emergya.cliente.constants.LogicConstants;
-import es.emergya.i18n.Internacionalization;
 import es.emergya.ui.base.BasicWindow;
 
 public class SaveGPXDialog extends JFrame {
@@ -67,6 +68,24 @@ public class SaveGPXDialog extends JFrame {
 	private static final long serialVersionUID = -6066807198392103411L;
 	private static SaveGPXDialog self;
 	private static final Log LOG = LogFactory.getLog(SaveGPXDialog.class);
+
+	@GoWired
+	public I18n i18n;
+
+	/**
+	 * @return the i18n
+	 */
+	public I18n getI18n() {
+		return i18n;
+	}
+
+	/**
+	 * @param i18n
+	 *            the i18n to set
+	 */
+	public void setI18n(I18n i18n) {
+		this.i18n = i18n;
+	}
 
 	public synchronized static void close() {
 		if (self != null)
@@ -186,10 +205,8 @@ public class SaveGPXDialog extends JFrame {
 
 			private File checkFileOverwritten(final JTextField nombre, File f)
 					throws Exception {
-				String nueva = JOptionPane.showInputDialog(
-						nombre,
-						Internacionalization.getString(
-								"savegpxdialog.overwrite", f.getName()),
+				String nueva = JOptionPane.showInputDialog(nombre,
+						i18n.getString("savegpxdialog.overwrite"),
 						"Sobreescribir archivo", JOptionPane.QUESTION_MESSAGE,
 						null, null, f.getCanonicalPath()).toString();
 				log.debug("Nueva ruta: " + nueva);

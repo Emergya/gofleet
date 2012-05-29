@@ -64,6 +64,8 @@ import javax.swing.SwingWorker;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.gofleet.context.GoWired;
+import org.gofleet.internacionalization.I18n;
 import org.openstreetmap.gui.jmapviewer.JobDispatcher;
 import org.openstreetmap.gui.jmapviewer.OsmMercator;
 import org.openstreetmap.josm.Main;
@@ -90,7 +92,6 @@ import es.emergya.cliente.constants.LogicConstants;
 import es.emergya.consultas.IncidenciaConsultas;
 import es.emergya.consultas.RecursoConsultas;
 import es.emergya.consultas.UsuarioConsultas;
-import es.emergya.i18n.Internacionalization;
 import es.emergya.ui.gis.layers.MapViewerLayer;
 import es.emergya.ui.gis.markers.CustomMarker;
 import es.emergya.ui.gis.markers.CustomMarker.Type;
@@ -227,6 +228,23 @@ public class CustomMapView extends MapView implements RotatableView,
 	 */
 	public ToolbarPreferences toolbar;
 
+	@GoWired
+	public I18n i18n;
+
+	/**
+	 * @return the i18n
+	 */
+	public I18n getI18n() {
+		return i18n;
+	}
+
+	/**
+	 * @param i18n the i18n to set
+	 */
+	public void setI18n(I18n i18n) {
+		this.i18n = i18n;
+	}
+
 	public CustomMapView() {
 		super();
 		menu = new MainMenu();
@@ -236,7 +254,7 @@ public class CustomMapView extends MapView implements RotatableView,
 		layerControls = new LinkedList<JToggleButton>();
 
 		JToggleButton botonMostrarOcultarBotones = new JToggleButton(
-				Internacionalization.getString("map.layers.hideButtons"),
+				getI18n().getString("map.layers.hideButtons"),
 				LogicConstants.getIcon("capas_button_mostrar"), false);
 		botonMostrarOcultarBotones.setSelected(true);
 		botonMostrarOcultarBotones.setActionCommand("#hide");
@@ -252,8 +270,7 @@ public class CustomMapView extends MapView implements RotatableView,
 					layerControlPanel.add(Box.createHorizontalStrut(10));
 					layerControlPanel.add(b);
 					b.setActionCommand("#show");
-					b.setText(Internacionalization
-							.getString("map.layers.showButtons"));
+					b.setText(getI18n().getString("map.layers.showButtons"));
 				} else {
 					layerControlPanel.removeAll();
 					layerControlPanel.add(Box.createHorizontalStrut(10));
@@ -262,8 +279,7 @@ public class CustomMapView extends MapView implements RotatableView,
 						layerControlPanel.add(Box.createHorizontalGlue());
 					}
 					b.setActionCommand("#hide");
-					b.setText(Internacionalization
-							.getString("map.layers.hideButtons"));
+					b.setText(getI18n().getString("map.layers.hideButtons"));
 				}
 				layerControlPanel.updateUI();
 			}
@@ -271,7 +287,7 @@ public class CustomMapView extends MapView implements RotatableView,
 		layerControls.add(botonMostrarOcultarBotones);
 
 		final JToggleButton botonTodoasLasCapas = new JToggleButton(
-				Internacionalization.getString("map.layers.allLayers"),
+				getI18n().getString("map.layers.allLayers"),
 				LogicConstants.getIcon("capas_button_mostrar"), false);
 		layerDialog = new LayerSelectionDialog(this);
 		layerDialog.addWindowListener(new WindowAdapter() {
@@ -1173,11 +1189,11 @@ public class CustomMapView extends MapView implements RotatableView,
 				// vehiculos_visibles
 				// personas_visibles
 				// incidencias_visibles
-				String capa_incidences = Internacionalization
+				String capa_incidences = getI18n()
 						.getString("Incidences.incidences");
-				String capa_vehiculos = Internacionalization
+				String capa_vehiculos = getI18n()
 						.getString("Resources.resources.vehicles");
-				String capa_people = Internacionalization
+				String capa_people = getI18n()
 						.getString("Resources.resources.people");
 				Usuario u = UsuarioConsultas.find(Authentication.getUsuario()
 						.getNombreUsuario());
@@ -1350,11 +1366,11 @@ public class CustomMapView extends MapView implements RotatableView,
 		MarkerLayer people = null, vehicles = null;
 		// tomar las capas vehiculo y persona
 		for (Layer l : getAllLayers()) {
-			if (l.name.equalsIgnoreCase(Internacionalization
+			if (l.name.equalsIgnoreCase(getI18n()
 					.getString("Resources.resources.people"))) {
 				people = (MarkerLayer) l;
 			}
-			if (l.name.equalsIgnoreCase(Internacionalization
+			if (l.name.equalsIgnoreCase(getI18n()
 					.getString("Resources.resources.vehicles"))) {
 				vehicles = (MarkerLayer) l;
 			}
@@ -1418,8 +1434,7 @@ public class CustomMapView extends MapView implements RotatableView,
 		MarkerLayer layer = null;
 		// tomar las capas vehiculo y persona
 		for (Layer l : getAllLayers()) {
-			if (l.name.equals(Internacionalization
-					.getString("Incidences.incidences"))) {
+			if (l.name.equals(getI18n().getString("Incidences.incidences"))) {
 				layer = (MarkerLayer) l;
 				break;
 			}

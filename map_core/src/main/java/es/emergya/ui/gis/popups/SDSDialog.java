@@ -30,8 +30,6 @@ package es.emergya.ui.gis.popups;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import static es.emergya.i18n.Internacionalization.getString;
-
 import java.awt.Color;
 import java.awt.Container;
 import java.awt.Dimension;
@@ -63,6 +61,8 @@ import javax.swing.text.PlainDocument;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.gofleet.context.GoClassLoader;
+import org.gofleet.context.GoWired;
+import org.gofleet.internacionalization.I18n;
 
 import es.emergya.bbdd.bean.Outbox;
 import es.emergya.bbdd.bean.Recurso;
@@ -86,6 +86,24 @@ public class SDSDialog extends JFrame implements ActionListener {
 	JButton send, cancel;
 	private static final Log LOG = LogFactory.getLog(SDSDialog.class);
 
+	@GoWired
+	public I18n i18n;
+
+	/**
+	 * @return the i18n
+	 */
+	public I18n getI18n() {
+		return i18n;
+	}
+
+	/**
+	 * @param i18n
+	 *            the i18n to set
+	 */
+	public void setI18n(I18n i18n) {
+		this.i18n = i18n;
+	}
+
 	public SDSDialog(Recurso r) {
 		super();
 		setAlwaysOnTop(true);
@@ -103,7 +121,8 @@ public class SDSDialog extends JFrame implements ActionListener {
 		});
 
 		// setPreferredSize(new Dimension(400, 150));
-		setTitle(getString("window.sds.titleBar") + " " + r.getIdentificador());
+		setTitle(i18n.getString("window.sds.titleBar") + " "
+				+ r.getIdentificador());
 		try {
 			setIconImage(((BasicWindow) GoClassLoader.getGoClassLoader().load(
 					BasicWindow.class)).getFrame().getIconImage());
@@ -118,7 +137,8 @@ public class SDSDialog extends JFrame implements ActionListener {
 
 		// Icono del titulo
 		JPanel title = new JPanel(new FlowLayout(FlowLayout.LEADING));
-		final JLabel titleLabel = new JLabel(getString("window.sds.title"),
+		final JLabel titleLabel = new JLabel(
+				i18n.getString("window.sds.title"),
 				LogicConstants.getIcon("tittleventana_icon_enviarsds"),
 				JLabel.LEFT);
 
@@ -135,7 +155,7 @@ public class SDSDialog extends JFrame implements ActionListener {
 
 		sdsp.setOpaque(false);
 		sdsp.setBorder(new TitledBorder(BorderFactory
-				.createLineBorder(Color.BLACK), getString("Admin.message")
+				.createLineBorder(Color.BLACK), i18n.getString("Admin.message")
 				+ "\t (0/" + maxChars + ")"));
 		sds.setDocument(new PlainDocument() {
 			@Override
@@ -163,9 +183,10 @@ public class SDSDialog extends JFrame implements ActionListener {
 			}
 
 			private void updateChars(DocumentEvent e) {
-				((TitledBorder) sdsp.getBorder())
-						.setTitle(getString("Admin.message") + "\t ("
-								+ sds.getText().length() + "/" + maxChars + ")");
+				((TitledBorder) sdsp.getBorder()).setTitle(i18n
+						.getString("Admin.message")
+						+ "\t ("
+						+ sds.getText().length() + "/" + maxChars + ")");
 				sdsp.repaint();
 				send.setEnabled(!sds.getText().isEmpty());
 				notification.setForeground(Color.WHITE);
@@ -187,7 +208,7 @@ public class SDSDialog extends JFrame implements ActionListener {
 
 		buttons.setOpaque(false);
 		buttons.setLayout(new BoxLayout(buttons, BoxLayout.X_AXIS));
-		send = new JButton(getString("Buttons.send"),
+		send = new JButton(i18n.getString("Buttons.send"),
 				LogicConstants.getIcon("ventanacontextual_button_enviarsds"));
 		send.addActionListener(this);
 		send.setEnabled(false);
@@ -196,7 +217,7 @@ public class SDSDialog extends JFrame implements ActionListener {
 		progressIcon = new JLabel(iconTransparente);
 		buttons.add(progressIcon);
 		buttons.add(Box.createHorizontalGlue());
-		cancel = new JButton(getString("Buttons.cancel"),
+		cancel = new JButton(i18n.getString("Buttons.cancel"),
 				LogicConstants.getIcon("button_cancel"));
 		cancel.addActionListener(this);
 		buttons.add(cancel);
@@ -277,7 +298,7 @@ public class SDSDialog extends JFrame implements ActionListener {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		if (e.getActionCommand().equals(getString("Buttons.send"))) {
+		if (e.getActionCommand().equals(i18n.getString("Buttons.send"))) {
 			bandejaSalida = send();
 
 			if (bandejaSalida == null) {
@@ -294,7 +315,8 @@ public class SDSDialog extends JFrame implements ActionListener {
 
 			listener.setTimer(t);
 			t.start();
-		} else if (e.getActionCommand().equals(getString("Buttons.cancel"))) {
+		} else if (e.getActionCommand()
+				.equals(i18n.getString("Buttons.cancel"))) {
 			if (bandejaSalida != null) {
 				MessageGenerator.remove(bandejaSalida.getId());
 			}
@@ -310,7 +332,7 @@ public class SDSDialog extends JFrame implements ActionListener {
 						.getInt("SDS", 31));
 
 		if (destino.getDispositivo() == null) {
-			notification.setText(getString("progress.message.nodevice"));
+			notification.setText(i18n.getString("progress.message.nodevice"));
 			notification.setForeground(Color.RED);
 
 			return null;
@@ -321,7 +343,7 @@ public class SDSDialog extends JFrame implements ActionListener {
 					tmensaje.getTipoTetra(), tmensaje.getPrioridad(),
 					sds.getText(), destino.getDispositivo().toString());
 		} catch (MessageGeneratingException ex) {
-			notification.setText(getString("progress.message.fail"));
+			notification.setText(i18n.getString("progress.message.fail"));
 			notification.setForeground(Color.RED);
 
 			return null;
@@ -349,7 +371,8 @@ public class SDSDialog extends JFrame implements ActionListener {
 				t.stop();
 			} else if (!MessageGenerator.messageExists(bandejaSalida.getId())) {
 				progressIcon.setIcon(iconTransparente);
-				notification.setText(getString("window.sds.message.sended"));
+				notification.setText(i18n
+						.getString("window.sds.message.sended"));
 				notification.setForeground(Color.RED);
 				bandejaSalida = null;
 				send.setEnabled(!sds.getText().isEmpty());

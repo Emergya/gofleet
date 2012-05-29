@@ -28,8 +28,6 @@
  */
 package es.emergya.ui.gis.popups;
 
-import static es.emergya.i18n.Internacionalization.getString;
-
 import java.awt.Color;
 import java.awt.Container;
 import java.awt.Dimension;
@@ -51,6 +49,8 @@ import javax.swing.SpringLayout;
 
 import org.apache.commons.logging.LogFactory;
 import org.gofleet.context.GoClassLoader;
+import org.gofleet.context.GoWired;
+import org.gofleet.internacionalization.I18n;
 
 import es.emergya.bbdd.bean.Recurso;
 import es.emergya.cliente.constants.LogicConstants;
@@ -67,6 +67,24 @@ public class SummaryDialog extends JFrame {
 	private static final org.apache.commons.logging.Log LOG = LogFactory
 			.getLog(SummaryDialog.class);
 
+	@GoWired
+	public I18n i18n;
+
+	/**
+	 * @return the i18n
+	 */
+	public I18n getI18n() {
+		return i18n;
+	}
+
+	/**
+	 * @param i18n
+	 *            the i18n to set
+	 */
+	public void setI18n(I18n i18n) {
+		this.i18n = i18n;
+	}
+
 	public SummaryDialog(Recurso r) {
 
 		super();
@@ -77,7 +95,7 @@ public class SummaryDialog extends JFrame {
 		setName(r.getIdentificador());
 		setBackground(Color.WHITE);
 		setSize(600, 400);
-		setTitle(getString("Resources.summary.titleWindow") + " "
+		setTitle(i18n.getString("Resources.summary.titleWindow") + " "
 				+ r.getIdentificador());
 		try {
 			setIconImage(((BasicWindow) GoClassLoader.getGoClassLoader().load(
@@ -95,7 +113,7 @@ public class SummaryDialog extends JFrame {
 		JPanel title = new JPanel(new FlowLayout(FlowLayout.LEADING));
 
 		final JLabel labelTitle = new JLabel(
-				getString("Resources.summary.title") + " "
+				i18n.getString("Resources.summary.title") + " "
 						+ r.getIdentificador(),
 				LogicConstants.getIcon("tittleficha_icon_recurso"), JLabel.LEFT);
 		labelTitle.setFont(LogicConstants.deriveBoldFont(12f));
@@ -109,14 +127,14 @@ public class SummaryDialog extends JFrame {
 		// Nombre
 		JPanel mid = new JPanel(new SpringLayout());
 		mid.setBackground(Color.WHITE);
-		mid.add(new JLabel(getString("Resources.name"), JLabel.RIGHT));
+		mid.add(new JLabel(i18n.getString("Resources.name"), JLabel.RIGHT));
 		JTextField name = new JTextField(25);
 		if (r != null)
 			name.setText(r.getIdentificador());
 		name.setEditable(false);
 		mid.add(name);
 		// Patrulla
-		mid.add(new JLabel(getString("Resources.squad"), JLabel.RIGHT));
+		mid.add(new JLabel(i18n.getString("Resources.squad"), JLabel.RIGHT));
 		// JComboBox squads = new
 		// JComboBox(PatrullaConsultas.getAll().toArray());
 		JTextField squads = new JTextField(r.getPatrullas() == null ? null : r
@@ -128,13 +146,13 @@ public class SummaryDialog extends JFrame {
 		mid.add(squads);
 
 		// Tipo
-		mid.add(new JLabel(getString("Resources.type"), JLabel.RIGHT));
+		mid.add(new JLabel(i18n.getString("Resources.type"), JLabel.RIGHT));
 		JTextField types = new JTextField(r.getTipo());
 		types.setEditable(false);
 		mid.add(types);
 
 		// Estado Eurocop
-		mid.add(new JLabel(getString("Resources.status"), JLabel.RIGHT));
+		mid.add(new JLabel(i18n.getString("Resources.status"), JLabel.RIGHT));
 		JTextField status = new JTextField();
 		if (r.getEstadoEurocop() != null)
 			status.setText(r.getEstadoEurocop().getIdentificador());
@@ -142,25 +160,25 @@ public class SummaryDialog extends JFrame {
 		mid.add(status);
 
 		// Subflota
-		mid.add(new JLabel(getString("Resources.subfleet"), JLabel.RIGHT));
+		mid.add(new JLabel(i18n.getString("Resources.subfleet"), JLabel.RIGHT));
 		JTextField subfleets = new JTextField(r.getFlotas() == null ? null : r
 				.getFlotas().getNombre());
 		subfleets.setEditable(false);
 		mid.add(subfleets);
 
 		// Referencia Humana
-		mid.add(new JLabel(getString("Resources.incidences"), JLabel.RIGHT));
+		mid.add(new JLabel(i18n.getString("Resources.incidences"), JLabel.RIGHT));
 		JTextField rHumana = new JTextField();
 		// if (r.getIncidencias() != null)
 		// rHumana.setText(r.getIncidencias().getReferenciaHumana());
 		rHumana.setEditable(false);
 		mid.add(rHumana);
 		// dispositivo
-		mid.add(new JLabel(getString("Resources.device"), JLabel.RIGHT));
+		mid.add(new JLabel(i18n.getString("Resources.device"), JLabel.RIGHT));
 		JTextField issi = new JTextField();
 		issi.setEditable(false);
 		mid.add(issi);
-		mid.add(new JLabel(getString("Resources.enabled"), JLabel.RIGHT));
+		mid.add(new JLabel(i18n.getString("Resources.enabled"), JLabel.RIGHT));
 		JCheckBox enabled = new JCheckBox("", true);
 		enabled.setEnabled(false);
 		enabled.setOpaque(false);
@@ -176,7 +194,8 @@ public class SummaryDialog extends JFrame {
 		mid.add(enabled);
 
 		// Fecha ultimo gps
-		mid.add(new JLabel(getString("Resources.lastPosition"), JLabel.RIGHT));
+		mid.add(new JLabel(i18n.getString("Resources.lastPosition"),
+				JLabel.RIGHT));
 		JTextField lastGPS = new JTextField();
 
 		final Date lastGPSDateForRecurso = HistoricoGPSConsultas
@@ -205,7 +224,7 @@ public class SummaryDialog extends JFrame {
 		info.setText(r.getInfoAdicional());
 		info.setEditable(false);
 		infoPanel.setOpaque(false);
-		infoPanel.add(new JLabel(getString("Resources.info")));
+		infoPanel.add(new JLabel(i18n.getString("Resources.info")));
 		infoPanel.add(info);
 		SpringUtilities.makeCompactGrid(infoPanel, 1, 2, 6, 6, 6, 18);
 		base.add(infoPanel);
@@ -213,7 +232,7 @@ public class SummaryDialog extends JFrame {
 		JPanel buttons = new JPanel();
 
 		buttons.setBackground(Color.WHITE);
-		JButton accept = new JButton(getString("Buttons.ok"),
+		JButton accept = new JButton(i18n.getString("Buttons.ok"),
 				LogicConstants.getIcon("button_accept"));
 
 		accept.addActionListener(new ActionListener() {

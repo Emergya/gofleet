@@ -166,7 +166,7 @@ public abstract class MapViewer extends AbstractPluggable implements
 	 */
 	public MapViewer(String title, PluginType type, int order, String icon,
 			List<MarkerLayer> layers) {
-		this.title = StringUtils.rightPad(title, 25);
+		setTitle(title);
 		this.type = type;
 		this.order = order;
 		this.tip = title;
@@ -198,6 +198,10 @@ public abstract class MapViewer extends AbstractPluggable implements
 			this.mapView.addLayer(layer);
 			layer.setMapView((MapView) this.mapView);
 		}
+	}
+
+	public void setTitle(String title) {
+		this.title = StringUtils.rightPad(title, 25);
 	}
 
 	/**

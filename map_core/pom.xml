@@ -68,7 +68,6 @@
 			<version>0.0.3-SNAPSHOT</version>
 		</dependency>
 
-
 		<!-- WMS -->
 		<dependency>
 			<groupId>gvsig.org</groupId>

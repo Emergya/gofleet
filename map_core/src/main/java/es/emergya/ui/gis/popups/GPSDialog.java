@@ -30,8 +30,6 @@ package es.emergya.ui.gis.popups;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import static es.emergya.i18n.Internacionalization.getString;
-
 import java.awt.Color;
 import java.awt.Container;
 import java.awt.Dimension;
@@ -54,6 +52,8 @@ import javax.swing.Timer;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.gofleet.context.GoClassLoader;
+import org.gofleet.context.GoWired;
+import org.gofleet.internacionalization.I18n;
 
 import es.emergya.bbdd.bean.Outbox;
 import es.emergya.bbdd.bean.Recurso;
@@ -77,6 +77,22 @@ public class GPSDialog extends JFrame implements ActionListener {
 	Recurso target;
 	private static final Log LOG = LogFactory.getLog(GPSDialog.class);
 
+	@GoWired
+	public I18n i18n;
+
+	/**
+	 * @return the i18n
+	 */
+	public I18n getI18n() {
+		return i18n;
+	}
+
+	/**
+	 * @param i18n the i18n to set
+	 */
+	public void setI18n(I18n i18n) {
+		this.i18n = i18n;
+	}
 	public GPSDialog(Recurso r) {
 		super();
 		setAlwaysOnTop(true);
@@ -86,7 +102,7 @@ public class GPSDialog extends JFrame implements ActionListener {
 		target = r;
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		setPreferredSize(new Dimension(400, 150));
-		setTitle(getString("window.gps.titleBar") + " "
+		setTitle(i18n.getString("window.gps.titleBar") + " "
 				+ target.getIdentificador());
 		try {
 			setIconImage(((BasicWindow) GoClassLoader.getGoClassLoader().load(
@@ -102,7 +118,7 @@ public class GPSDialog extends JFrame implements ActionListener {
 
 		// Icono del titulo
 		JPanel title = new JPanel(new FlowLayout(FlowLayout.LEADING));
-		final JLabel titleLabel = new JLabel(getString("window.gps.title"),
+		final JLabel titleLabel = new JLabel(i18n.getString("window.gps.title"),
 				LogicConstants.getIcon("tittleventana_icon_actualizargps"),
 				JLabel.LEFT);
 
@@ -124,7 +140,7 @@ public class GPSDialog extends JFrame implements ActionListener {
 
 		buttons.setOpaque(false);
 		buttons.setLayout(new BoxLayout(buttons, BoxLayout.X_AXIS));
-		actualizar = new JButton(getString("window.gps.button.actualizar"),
+		actualizar = new JButton(i18n.getString("window.gps.button.actualizar"),
 				LogicConstants.getIcon("ventanacontextual_button_solicitargps"));
 		actualizar.addActionListener(this);
 		buttons.add(actualizar);
@@ -133,7 +149,7 @@ public class GPSDialog extends JFrame implements ActionListener {
 		buttons.add(progressIcon);
 		buttons.add(Box.createHorizontalGlue());
 
-		JButton cancel = new JButton(getString("Buttons.cancel"),
+		JButton cancel = new JButton(i18n.getString("Buttons.cancel"),
 				LogicConstants.getIcon("button_cancel"));
 
 		cancel.addActionListener(this);
@@ -217,7 +233,7 @@ public class GPSDialog extends JFrame implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (e.getActionCommand().equals(
-				getString("window.gps.button.actualizar"))) {
+				i18n.getString("window.gps.button.actualizar"))) {
 			last_bandejaSalida = send();
 			log.info("bandeja de salida: " + last_bandejaSalida);
 
@@ -239,7 +255,7 @@ public class GPSDialog extends JFrame implements ActionListener {
 			t.start();
 		}
 
-		if (e.getActionCommand().equals(getString("Buttons.cancel"))) {
+		if (e.getActionCommand().equals(i18n.getString("Buttons.cancel"))) {
 			if (last_bandejaSalida != null) {
 				MessageGenerator.remove(last_bandejaSalida.getId());
 			}
@@ -255,7 +271,7 @@ public class GPSDialog extends JFrame implements ActionListener {
 						.getInt("GPS", 32));
 
 		if (target.getDispositivo() == null) {
-			notification.setText(getString("progress.message.nodevice"));
+			notification.setText(i18n.getString("progress.message.nodevice"));
 			notification.setForeground(Color.RED);
 
 			return null;
@@ -267,7 +283,7 @@ public class GPSDialog extends JFrame implements ActionListener {
 					.get("DATAGRAMA_SOLICITUD_GPS"), target.getDispositivo()
 					.toString());
 		} catch (MessageGeneratingException e) {
-			notification.setText(getString("progress.message.fail"));
+			notification.setText(i18n.getString("progress.message.fail"));
 			notification.setForeground(Color.RED);
 
 			return null;
@@ -294,7 +310,7 @@ public class GPSDialog extends JFrame implements ActionListener {
 				t.stop();
 			} else if (!MessageGenerator.messageExists(b.getId())) {
 				progressIcon.setIcon(iconTransparente);
-				notification.setText(getString("progress.updating"));
+				notification.setText(i18n.getString("progress.updating"));
 				notification.setForeground(Color.RED);
 				actualizar.setEnabled(true);
 				last_bandejaSalida = null;

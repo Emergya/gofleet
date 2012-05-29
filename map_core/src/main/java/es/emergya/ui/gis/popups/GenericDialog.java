@@ -28,8 +28,6 @@
  */
 package es.emergya.ui.gis.popups;
 
-import static es.emergya.i18n.Internacionalization.getString;
-
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;
@@ -57,6 +55,8 @@ import javax.swing.SpringLayout;
 import org.apache.commons.logging.LogFactory;
 import org.freixas.jcalendar.JCalendarCombo;
 import org.gofleet.context.GoClassLoader;
+import org.gofleet.context.GoWired;
+import org.gofleet.internacionalization.I18n;
 
 import es.emergya.cliente.constants.LogicConstants;
 import es.emergya.ui.SpringUtilities;
@@ -92,6 +92,24 @@ public abstract class GenericDialog<T> extends JFrame {
 
 	protected Object getObject() {
 		return this.id;
+	}
+
+	@GoWired
+	public I18n i18n;
+
+	/**
+	 * @return the i18n
+	 */
+	public I18n getI18n() {
+		return i18n;
+	}
+
+	/**
+	 * @param i18n
+	 *            the i18n to set
+	 */
+	public void setI18n(I18n i18n) {
+		this.i18n = i18n;
 	}
 
 	public GenericDialog(T i, final String titulo, final String icon) {
@@ -136,13 +154,13 @@ public abstract class GenericDialog<T> extends JFrame {
 		JPanel buttons = new JPanel();
 
 		buttons.setBackground(Color.WHITE);
-		JButton accept = new JButton(getString("Buttons.ok"),
+		JButton accept = new JButton(i18n.getString("Buttons.ok"),
 				LogicConstants.getIcon("button_accept"));
 		accept.addActionListener(closeListener);
 		accept.addActionListener(saveListener);
 		buttons.add(accept);
 
-		JButton cancel = new JButton(getString("Buttons.cancel"),
+		JButton cancel = new JButton(i18n.getString("Buttons.cancel"),
 				LogicConstants.getIcon("button_cancel"));
 		cancel.addActionListener(closeListener);
 		buttons.add(cancel);
@@ -200,14 +218,14 @@ public abstract class GenericDialog<T> extends JFrame {
 		jtextField.setEditable(true);
 		jtextField.setColumns(colsLength[0]);
 		panel.add(jtextField);
-		mid.add(new JLabel(getString(pairs[0][0]), JLabel.RIGHT));
+		mid.add(new JLabel(i18n.getString(pairs[0][0]), JLabel.RIGHT));
 
 		for (int i = 1; i < pairs.length; i++) {
 			String[] pair = pairs[i];
 			if (pair.length != 2)
 				log.error("Par desconocido");
 			else {
-				panel.add(new JLabel(getString(pair[0]), JLabel.RIGHT));
+				panel.add(new JLabel(i18n.getString(pair[0]), JLabel.RIGHT));
 				jtextField = new JTextField(pair[1]);
 				jtextField.setEditable(true);
 				panel.add(jtextField);
@@ -235,7 +253,7 @@ public abstract class GenericDialog<T> extends JFrame {
 				log.error("Par desconocido");
 			else {
 				columnas += 2;
-				mid.add(new JLabel(getString(pair[0]), JLabel.RIGHT));
+				mid.add(new JLabel(i18n.getString(pair[0]), JLabel.RIGHT));
 				JTextField jtextField = new JTextField(pair[1]);
 				jtextField.setEditable(true);
 				mid.add(jtextField);
@@ -249,7 +267,7 @@ public abstract class GenericDialog<T> extends JFrame {
 
 	protected void addString(String texto, String label) {
 		rows++;
-		mid.add(new JLabel(getString(label), JLabel.RIGHT));
+		mid.add(new JLabel(i18n.getString(label), JLabel.RIGHT));
 		JTextField jtextField = new JTextField(texto);
 		jtextField.setEditable(true);
 		jtextField.setName(label);
@@ -261,7 +279,7 @@ public abstract class GenericDialog<T> extends JFrame {
 
 	protected void addString_Fixed(String texto, String label) {
 		rows++;
-		mid.add(new JLabel(getString(label), JLabel.RIGHT));
+		mid.add(new JLabel(i18n.getString(label), JLabel.RIGHT));
 		JTextField jtextField = new JTextField(texto);
 		jtextField.setEditable(false);
 		mid.add(jtextField);
@@ -271,7 +289,7 @@ public abstract class GenericDialog<T> extends JFrame {
 
 	protected void addComboBox(Object selected, Object[] options, String title) {
 		rows++;
-		mid.add(new JLabel(getString(title), JLabel.RIGHT));
+		mid.add(new JLabel(i18n.getString(title), JLabel.RIGHT));
 		JComboBox cb = new JComboBox(options);
 		cb.setName(title);
 		cb.setSelectedItem(selected);
@@ -284,7 +302,7 @@ public abstract class GenericDialog<T> extends JFrame {
 	protected void addDate(Date fecha, String title, boolean editable) {
 		rows++;
 		// TODO editable
-		mid.add(new JLabel(getString(title), JLabel.RIGHT));
+		mid.add(new JLabel(i18n.getString(title), JLabel.RIGHT));
 		JPanel panel = new JPanel();
 		panel.setOpaque(false);
 		JCalendarCombo calendar = new JCalendarCombo();
@@ -312,7 +330,7 @@ public abstract class GenericDialog<T> extends JFrame {
 
 	protected void addList(Object[] lista, String label) {
 		rows++;
-		mid.add(new JLabel(getString(label), JLabel.RIGHT));
+		mid.add(new JLabel(i18n.getString(label), JLabel.RIGHT));
 		if (lista != null) {
 			JList jlist = new JList(lista);
 			final JScrollPane jScrollPane = new JScrollPane(jlist);
