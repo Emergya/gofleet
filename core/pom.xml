@@ -143,8 +143,15 @@
 			</snapshots>
 			<id>GoFleet</id>
 			<name>GoFleet</name>
-			<url>http://gis.emergya.info/nexus/content/groups/Gofleet</url>
+			<url>http://nexus.emergya.es/nexus/content/repositories/gofleet</url>
 		</repository>
+
+                <repository>
+                        <id>GoFleet-snap</id>
+                        <name>GoFleet-snap</name>
+                        <url>http://nexus.emergya.es/nexus/content/groups/public-snapshots</url>
+                </repository>
+
 	</repositories>
 
 	<dependencies>
